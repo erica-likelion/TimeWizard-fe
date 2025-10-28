@@ -1,0 +1,24 @@
+name: Deploy
+on:
+  push:
+    branches: ['master']
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout source repo
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.AUTO_ACTIONS }}
+      
+      - name: Push to personal repository
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "${{ secrets.OFFICIAL_ACCOUNT_EMAIL }}"
+          
+          rm -rf .github/workflows/
+          
+          git remote add personal https://x-access-token:${{ secrets.AUTO_ACTIONS }}@github.com/mna11/TimeWizard-fe.git
+          git push personal master --force
