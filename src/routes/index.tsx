@@ -12,14 +12,14 @@ export const Route = createFileRoute('/')({
 function Index() {
   return (
     <div
-      className="relative flex min-h-screen w-full flex-col bg-cover bg-center text-white"
+      className="relative flex min-h-screen w-full flex-col bg-cover bg-center text-white "
       style={{ backgroundImage: `url(${backgroundImage})` }}
     >
       <div className="absolute inset-0 z-0 bg-black/60" />
 
       <div className="relative z-10 flex min-h-screen flex-col">
-        <nav className="flex w-full h-[88px] items-center justify-between bg-[#303030] px-8 text-gray-300 md:px-12 
-                      text-2xl font-bold font-['Galmuri11']">
+        <nav className="flex w-full h-[88px] items-center justify-between bg-[#303030]/45 px-8 text-gray-300 md:px-12 
+                      text-2xl font-bold font-['Galmuri11'] backdrop-blur-md">
           <div className="flex items-center gap-6">
             <div className="flex items-center gap-2">
               <img src={timewizardLogo} alt="TimeWizard Logo" className="h-8 w-auto" />
