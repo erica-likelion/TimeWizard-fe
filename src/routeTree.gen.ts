@@ -12,12 +12,12 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as AboutRouteImport } from './routes/about'
 import { Route as Main_layoutRouteImport } from './routes/_main_layout'
 import { Route as IndexRouteImport } from './routes/index'
-import { Route as Main_layoutTuningRouteImport } from './routes/_main_layout/tuning'
-import { Route as Main_layoutPlannerRouteImport } from './routes/_main_layout/planner'
-import { Route as Main_layoutPlanbRouteImport } from './routes/_main_layout/planb'
-import { Route as Main_layoutListRouteImport } from './routes/_main_layout/list'
-import { Route as Main_layoutHomeRouteImport } from './routes/_main_layout/home'
-import { Route as Main_layoutGenRouteImport } from './routes/_main_layout/gen'
+import { Route as TuningIndexRouteImport } from './routes/tuning/index'
+import { Route as PlannerIndexRouteImport } from './routes/planner/index'
+import { Route as PlanbIndexRouteImport } from './routes/planb/index'
+import { Route as MainIndexRouteImport } from './routes/main/index'
+import { Route as ListIndexRouteImport } from './routes/list/index'
+import { Route as GenerateIndexRouteImport } from './routes/generate/index'
 
 const AboutRoute = AboutRouteImport.update({
   id: '/about',
@@ -33,77 +33,77 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
-const Main_layoutTuningRoute = Main_layoutTuningRouteImport.update({
-  id: '/tuning',
-  path: '/tuning',
-  getParentRoute: () => Main_layoutRoute,
+const TuningIndexRoute = TuningIndexRouteImport.update({
+  id: '/tuning/',
+  path: '/tuning/',
+  getParentRoute: () => rootRouteImport,
 } as any)
-const Main_layoutPlannerRoute = Main_layoutPlannerRouteImport.update({
-  id: '/planner',
-  path: '/planner',
-  getParentRoute: () => Main_layoutRoute,
+const PlannerIndexRoute = PlannerIndexRouteImport.update({
+  id: '/planner/',
+  path: '/planner/',
+  getParentRoute: () => rootRouteImport,
 } as any)
-const Main_layoutPlanbRoute = Main_layoutPlanbRouteImport.update({
-  id: '/planb',
-  path: '/planb',
-  getParentRoute: () => Main_layoutRoute,
+const PlanbIndexRoute = PlanbIndexRouteImport.update({
+  id: '/planb/',
+  path: '/planb/',
+  getParentRoute: () => rootRouteImport,
 } as any)
-const Main_layoutListRoute = Main_layoutListRouteImport.update({
-  id: '/list',
-  path: '/list',
-  getParentRoute: () => Main_layoutRoute,
+const MainIndexRoute = MainIndexRouteImport.update({
+  id: '/main/',
+  path: '/main/',
+  getParentRoute: () => rootRouteImport,
 } as any)
-const Main_layoutHomeRoute = Main_layoutHomeRouteImport.update({
-  id: '/home',
-  path: '/home',
-  getParentRoute: () => Main_layoutRoute,
+const ListIndexRoute = ListIndexRouteImport.update({
+  id: '/list/',
+  path: '/list/',
+  getParentRoute: () => rootRouteImport,
 } as any)
-const Main_layoutGenRoute = Main_layoutGenRouteImport.update({
-  id: '/gen',
-  path: '/gen',
-  getParentRoute: () => Main_layoutRoute,
+const GenerateIndexRoute = GenerateIndexRouteImport.update({
+  id: '/generate/',
+  path: '/generate/',
+  getParentRoute: () => rootRouteImport,
 } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
-  '/gen': typeof Main_layoutGenRoute
-  '/home': typeof Main_layoutHomeRoute
-  '/list': typeof Main_layoutListRoute
-  '/planb': typeof Main_layoutPlanbRoute
-  '/planner': typeof Main_layoutPlannerRoute
-  '/tuning': typeof Main_layoutTuningRoute
+  '/generate': typeof GenerateIndexRoute
+  '/list': typeof ListIndexRoute
+  '/main': typeof MainIndexRoute
+  '/planb': typeof PlanbIndexRoute
+  '/planner': typeof PlannerIndexRoute
+  '/tuning': typeof TuningIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
-  '/gen': typeof Main_layoutGenRoute
-  '/home': typeof Main_layoutHomeRoute
-  '/list': typeof Main_layoutListRoute
-  '/planb': typeof Main_layoutPlanbRoute
-  '/planner': typeof Main_layoutPlannerRoute
-  '/tuning': typeof Main_layoutTuningRoute
+  '/generate': typeof GenerateIndexRoute
+  '/list': typeof ListIndexRoute
+  '/main': typeof MainIndexRoute
+  '/planb': typeof PlanbIndexRoute
+  '/planner': typeof PlannerIndexRoute
+  '/tuning': typeof TuningIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
-  '/_main_layout': typeof Main_layoutRouteWithChildren
+  '/_main_layout': typeof Main_layoutRoute
   '/about': typeof AboutRoute
-  '/_main_layout/gen': typeof Main_layoutGenRoute
-  '/_main_layout/home': typeof Main_layoutHomeRoute
-  '/_main_layout/list': typeof Main_layoutListRoute
-  '/_main_layout/planb': typeof Main_layoutPlanbRoute
-  '/_main_layout/planner': typeof Main_layoutPlannerRoute
-  '/_main_layout/tuning': typeof Main_layoutTuningRoute
+  '/generate/': typeof GenerateIndexRoute
+  '/list/': typeof ListIndexRoute
+  '/main/': typeof MainIndexRoute
+  '/planb/': typeof PlanbIndexRoute
+  '/planner/': typeof PlannerIndexRoute
+  '/tuning/': typeof TuningIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
     | '/about'
-    | '/gen'
-    | '/home'
+    | '/generate'
     | '/list'
+    | '/main'
     | '/planb'
     | '/planner'
     | '/tuning'
@@ -111,9 +111,9 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/about'
-    | '/gen'
-    | '/home'
+    | '/generate'
     | '/list'
+    | '/main'
     | '/planb'
     | '/planner'
     | '/tuning'
@@ -122,18 +122,24 @@ export interface FileRouteTypes {
     | '/'
     | '/_main_layout'
     | '/about'
-    | '/_main_layout/gen'
-    | '/_main_layout/home'
-    | '/_main_layout/list'
-    | '/_main_layout/planb'
-    | '/_main_layout/planner'
-    | '/_main_layout/tuning'
+    | '/generate/'
+    | '/list/'
+    | '/main/'
+    | '/planb/'
+    | '/planner/'
+    | '/tuning/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  Main_layoutRoute: typeof Main_layoutRouteWithChildren
+  Main_layoutRoute: typeof Main_layoutRoute
   AboutRoute: typeof AboutRoute
+  GenerateIndexRoute: typeof GenerateIndexRoute
+  ListIndexRoute: typeof ListIndexRoute
+  MainIndexRoute: typeof MainIndexRoute
+  PlanbIndexRoute: typeof PlanbIndexRoute
+  PlannerIndexRoute: typeof PlannerIndexRoute
+  TuningIndexRoute: typeof TuningIndexRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -159,77 +165,61 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/_main_layout/tuning': {
-      id: '/_main_layout/tuning'
+    '/tuning/': {
+      id: '/tuning/'
       path: '/tuning'
       fullPath: '/tuning'
-      preLoaderRoute: typeof Main_layoutTuningRouteImport
-      parentRoute: typeof Main_layoutRoute
+      preLoaderRoute: typeof TuningIndexRouteImport
+      parentRoute: typeof rootRouteImport
     }
-    '/_main_layout/planner': {
-      id: '/_main_layout/planner'
+    '/planner/': {
+      id: '/planner/'
       path: '/planner'
       fullPath: '/planner'
-      preLoaderRoute: typeof Main_layoutPlannerRouteImport
-      parentRoute: typeof Main_layoutRoute
+      preLoaderRoute: typeof PlannerIndexRouteImport
+      parentRoute: typeof rootRouteImport
     }
-    '/_main_layout/planb': {
-      id: '/_main_layout/planb'
+    '/planb/': {
+      id: '/planb/'
       path: '/planb'
       fullPath: '/planb'
-      preLoaderRoute: typeof Main_layoutPlanbRouteImport
-      parentRoute: typeof Main_layoutRoute
+      preLoaderRoute: typeof PlanbIndexRouteImport
+      parentRoute: typeof rootRouteImport
     }
-    '/_main_layout/list': {
-      id: '/_main_layout/list'
+    '/main/': {
+      id: '/main/'
+      path: '/main'
+      fullPath: '/main'
+      preLoaderRoute: typeof MainIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/list/': {
+      id: '/list/'
       path: '/list'
       fullPath: '/list'
-      preLoaderRoute: typeof Main_layoutListRouteImport
-      parentRoute: typeof Main_layoutRoute
+      preLoaderRoute: typeof ListIndexRouteImport
+      parentRoute: typeof rootRouteImport
     }
-    '/_main_layout/home': {
-      id: '/_main_layout/home'
-      path: '/home'
-      fullPath: '/home'
-      preLoaderRoute: typeof Main_layoutHomeRouteImport
-      parentRoute: typeof Main_layoutRoute
-    }
-    '/_main_layout/gen': {
-      id: '/_main_layout/gen'
-      path: '/gen'
-      fullPath: '/gen'
-      preLoaderRoute: typeof Main_layoutGenRouteImport
-      parentRoute: typeof Main_layoutRoute
+    '/generate/': {
+      id: '/generate/'
+      path: '/generate'
+      fullPath: '/generate'
+      preLoaderRoute: typeof GenerateIndexRouteImport
+      parentRoute: typeof rootRouteImport
     }
   }
 }
 
-interface Main_layoutRouteChildren {
-  Main_layoutGenRoute: typeof Main_layoutGenRoute
-  Main_layoutHomeRoute: typeof Main_layoutHomeRoute
-  Main_layoutListRoute: typeof Main_layoutListRoute
-  Main_layoutPlanbRoute: typeof Main_layoutPlanbRoute
-  Main_layoutPlannerRoute: typeof Main_layoutPlannerRoute
-  Main_layoutTuningRoute: typeof Main_layoutTuningRoute
-}
-
-const Main_layoutRouteChildren: Main_layoutRouteChildren = {
-  Main_layoutGenRoute: Main_layoutGenRoute,
-  Main_layoutHomeRoute: Main_layoutHomeRoute,
-  Main_layoutListRoute: Main_layoutListRoute,
-  Main_layoutPlanbRoute: Main_layoutPlanbRoute,
-  Main_layoutPlannerRoute: Main_layoutPlannerRoute,
-  Main_layoutTuningRoute: Main_layoutTuningRoute,
-}
-
-const Main_layoutRouteWithChildren = Main_layoutRoute._addFileChildren(
-  Main_layoutRouteChildren,
-)
-
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  Main_layoutRoute: Main_layoutRouteWithChildren,
+  Main_layoutRoute: Main_layoutRoute,
   AboutRoute: AboutRoute,
+  GenerateIndexRoute: GenerateIndexRoute,
+  ListIndexRoute: ListIndexRoute,
+  MainIndexRoute: MainIndexRoute,
+  PlanbIndexRoute: PlanbIndexRoute,
+  PlannerIndexRoute: PlannerIndexRoute,
+  TuningIndexRoute: TuningIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

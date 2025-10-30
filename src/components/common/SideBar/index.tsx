@@ -2,9 +2,9 @@ import { Link } from '@tanstack/react-router';
 import logoIcon from '@assets/icons/billnut_col_noneoutline.svg';
 
 const navItems = [
-    { to: '/home', label: '메인' },
+    { to: '/main', label: '메인' },
     { to: '/list', label: '목록' },
-    { to: '/gen', label: '생성' },
+    { to: '/generate', label: '생성' },
     { to: '/tuning', label: '튜닝' },
     { to: '/planner', label: '플래너' },
     { to: '/planb', label: '플랜B' }
