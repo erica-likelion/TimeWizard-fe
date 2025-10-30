@@ -14,7 +14,7 @@ const SideBar = () => {
 
     return (
         <div className="flex flex-col w-[313px] h-full">
-            <div className="flex items-end px-7.5 w-full h-[160px] bg-[#E65787]">
+            <div className="flex items-end px-7.5 w-full min-h-[160px] bg-[#E65787]">
                 <img
                     src={logoIcon}
                     alt="빌넣 로고"
