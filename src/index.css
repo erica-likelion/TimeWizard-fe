@@ -15,7 +15,15 @@
   font-style: normal;
 }
 
+body {
+  font-family: 'Galmuri11';
+  font-style: normal;
+  font-size: 24px;
+  height: 100vh;
+  background-color: #111;
+}
+
 /* --- (기존에 있던 코드) --- */
-@tailwind base;
+/* @tailwind base;
 @tailwind components;
-@tailwind utilities;
+@tailwind utilities; */
