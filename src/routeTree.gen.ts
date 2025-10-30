@@ -10,11 +10,22 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as AboutRouteImport } from './routes/about'
+import { Route as Main_layoutRouteImport } from './routes/_main_layout'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as Main_layoutTuningRouteImport } from './routes/_main_layout/tuning'
+import { Route as Main_layoutPlannerRouteImport } from './routes/_main_layout/planner'
+import { Route as Main_layoutPlanbRouteImport } from './routes/_main_layout/planb'
+import { Route as Main_layoutListRouteImport } from './routes/_main_layout/list'
+import { Route as Main_layoutHomeRouteImport } from './routes/_main_layout/home'
+import { Route as Main_layoutGenRouteImport } from './routes/_main_layout/gen'
 
 const AboutRoute = AboutRouteImport.update({
   id: '/about',
   path: '/about',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const Main_layoutRoute = Main_layoutRouteImport.update({
+  id: '/_main_layout',
   getParentRoute: () => rootRouteImport,
 } as any)
 const IndexRoute = IndexRouteImport.update({
@@ -22,30 +33,106 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const Main_layoutTuningRoute = Main_layoutTuningRouteImport.update({
+  id: '/tuning',
+  path: '/tuning',
+  getParentRoute: () => Main_layoutRoute,
+} as any)
+const Main_layoutPlannerRoute = Main_layoutPlannerRouteImport.update({
+  id: '/planner',
+  path: '/planner',
+  getParentRoute: () => Main_layoutRoute,
+} as any)
+const Main_layoutPlanbRoute = Main_layoutPlanbRouteImport.update({
+  id: '/planb',
+  path: '/planb',
+  getParentRoute: () => Main_layoutRoute,
+} as any)
+const Main_layoutListRoute = Main_layoutListRouteImport.update({
+  id: '/list',
+  path: '/list',
+  getParentRoute: () => Main_layoutRoute,
+} as any)
+const Main_layoutHomeRoute = Main_layoutHomeRouteImport.update({
+  id: '/home',
+  path: '/home',
+  getParentRoute: () => Main_layoutRoute,
+} as any)
+const Main_layoutGenRoute = Main_layoutGenRouteImport.update({
+  id: '/gen',
+  path: '/gen',
+  getParentRoute: () => Main_layoutRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
+  '/gen': typeof Main_layoutGenRoute
+  '/home': typeof Main_layoutHomeRoute
+  '/list': typeof Main_layoutListRoute
+  '/planb': typeof Main_layoutPlanbRoute
+  '/planner': typeof Main_layoutPlannerRoute
+  '/tuning': typeof Main_layoutTuningRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
+  '/gen': typeof Main_layoutGenRoute
+  '/home': typeof Main_layoutHomeRoute
+  '/list': typeof Main_layoutListRoute
+  '/planb': typeof Main_layoutPlanbRoute
+  '/planner': typeof Main_layoutPlannerRoute
+  '/tuning': typeof Main_layoutTuningRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/_main_layout': typeof Main_layoutRouteWithChildren
   '/about': typeof AboutRoute
+  '/_main_layout/gen': typeof Main_layoutGenRoute
+  '/_main_layout/home': typeof Main_layoutHomeRoute
+  '/_main_layout/list': typeof Main_layoutListRoute
+  '/_main_layout/planb': typeof Main_layoutPlanbRoute
+  '/_main_layout/planner': typeof Main_layoutPlannerRoute
+  '/_main_layout/tuning': typeof Main_layoutTuningRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/about'
+  fullPaths:
+    | '/'
+    | '/about'
+    | '/gen'
+    | '/home'
+    | '/list'
+    | '/planb'
+    | '/planner'
+    | '/tuning'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/about'
-  id: '__root__' | '/' | '/about'
+  to:
+    | '/'
+    | '/about'
+    | '/gen'
+    | '/home'
+    | '/list'
+    | '/planb'
+    | '/planner'
+    | '/tuning'
+  id:
+    | '__root__'
+    | '/'
+    | '/_main_layout'
+    | '/about'
+    | '/_main_layout/gen'
+    | '/_main_layout/home'
+    | '/_main_layout/list'
+    | '/_main_layout/planb'
+    | '/_main_layout/planner'
+    | '/_main_layout/tuning'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  Main_layoutRoute: typeof Main_layoutRouteWithChildren
   AboutRoute: typeof AboutRoute
 }
 
@@ -58,6 +145,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AboutRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_main_layout': {
+      id: '/_main_layout'
+      path: ''
+      fullPath: ''
+      preLoaderRoute: typeof Main_layoutRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -65,11 +159,76 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_main_layout/tuning': {
+      id: '/_main_layout/tuning'
+      path: '/tuning'
+      fullPath: '/tuning'
+      preLoaderRoute: typeof Main_layoutTuningRouteImport
+      parentRoute: typeof Main_layoutRoute
+    }
+    '/_main_layout/planner': {
+      id: '/_main_layout/planner'
+      path: '/planner'
+      fullPath: '/planner'
+      preLoaderRoute: typeof Main_layoutPlannerRouteImport
+      parentRoute: typeof Main_layoutRoute
+    }
+    '/_main_layout/planb': {
+      id: '/_main_layout/planb'
+      path: '/planb'
+      fullPath: '/planb'
+      preLoaderRoute: typeof Main_layoutPlanbRouteImport
+      parentRoute: typeof Main_layoutRoute
+    }
+    '/_main_layout/list': {
+      id: '/_main_layout/list'
+      path: '/list'
+      fullPath: '/list'
+      preLoaderRoute: typeof Main_layoutListRouteImport
+      parentRoute: typeof Main_layoutRoute
+    }
+    '/_main_layout/home': {
+      id: '/_main_layout/home'
+      path: '/home'
+      fullPath: '/home'
+      preLoaderRoute: typeof Main_layoutHomeRouteImport
+      parentRoute: typeof Main_layoutRoute
+    }
+    '/_main_layout/gen': {
+      id: '/_main_layout/gen'
+      path: '/gen'
+      fullPath: '/gen'
+      preLoaderRoute: typeof Main_layoutGenRouteImport
+      parentRoute: typeof Main_layoutRoute
+    }
   }
 }
 
+interface Main_layoutRouteChildren {
+  Main_layoutGenRoute: typeof Main_layoutGenRoute
+  Main_layoutHomeRoute: typeof Main_layoutHomeRoute
+  Main_layoutListRoute: typeof Main_layoutListRoute
+  Main_layoutPlanbRoute: typeof Main_layoutPlanbRoute
+  Main_layoutPlannerRoute: typeof Main_layoutPlannerRoute
+  Main_layoutTuningRoute: typeof Main_layoutTuningRoute
+}
+
+const Main_layoutRouteChildren: Main_layoutRouteChildren = {
+  Main_layoutGenRoute: Main_layoutGenRoute,
+  Main_layoutHomeRoute: Main_layoutHomeRoute,
+  Main_layoutListRoute: Main_layoutListRoute,
+  Main_layoutPlanbRoute: Main_layoutPlanbRoute,
+  Main_layoutPlannerRoute: Main_layoutPlannerRoute,
+  Main_layoutTuningRoute: Main_layoutTuningRoute,
+}
+
+const Main_layoutRouteWithChildren = Main_layoutRoute._addFileChildren(
+  Main_layoutRouteChildren,
+)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  Main_layoutRoute: Main_layoutRouteWithChildren,
   AboutRoute: AboutRoute,
 }
 export const routeTree = rootRouteImport
