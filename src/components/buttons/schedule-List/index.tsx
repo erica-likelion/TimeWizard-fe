@@ -1,4 +1,4 @@
-// src/components/PlanButtonLink.tsx
+
 
 import React from 'react';
 import { Link } from '@tanstack/react-router';
@@ -47,7 +47,7 @@ export const PlanButtonLink: React.FC<PlanButtonLinkProps> = ({
         active:border-[#C1446C]
       "
     >
-      {/* --- 👈 왼쪽 텍스트 (#25-2학기 플랜A) --- */}
+      
       <span
         className="
           /* 기본 폰트 명세 */
@@ -69,7 +69,7 @@ export const PlanButtonLink: React.FC<PlanButtonLinkProps> = ({
         {title}
       </span>
       
-      {/* --- 👉 오른쪽 텍스트 (2025.08.02. 생성됨) --- */}
+      
       <span
         className="
         
