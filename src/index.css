@@ -21,6 +21,22 @@ body {
   font-size: 24px;
   height: 100vh;
   background-color: #111;
+
+  -ms-overflow-style: none;
+}
+
+body::-webkit-scrollbar {
+  display: none;
+}
+
+@layer utilities {
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
 }
 
 /* --- (기존에 있던 코드) --- */
