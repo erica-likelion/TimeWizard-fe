@@ -1,0 +1,51 @@
+import React from 'react';
+import type { TextInputProps } from './types';
+import { cn } from '../../../utils/util'; 
+
+export const TextInput: React.FC<TextInputProps> = ({
+  className,
+  width = 'full', 
+  size = 'md',    
+  ...props
+}) => {
+  
+  const baseStyles = `
+    font-[Galmuri11] font-normal
+    bg-[#303030]
+    text-white
+    placeholder:text-gray-500
+
+    transition-colors duration-150
+    focus:outline-none
+    
+    border-2
+    border-transparent
+
+    hover:border-[#E65787]
+    group-hover:border-[#E65787]
+    focus:border-white
+  `;
+
+  const widthStyles = {
+    fit: 'w-fit',
+    full: 'w-full',
+  };
+
+  const sizeStyles = {
+    sm: 'h-[44px] px-4 text-xl', 
+    md: 'h-[54px] px-4 text-[28px]',
+    lg: 'h-[64px] px-5 text-3xl',
+  };
+
+  return (
+    <input
+      className={cn(
+        baseStyles,
+        widthStyles[width],
+        sizeStyles[size],
+        className
+      )}
+      {...props} 
+    />
+  );
+};
