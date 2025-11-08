@@ -14,3 +14,12 @@
   font-weight: 700; 
   font-style: normal;
 }
+
+body {
+  font-family: 'Galmuri11';
+  font-style: normal;
+  font-size: 24px;
+  height: 100vh;
+  background-color: #111;
+}
+
