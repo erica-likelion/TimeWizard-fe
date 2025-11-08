@@ -13,5 +13,5 @@ export const fontStyles = {
   caption: 'text-[16px] leading-[130%] tracking-[-0.48px]',
 
   /** 버튼 텍스트 */
-  button: 'text-lg font-medium',
+  button: 'text-[24px] leading-[130%] tracking-[-0.48px]',
 }

@@ -18,6 +18,7 @@ import { Route as PlanbIndexRouteImport } from './routes/planb/index'
 import { Route as MainIndexRouteImport } from './routes/main/index'
 import { Route as ListIndexRouteImport } from './routes/list/index'
 import { Route as GenerateIndexRouteImport } from './routes/generate/index'
+import { Route as ListTimetableIdRouteImport } from './routes/list/$timetableId'
 
 const AboutRoute = AboutRouteImport.update({
   id: '/about',
@@ -63,10 +64,16 @@ const GenerateIndexRoute = GenerateIndexRouteImport.update({
   path: '/generate/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ListTimetableIdRoute = ListTimetableIdRouteImport.update({
+  id: '/list/$timetableId',
+  path: '/list/$timetableId',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
+  '/list/$timetableId': typeof ListTimetableIdRoute
   '/generate': typeof GenerateIndexRoute
   '/list': typeof ListIndexRoute
   '/main': typeof MainIndexRoute
@@ -77,6 +84,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
+  '/list/$timetableId': typeof ListTimetableIdRoute
   '/generate': typeof GenerateIndexRoute
   '/list': typeof ListIndexRoute
   '/main': typeof MainIndexRoute
@@ -89,6 +97,7 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/_main_layout': typeof Main_layoutRoute
   '/about': typeof AboutRoute
+  '/list/$timetableId': typeof ListTimetableIdRoute
   '/generate/': typeof GenerateIndexRoute
   '/list/': typeof ListIndexRoute
   '/main/': typeof MainIndexRoute
@@ -101,6 +110,7 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/about'
+    | '/list/$timetableId'
     | '/generate'
     | '/list'
     | '/main'
@@ -111,6 +121,7 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/about'
+    | '/list/$timetableId'
     | '/generate'
     | '/list'
     | '/main'
@@ -122,6 +133,7 @@ export interface FileRouteTypes {
     | '/'
     | '/_main_layout'
     | '/about'
+    | '/list/$timetableId'
     | '/generate/'
     | '/list/'
     | '/main/'
@@ -134,6 +146,7 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   Main_layoutRoute: typeof Main_layoutRoute
   AboutRoute: typeof AboutRoute
+  ListTimetableIdRoute: typeof ListTimetableIdRoute
   GenerateIndexRoute: typeof GenerateIndexRoute
   ListIndexRoute: typeof ListIndexRoute
   MainIndexRoute: typeof MainIndexRoute
@@ -207,6 +220,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof GenerateIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/list/$timetableId': {
+      id: '/list/$timetableId'
+      path: '/list/$timetableId'
+      fullPath: '/list/$timetableId'
+      preLoaderRoute: typeof ListTimetableIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -214,6 +234,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   Main_layoutRoute: Main_layoutRoute,
   AboutRoute: AboutRoute,
+  ListTimetableIdRoute: ListTimetableIdRoute,
   GenerateIndexRoute: GenerateIndexRoute,
   ListIndexRoute: ListIndexRoute,
   MainIndexRoute: MainIndexRoute,
