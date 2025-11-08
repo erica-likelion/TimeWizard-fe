@@ -1,17 +1,14 @@
 import React from 'react';
 import { fontStyles } from '@/utils/styles';
 import { cn } from '@/utils/util';
+import type { BasicButtonProps } from './types';
 
-interface BasicButtonProps {
-  children: React.ReactNode;
-  onClick?: () => void;
-  variant?: 'default' | 'danger';
-}
 
 export const BasicButton: React.FC<BasicButtonProps> = ({
   children,
   onClick,
-  variant = 'default'
+  variant = 'default',
+  className
 }) => {
   const textColor = variant === 'danger' ? 'text-[#FF0000]' : 'text-[#BBB]';
 
@@ -23,11 +20,12 @@ export const BasicButton: React.FC<BasicButtonProps> = ({
         border-2 border-[#D7D9DF]
         bg-transparent
         max-w-60
+        max-h-15
         ${textColor}
         hover:bg-[#505050]
         hover:cursor-pointer
         active:bg-[#505050]
-      `, fontStyles.body)}
+      `, fontStyles.button, className)}
     >
       {children}
     </button>
