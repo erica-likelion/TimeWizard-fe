@@ -1,13 +1,14 @@
-import { createFileRoute } from '@tanstack/react-router'
-import { useState, useEffect } from 'react'
-import { fontStyles } from '@/utils/styles'
-import { cn } from '@/utils/util'
+import { createFileRoute, useNavigate } from '@tanstack/react-router';
+import { useState, useEffect, act } from 'react';
+import { fontStyles } from '@/utils/styles';
+import { cn } from '@/utils/util';
 
-import { PlanButton } from '@/components/buttons/ScheduleList'
-import { BasicButton } from '@/components/buttons/BasicButton'
-import { TimeTable } from '@/components/timetable'
-import { mockGetTimeTables, mockGetTimeTableDetail } from '@/apis/TimeTableAPI/timeTableApi'
-import type { TimeTableItem, TimeTableDetail } from './types'
+import { PlanButton } from '@/components/buttons/ScheduleList';
+import { PinkButton } from '@/components/buttons/PinkButton';
+import { BasicButton } from '@/components/buttons/BasicButton';
+import { TimeTable } from '@/components/TimeTable';
+import { mockGetTimeTables, mockGetTimeTableDetail } from '@/apis/TimeTableAPI/timeTableApi';
+import type { TimeTableItem, TimeTableDetail } from './types';
 
 export const Route = createFileRoute('/list/')({
   component: RouteComponent,
@@ -15,7 +16,9 @@ export const Route = createFileRoute('/list/')({
 
 function RouteComponent() {
   const [timeTables, setTimeTables] = useState<TimeTableItem[]>([])
+  const [activeTimeTable, setActiveTimeTable] = useState<number | null>(1)
   const [selectedTimeTable, setSelectedTimeTable] = useState<TimeTableDetail | null>(null)
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchTimeTables = async () => {
@@ -28,6 +31,7 @@ function RouteComponent() {
     }
 
     fetchTimeTables()
+    handleTimeTableClick(Number(activeTimeTable))
   }, [])
 
   const handleTimeTableClick = async (timetableId: number) => {
@@ -35,42 +39,61 @@ function RouteComponent() {
       const response = await mockGetTimeTableDetail(timetableId)
       if (response.success) {
         setSelectedTimeTable(response.data)
+        setActiveTimeTable(timetableId)
       }
     } catch (error) {
       console.error('시간표 상세 조회 실패:', error)
     }
   }
 
+
+
   return (
-    <div className="flex flex-col px-20 gap-6 pt-11 pb-20 no-scrollbar">
-      <p className={fontStyles.title}> 시간표 목록 </p>
-      <div className="flex justify-evenly gap-6 items-center h-[570px] ">
-        <div className="flex flex-col w-[684px] h-full pl-5 pr-10.5 pb-5 bg-[#303030] overflow-y-auto">
-          <p className={cn("pt-5 text-[#767676]", fontStyles.subtitle, "sticky top-0 bg-[#303030] z-10 pb-4")}> 생성된 시간표 </p>
-          <div className="flex flex-col gap-6">
+    <div className="flex flex-col px-[72px] gap-[22px] pt-[40px] pb-[72px]">
+      <p className={cn("min-w-full", fontStyles.title)}> 시간표 목록 </p>
+      <div className="flex justify-between h-full">
+        <div className="flex-3 flex flex-col h-[513px] min-w-[350px] px-[18px] pb-[18px] bg-[#303030] no-scrollbar overflow-y-auto">
+          <p className={cn("py-[18px] text-[#767676]", fontStyles.subtitle, "sticky top-0 bg-[#303030] z-10")}> 생성된 시간표 </p>
+          <div className="flex flex-col gap-[22px]">
             {timeTables.map((timetable) => (
               <PlanButton
                 key={timetable.timetable_id}
                 title={"#" + timetable.timetable_name}
                 date={timetable.created_at}
                 onClick={() => handleTimeTableClick(timetable.timetable_id)}
+                isActive={activeTimeTable === timetable.timetable_id}
               />
             ))}
           </div>
-          <div className="mt-auto self-end pt-6">
-            <BasicButton onClick={() => {}}>+ 새 시간표 추가</BasicButton>
+          <div className="mt-auto self-end pt-[22px]">
+            <BasicButton onClick={() => {navigate({to: '/generate'})}} className="min-w-60">+ 새 시간표 추가</BasicButton>
           </div>
         </div>
-        <div className="flex w-[50px] justify-center">
-          <p className={cn(fontStyles.subtitle, "font-bold")}>--&gt;</p>
+        <div className="flex-1 flex w-[45px] justify-center">
+          <p className={cn(fontStyles.subtitle, "font-bold my-auto whitespace-nowrap")}>--&gt;</p>
         </div>
-        <div className="flex flex-col w-[617px] h-full p-5 pt-0 bg-[#303030] overflow-y-auto no-scrollbar">
-          <p className={cn("pt-5 text-[#767676]", fontStyles.subtitle, "sticky top-0 bg-[#303030] z-10 pb-4")}> 선택된 시간표 </p>
-          {selectedTimeTable && <TimeTable courses={selectedTimeTable.courses} />}
+        <div className="flex-3 flex flex-col min-w-[350px] gap-8">
+          <div className="flex flex-col h-[513px] p-[18px] pt-0 bg-[#303030] overflow-y-auto no-scrollbar">
+            <p className={cn("py-[18px] text-[#767676]", fontStyles.subtitle, "sticky top-0 bg-[#303030] z-10")}> 선택된 시간표 </p>
+            {selectedTimeTable && <TimeTable courses={selectedTimeTable.courses} />}
+          </div>
+          <div className="flex flex-col p-[14px] gap-[14px] bg-[#303030]">
+            <div className="flex justify-evenly gap-[29px]">
+              <BasicButton variant="danger" onClick={() => {}} className="flex-1">삭제</BasicButton>
+              <BasicButton onClick={() => {}} className="flex-1">튜닝</BasicButton>
+              <BasicButton onClick={() => navigate({to: '/list/$timetableId', params: {timetableId: String(activeTimeTable)}})} className="flex-1">
+                  자세히보기
+              </BasicButton>
+            </div>
+            <PinkButton
+              width='full'
+              size='sm'
+              onClick={() => {}}
+              className={cn(fontStyles.button)}>
+                이 시간표로 플래너 짜기
+            </PinkButton>
+          </div>  
         </div>
-      </div>
-      <div>
-
       </div>
     </div>
   )
