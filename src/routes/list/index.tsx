@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react'
 import { fontStyles } from '@/utils/styles'
 import { cn } from '@/utils/util'
 
-import { PlanButtonLink } from '@/components/buttons/schedule-List'
+import { PlanButton } from '@/components/buttons/ScheduleList'
 import { BasicButton } from '@/components/buttons/BasicButton'
 import { TimeTable } from '@/components/timetable'
 import { mockGetTimeTables, mockGetTimeTableDetail } from '@/apis/TimeTableAPI/timeTableApi'
@@ -49,7 +49,7 @@ function RouteComponent() {
           <p className={cn("pt-5 text-[#767676]", fontStyles.subtitle, "sticky top-0 bg-[#303030] z-10 pb-4")}> 생성된 시간표 </p>
           <div className="flex flex-col gap-6">
             {timeTables.map((timetable) => (
-              <PlanButtonLink
+              <PlanButton
                 key={timetable.timetable_id}
                 title={"#" + timetable.timetable_name}
                 date={timetable.created_at}
