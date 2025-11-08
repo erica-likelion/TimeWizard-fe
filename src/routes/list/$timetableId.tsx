@@ -14,12 +14,19 @@ export const Route = createFileRoute('/list/$timetableId')({
   component: RouteComponent,
 })
 
+// 시간표 상세보기 페이지
 function RouteComponent() {
   const { timetableId } = Route.useParams();
   const navigate = useNavigate();
+  // 조회한 시간표 상세 정보
   const [timetable, setTimetable] = useState<TimeTableDetail | null>(null);
+  // 현재 선택된(하이라이팅된) 강의 ID
   const [activeCourseId, setActiveCourseId] = useState<number | undefined>(1);
 
+  /*
+    마운트 시 URL 파라미터의 timetableId로
+    해당 시간표 상세 정보 조회
+  */
   useEffect(() => {
     const fetchTimetable = async () => {
       try {
@@ -41,10 +48,15 @@ function RouteComponent() {
     return assignCourseColors(timetable.courses);
   }, [timetable]);
 
+  /*
+    강의 클릭 시 해당 강의를 활성화(하이라이팅)
+    인자 - 클릭한 강의 ID
+  */
   const handleCourseItemClick = (course_id: number) => {
     setActiveCourseId(course_id);
   }
 
+  // 시간표 로딩 중일 때 표시
   if (!timetable) {
     return (
       <div className="flex items-center justify-center h-screen">
@@ -55,15 +67,19 @@ function RouteComponent() {
 
   return (
     <div className="flex flex-col px-[72px] gap-[22px] pt-[40px] pb-[72px]">
+      {/* [위] 시간표 이름 + 목록으로 돌아가기 버튼 */}
       <div className="flex items-end">
         <p className={fontStyles.title}>#{timetable.timetable_name}</p>
         <BasicButton onClick={() => navigate({to: '/list'})} className={cn("ml-auto h-9 w-40 p-1 mb-[-22px] bg-[#000] text-white", fontStyles.caption)}>← 목록으로</BasicButton>
       </div>
+
       <div className="flex justify-between gap-[22px] items-start h-[513px]">
+        {/* [왼쪽] 등록된 강의 목록 */}
         <div className="flex-1 flex flex-col max-w-[500px] h-full px-[18px] pb-[18px] bg-[#303030] overflow-y-auto no-scrollbar">
           <p className={cn("py-[18px] text-[#767676]", fontStyles.subtitle, "sticky top-0 bg-[#303030] z-10")}>
             등록된 강의
           </p>
+          {/* 강의들 (클릭하면 시간표에서 하이라이팅됨) */}
           <div className="flex flex-col gap-[14px]">
             {timetable.courses.map((course) => (
               <CourseItem
@@ -77,6 +93,7 @@ function RouteComponent() {
           </div>
         </div>
 
+        {/* [오른쪽] 시간표 */}
         <div className="flex-1 flex flex-col h-full p-[18px] pt-0 bg-[#303030] overflow-y-auto no-scrollbar">
           <p className={cn("py-[18px] text-[#767676]", fontStyles.subtitle, "sticky top-0 bg-[#303030] z-10")}>
             시간표
