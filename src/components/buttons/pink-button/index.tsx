@@ -1,47 +1,49 @@
-
-
 import React from 'react';
-import { Link } from '@tanstack/react-router';
-import type { ToPathOption } from '@tanstack/react-router';
 import { cn } from '../../../utils/util'; 
 
 
-interface PinkButtonProps {
+interface PinkButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   children: React.ReactNode;
-  to: ToPathOption;
-  params?: any;
   width?: 'fit' | 'full'; 
   size?: 'sm' | 'md' | 'lg'; 
-  className?: string; 
+
 }
 
 export const PinkButton: React.FC<PinkButtonProps> = ({
   children,
-  to,
-  params,
   width = 'fit',
   size = 'md', 
   className,
+  type = 'button', 
+  ...props 
 }) => {
   
-  
+ 
   const baseStyles = `
     inline-flex items-center justify-center
     
-    font-[Galmuri11] font-normal text-white
+    font-[Galmuri11] font-normal text-white 
     
     transition-colors duration-150
-    bg-[#E65787]
-    hover:bg-[#FF6096] border4-[#E65787]
-    active:bg-[#C1446C]
-  `;
 
+    border-4 
+    
+    
+    bg-[#E65787]
+    border-[#E65787] 
+
+    hover:bg-[#FF6096]
+    hover:border-[#FF6096] 
+
+    
+    active:bg-[#C1446C]
+    active:border-[#C1446C] 
+  `;
 
   const widthStyles = {
     fit: 'w-fit',
     full: 'w-full',
   };
-
 
   const sizeStyles = {
     sm: 'px-8 py-2 text-xl', 
@@ -50,18 +52,18 @@ export const PinkButton: React.FC<PinkButtonProps> = ({
   };
 
   return (
-    <Link
-      to={to}
-      params={params}
-      
+   
+    <button
+      type={type} 
       className={cn(
-        baseStyles,         
+        baseStyles,      
         widthStyles[width], 
         sizeStyles[size],   
-        className          
+        className           
       )}
+      {...props} 
     >
       {children}
-    </Link>
+    </button>
   );
 };
