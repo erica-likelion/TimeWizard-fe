@@ -13,7 +13,7 @@ const navItems = [
 const SideBar = () => {
 
     return (
-        <div className="flex flex-col min-w-[313px] min-h-screen">
+        <div className="flex flex-col min-w-[313px] min-h-screen z-10">
             <div className="flex items-end px-7.5 w-full min-h-40 bg-[#E65787]">
                 <img
                     src={logoIcon}

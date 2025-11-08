@@ -6,9 +6,9 @@ import TopBar from "@components/common/TopBar";
 
 const MainLayout = ({ children }: LayoutProps) => {
     return (
-        <div className="flex w-full h-screen mx-auto">
+        <div className="flex w-full min-h-screen mx-auto">
             <SideBar />
-            <div className="flex flex-col w-full h-screen">
+            <div className="flex flex-col w-full min-h-screen">
                 <TopBar />
                 {children}
             </div>

@@ -17,6 +17,7 @@ export const PlanButton: React.FC<PlanButtonProps> = ({
         flex items-center justify-between
 
         w-full
+        min-w-70
         h-[72px]
         px-[28px]
         py-[18px]
@@ -44,7 +45,7 @@ export const PlanButton: React.FC<PlanButtonProps> = ({
          tracking-[-0.02em]
 
          ${isActive
-            ? 'text-[#FFFFFF]'
+            ? 'text-[#1EC6AA]'
             : 'text-[#FFFFFF] group-hover:text-[#D7D9DF]'
          }
 
