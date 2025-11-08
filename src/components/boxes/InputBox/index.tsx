@@ -1,12 +1,6 @@
 import React from 'react';
+import type { TextInputProps } from './types';
 import { cn } from '../../../utils/util'; 
-
-interface TextInputProps 
-  extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'size'> { 
-  width?: 'fit' | 'full'; 
-  size?: 'sm' | 'md' | 'lg'; 
-}
-// --- 👆 ---
 
 export const TextInput: React.FC<TextInputProps> = ({
   className,
