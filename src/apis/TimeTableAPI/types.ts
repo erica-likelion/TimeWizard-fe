@@ -1,4 +1,4 @@
-import type { Course } from '@/components/timetable/types';
+import type { Course } from '@/components/TimeTable/types';
 
 /**
  * 시간표 목록 API 응답

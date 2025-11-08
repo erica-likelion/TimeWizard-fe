@@ -2,32 +2,14 @@ import React from 'react';
 
 import { cn } from '@/utils/util';
 import { fontStyles } from '@/utils/styles';
+import {
+  DAYS_KR,
+  getCourseColor,
+  getDayColumn,
+  getTimeRow,
+  generateTimeSlots,
+} from '@/utils/timetable';
 import type { TimeTableProps } from './types';
-
-// EN: api에서 받아오는 값
-// KR: EN을 기반으로 화면에 띄울 값
-const DAYS_KR = ['월', '화', '수', '목', '금'];
-const DAYS_EN = ['mon', 'tue', 'wed', 'thu', 'fri'];
-
-// 시간표 시작 시간, 끝 시간, 시간표 간격
-const START_HOUR = 9;
-const END_HOUR = 21;
-const SLOT_DURATION = 30;
-
-/**
- * 수업 별로 다른 색깔
- * (강의 코드 기반)
- */
-const COLORS = [
-  'bg-orange-500',   
-  'bg-cyan-500',      
-  'bg-purple-500',    
-  'bg-green-500',     
-  'bg-pink-500',      
-  'bg-yellow-500',    
-  'bg-blue-500',      
-  'bg-red-500',       
-];
 
 /**
  * 시간표 컴포넌트
@@ -39,43 +21,14 @@ const COLORS = [
  */
 export const TimeTable: React.FC<TimeTableProps> = ({ courses }) => {
 
-  // 시간 슬롯 
-  /**
-   * ['9', '9:30', '10', '10:30', ..., '21']
-   */
-  const timeSlots: string[] = [];
-  for (let hour = START_HOUR; hour <= END_HOUR; hour++) {
-    timeSlots.push(`${hour}`);
-    if (hour < END_HOUR) {
-      timeSlots.push(`${hour}:30`);
-    }
-  }
-
-  // 유틸리티 함수들
-
-  // 요일을 Grid의 column 번호로 변환하는 함수
-  const getDayColumn = (day: string): number => {
-    const index = DAYS_EN.indexOf(day.toLowerCase());
-    return index + 2; // 1열은 시간 라벨이므로 +2
-  };
-
-  /* 시간(분 단위)을 Grid의 row 번호로 변환하는 함수
-   * 예시:
-   * - 540분(9:00) → (540 - 540) / 30 = 0 → row 2 (1행은 헤더)
-   * - 570분(9:30) → (570 - 540) / 30 = 1 → row 3
-   * - 630분(10:30) → (630 - 540) / 30 = 3 → row 5
-   */
-  const getTimeRow = (minutes: number): number => {
-    const startMinutes = START_HOUR * 60; // 9시 = 540분
-    const slotIndex = Math.floor((minutes - startMinutes) / SLOT_DURATION);
-    return slotIndex + 2; // 1행은 요일 헤더이므로 +2
-  };
+  // 시간 슬롯 생성
+  const timeSlots = generateTimeSlots();
 
   // 수업별 색상 할당
   const courseColors = new Map<number, string>();
   courses.forEach((course, index) => {
     if (!courseColors.has(course.course_id)) {
-      courseColors.set(course.course_id, COLORS[index % COLORS.length]);
+      courseColors.set(course.course_id, getCourseColor(course.course_id, index));
     }
   });
 
