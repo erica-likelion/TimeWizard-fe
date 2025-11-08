@@ -4,7 +4,7 @@ import { cn } from '@/utils/util';
 import { fontStyles } from '@/utils/styles';
 import {
   DAYS_KR,
-  getCourseColor,
+  assignCourseColors,
   getDayColumn,
   getTimeRow,
   generateTimeSlots,
@@ -19,18 +19,13 @@ import type { TimeTableProps } from './types';
  * - 세로축: 시간 (9:00 ~ 21:00, 30분 단위)
  * - 각 수업은 Grid의 특정 영역에 배치됨
  */
-export const TimeTable: React.FC<TimeTableProps> = ({ courses }) => {
+export const TimeTable: React.FC<TimeTableProps> = ({ courses, activeCourseId }) => {
 
   // 시간 슬롯 생성
   const timeSlots = generateTimeSlots();
 
-  // 수업별 색상 할당
-  const courseColors = new Map<number, string>();
-  courses.forEach((course, index) => {
-    if (!courseColors.has(course.course_id)) {
-      courseColors.set(course.course_id, getCourseColor(course.course_id, index));
-    }
-  });
+  // 수업별 색상 할당 (같은 course_id는 같은 색, 다른 course_id는 최대한 다른 색)
+  const courseColors = assignCourseColors(courses);
 
 
 
@@ -40,18 +35,18 @@ export const TimeTable: React.FC<TimeTableProps> = ({ courses }) => {
       {/*
         Grid 컨테이너 설정:
         - gridTemplateColumns:
-          - 첫 번째 열(60px): 시간 라벨 표시
+          - 첫 번째 열(30px): 시간 라벨 표시
           - 나머지 5개 열(1fr씩): 월/화/수/목/금 요일 칸 (동일한 크기로 분할)
 
         - gridTemplateRows:
           - 첫 번째 행(40px): 요일 헤더
-          - 나머지 행들(각 40px): 시간 슬롯 수만큼 반복 (총 25개)
+          - 나머지 행들(각 30px): 시간 슬롯 수만큼 반복 (총 25개)
       */}
       <div
         className="grid gap-0"
         style={{
           gridTemplateColumns: '30px repeat(5, 1fr)',
-          gridTemplateRows: `40px repeat(${timeSlots.length}, 40px)`,
+          gridTemplateRows: `40px repeat(${timeSlots.length}, 30px)`,
         }}
       >
         {/* 좌측 상단 빈 칸 (1행 1열) - 명시적 배치 */}
@@ -129,14 +124,21 @@ export const TimeTable: React.FC<TimeTableProps> = ({ courses }) => {
           const startRow = getTimeRow(course.start_time);         // 시작 시간 → 시작 행
           const endRow = getTimeRow(course.finish_time) + 1;      // 종료 시간 → 종료 행 (+1은 exclusive)
           const color = courseColors.get(course.course_id);       // 수업별 색상
-          
+
+          const isActive = activeCourseId === undefined || course.course_id === activeCourseId;
+
           return (
             <div
               key={`${course.course_id}-${course.day_of_week}`}
-              className={cn(`${color} p-2 flex flex-col justify-evenly items-center overflow-hidden`, fontStyles.caption)}
+              className={cn(
+                `p-2 flex flex-col justify-evenly items-center overflow-hidden`,
+                fontStyles.caption,
+                !isActive && "opacity-30"
+              )}
               style={{
-                gridColumn: dayColumn,              
-                gridRow: `${startRow} / ${endRow}`, 
+                gridColumn: dayColumn,
+                gridRow: `${startRow} / ${endRow}`,
+                backgroundColor: color
               }}
             >
               {/* 수업 이름 */}

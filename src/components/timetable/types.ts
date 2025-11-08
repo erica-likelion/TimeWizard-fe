@@ -16,4 +16,5 @@ export interface Course {
  */
 export interface TimeTableProps {
   courses: Course[];       // 표시할 수업 목록
+  activeCourseId?: number | undefined; // 활성화된 수업 ID (선택)
 }
