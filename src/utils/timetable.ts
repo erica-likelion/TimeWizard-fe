@@ -5,28 +5,50 @@
 // ========== 색상 관련 ==========
 
 /**
- * 수업별로 할당할 수 있는 색상 배열
+ * 수업별로 할당할 수 있는 색상 배열 (hex 값)
  * (강의 인덱스 기반으로 순환 사용)
  */
 export const COLORS = [
-  'bg-orange-500',
-  'bg-cyan-500',
-  'bg-purple-500',
-  'bg-green-500',
-  'bg-pink-500',
-  'bg-yellow-500',
-  'bg-blue-500',
-  'bg-red-500',
+  '#f97316', // orange-500
+  '#06b6d4', // cyan-500
+  '#a855f7', // purple-500
+  '#22c55e', // green-500
+  '#ec4899', // pink-500
+  '#eab308', // yellow-500
+  '#3b82f6', // blue-500
+  '#ef4444', // red-500
 ];
 
 /**
- * 강의별 색상 할당 함수
- * @param courseId - 강의 ID (현재는 사용하지 않지만 확장 가능)
- * @param index - 강의 인덱스
- * @returns Tailwind CSS 색상 클래스
+ * 강의 목록에 대해 색상을 할당하는 함수
+ * - 같은 course_id는 항상 같은 색상
+ * - 다른 course_id는 최대한 다른 색상 할당
+ *
+ * @param courses - 강의 목록 (course_id 속성을 가진 객체 배열)
+ * @returns course_id를 키로, 색상을 값으로 가지는 Map
  */
-export const getCourseColor = (courseId: number, index: number): string => {
-  return COLORS[index % COLORS.length];
+export const assignCourseColors = <T extends { course_id: number }>(
+  courses: T[]
+): Map<number, string> => {
+  const courseColors = new Map<number, string>();
+  const usedColorIndices = new Set<number>();
+
+  courses.forEach((course) => {
+    if (!courseColors.has(course.course_id)) {
+      // courseId 기반 초기 인덱스
+      let colorIndex = course.course_id % COLORS.length;
+
+      // 이미 사용된 색이면 다음 색 찾기 (8개 색상 모두 사용되지 않았을 때만)
+      while (usedColorIndices.has(colorIndex) && usedColorIndices.size < COLORS.length) {
+        colorIndex = (colorIndex + 1) % COLORS.length;
+      }
+
+      courseColors.set(course.course_id, COLORS[colorIndex]);
+      usedColorIndices.add(colorIndex);
+    }
+  });
+
+  return courseColors;
 };
 
 // ========== 요일 관련 ==========
