@@ -32,6 +32,9 @@ export const PinkButton: React.FC<PinkButtonProps> = ({
     
     active:bg-[#C1446C]
     active:border-[#C1446C] 
+
+    disabled:bg-[#E657874D]
+    disabled:border-[#E657874D] 
   `;
 
   const widthStyles = {
