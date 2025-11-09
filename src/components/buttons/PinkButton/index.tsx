@@ -1,37 +1,34 @@
 import React from 'react';
-import type { PinkButtonProps } from './types';
-import { cn } from '../../../utils/util'; 
+import { cn } from '@utils/util';
+
+interface PinkButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+  children: React.ReactNode;
+  width?: 'fit' | 'full'; 
+  size?: 'sm' | 'md' | 'lg' | 'custom'; 
+}
 
 export const PinkButton: React.FC<PinkButtonProps> = ({
   children,
   width = 'fit',
   size = 'md', 
   className,
-  type = 'button', 
-  onClick,
-  ...props 
+  type = 'button',
+  ...props
 }) => {
   
- 
   const baseStyles = `
     inline-flex items-center justify-center
-    
-    font-[Galmuri11] font-normal text-white 
-    
+    font-galmuri font-normal text-white
     transition-colors duration-150
-
-    border-4 
-    
-    
+    border-4
     bg-[#E65787]
-    border-[#E65787] 
-
+    border-[#E65787]
     hover:bg-[#FF6096]
-    hover:border-[#FF6096] 
-
-    
+    hover:border-[#FF6096]
+    group-hover:bg-[#FF6096]
+    group-hover:border-[#E65787]
     active:bg-[#C1446C]
-    active:border-[#C1446C] 
+    active:border-[#C1446C]
   `;
 
   const widthStyles = {
@@ -40,23 +37,22 @@ export const PinkButton: React.FC<PinkButtonProps> = ({
   };
 
   const sizeStyles = {
-    sm: 'px-8 py-2 text-xl', 
-    md: 'px-10 py-4 text-[28px] leading-[130%] tracking-[-0.02em]',
-    lg: 'px-12 py-5 text-3xl leading-[130%] tracking-[-0.02em]',
+    sm: 'h-[44px] px-8 text-xl',
+    md: 'h-[54px] px-10 text-[28px]',
+    lg: 'h-[64px] px-12 text-3xl',
+    custom: '', 
   };
 
   return (
-   
     <button
-      type={type} 
+      type={type}
       className={cn(
-        baseStyles,      
+        baseStyles,         
         widthStyles[width], 
         sizeStyles[size],   
         className           
       )}
-      onClick={onClick}
-      {...props} 
+      {...props}
     >
       {children}
     </button>

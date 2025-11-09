@@ -13,9 +13,12 @@ import { Route as AboutRouteImport } from './routes/about'
 import { Route as Main_layoutRouteImport } from './routes/_main_layout'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as TuningIndexRouteImport } from './routes/tuning/index'
+import { Route as SignupIndexRouteImport } from './routes/signup/index'
 import { Route as PlannerIndexRouteImport } from './routes/planner/index'
 import { Route as PlanbIndexRouteImport } from './routes/planb/index'
+import { Route as MypageIndexRouteImport } from './routes/mypage/index'
 import { Route as MainIndexRouteImport } from './routes/main/index'
+import { Route as LoginIndexRouteImport } from './routes/login/index'
 import { Route as ListIndexRouteImport } from './routes/list/index'
 import { Route as GenerateIndexRouteImport } from './routes/generate/index'
 
@@ -38,6 +41,11 @@ const TuningIndexRoute = TuningIndexRouteImport.update({
   path: '/tuning/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const SignupIndexRoute = SignupIndexRouteImport.update({
+  id: '/signup/',
+  path: '/signup/',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const PlannerIndexRoute = PlannerIndexRouteImport.update({
   id: '/planner/',
   path: '/planner/',
@@ -48,9 +56,19 @@ const PlanbIndexRoute = PlanbIndexRouteImport.update({
   path: '/planb/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const MypageIndexRoute = MypageIndexRouteImport.update({
+  id: '/mypage/',
+  path: '/mypage/',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const MainIndexRoute = MainIndexRouteImport.update({
   id: '/main/',
   path: '/main/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LoginIndexRoute = LoginIndexRouteImport.update({
+  id: '/login/',
+  path: '/login/',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ListIndexRoute = ListIndexRouteImport.update({
@@ -69,9 +87,12 @@ export interface FileRoutesByFullPath {
   '/about': typeof AboutRoute
   '/generate': typeof GenerateIndexRoute
   '/list': typeof ListIndexRoute
+  '/login': typeof LoginIndexRoute
   '/main': typeof MainIndexRoute
+  '/mypage': typeof MypageIndexRoute
   '/planb': typeof PlanbIndexRoute
   '/planner': typeof PlannerIndexRoute
+  '/signup': typeof SignupIndexRoute
   '/tuning': typeof TuningIndexRoute
 }
 export interface FileRoutesByTo {
@@ -79,9 +100,12 @@ export interface FileRoutesByTo {
   '/about': typeof AboutRoute
   '/generate': typeof GenerateIndexRoute
   '/list': typeof ListIndexRoute
+  '/login': typeof LoginIndexRoute
   '/main': typeof MainIndexRoute
+  '/mypage': typeof MypageIndexRoute
   '/planb': typeof PlanbIndexRoute
   '/planner': typeof PlannerIndexRoute
+  '/signup': typeof SignupIndexRoute
   '/tuning': typeof TuningIndexRoute
 }
 export interface FileRoutesById {
@@ -91,9 +115,12 @@ export interface FileRoutesById {
   '/about': typeof AboutRoute
   '/generate/': typeof GenerateIndexRoute
   '/list/': typeof ListIndexRoute
+  '/login/': typeof LoginIndexRoute
   '/main/': typeof MainIndexRoute
+  '/mypage/': typeof MypageIndexRoute
   '/planb/': typeof PlanbIndexRoute
   '/planner/': typeof PlannerIndexRoute
+  '/signup/': typeof SignupIndexRoute
   '/tuning/': typeof TuningIndexRoute
 }
 export interface FileRouteTypes {
@@ -103,9 +130,12 @@ export interface FileRouteTypes {
     | '/about'
     | '/generate'
     | '/list'
+    | '/login'
     | '/main'
+    | '/mypage'
     | '/planb'
     | '/planner'
+    | '/signup'
     | '/tuning'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -113,9 +143,12 @@ export interface FileRouteTypes {
     | '/about'
     | '/generate'
     | '/list'
+    | '/login'
     | '/main'
+    | '/mypage'
     | '/planb'
     | '/planner'
+    | '/signup'
     | '/tuning'
   id:
     | '__root__'
@@ -124,9 +157,12 @@ export interface FileRouteTypes {
     | '/about'
     | '/generate/'
     | '/list/'
+    | '/login/'
     | '/main/'
+    | '/mypage/'
     | '/planb/'
     | '/planner/'
+    | '/signup/'
     | '/tuning/'
   fileRoutesById: FileRoutesById
 }
@@ -136,9 +172,12 @@ export interface RootRouteChildren {
   AboutRoute: typeof AboutRoute
   GenerateIndexRoute: typeof GenerateIndexRoute
   ListIndexRoute: typeof ListIndexRoute
+  LoginIndexRoute: typeof LoginIndexRoute
   MainIndexRoute: typeof MainIndexRoute
+  MypageIndexRoute: typeof MypageIndexRoute
   PlanbIndexRoute: typeof PlanbIndexRoute
   PlannerIndexRoute: typeof PlannerIndexRoute
+  SignupIndexRoute: typeof SignupIndexRoute
   TuningIndexRoute: typeof TuningIndexRoute
 }
 
@@ -172,6 +211,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof TuningIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/signup/': {
+      id: '/signup/'
+      path: '/signup'
+      fullPath: '/signup'
+      preLoaderRoute: typeof SignupIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/planner/': {
       id: '/planner/'
       path: '/planner'
@@ -186,11 +232,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PlanbIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/mypage/': {
+      id: '/mypage/'
+      path: '/mypage'
+      fullPath: '/mypage'
+      preLoaderRoute: typeof MypageIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/main/': {
       id: '/main/'
       path: '/main'
       fullPath: '/main'
       preLoaderRoute: typeof MainIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/login/': {
+      id: '/login/'
+      path: '/login'
+      fullPath: '/login'
+      preLoaderRoute: typeof LoginIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/list/': {
@@ -216,9 +276,12 @@ const rootRouteChildren: RootRouteChildren = {
   AboutRoute: AboutRoute,
   GenerateIndexRoute: GenerateIndexRoute,
   ListIndexRoute: ListIndexRoute,
+  LoginIndexRoute: LoginIndexRoute,
   MainIndexRoute: MainIndexRoute,
+  MypageIndexRoute: MypageIndexRoute,
   PlanbIndexRoute: PlanbIndexRoute,
   PlannerIndexRoute: PlannerIndexRoute,
+  SignupIndexRoute: SignupIndexRoute,
   TuningIndexRoute: TuningIndexRoute,
 }
 export const routeTree = rootRouteImport

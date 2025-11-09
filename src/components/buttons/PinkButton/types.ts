@@ -1,6 +1,6 @@
 export interface PinkButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   children: React.ReactNode;
   width?: 'fit' | 'full'; 
-  size?: 'sm' | 'md' | 'lg'; 
+  size?: 'sm' | 'md' | 'lg' | 'custom'; 
   onClick: () => void; 
 }
