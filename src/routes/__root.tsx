@@ -9,7 +9,7 @@ const RootLayout = () => {
 
   return (
     <div className="min-h-screen bg-black text-white">
-      {locatation.pathname == '/' ? 
+      {locatation.pathname == '/' || locatation.pathname == '/signup' || locatation.pathname == '/login' ? 
       <Outlet/>
       : 
       <Layout>

@@ -49,7 +49,7 @@ function Index() {
             <button
               type="button" 
               className="w-full flex items-center justify-center border-2 border-white bg-transparent py-4 text-lg font-bold transition hover:bg-white/10 font-['Galmuri11']"
-              onClick={() => navigate({to: '/main'})}
+              onClick={() => navigate({to: '/login'})}
             >
               로그인 페이지로 이동
             </button>
@@ -57,6 +57,7 @@ function Index() {
             <button
               type="button" 
               className="w-full flex items-center justify-center bg-[#e65787] py-4 text-lg font-bold text-white transition hover:bg-pink-600 font-['Galmuri11']"
+              onClick={() => navigate({to: '/signup'})}
             >
               회원가입
             </button>
