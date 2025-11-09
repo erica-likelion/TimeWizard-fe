@@ -35,3 +35,40 @@ export interface GenerateTimetableResponse {
     message: string;
   };
 }
+
+/**
+ * AI 시간표 생성 상태 조회 응답 - 성공 (completed)
+ */
+export interface GenerationStatusSuccessResponse {
+  success: boolean;
+  data: {
+    // 생성 이력 ID
+    history_id: number;
+    // 상태 (completed)
+    status: 'completed';
+    // 생성된 시간표 ID
+    timetable_id: number;
+    // 응답 메시지
+    message: string;
+  };
+}
+
+/**
+ * AI 시간표 생성 상태 조회 응답 - 실패 (failed)
+ */
+export interface GenerationStatusFailureResponse {
+  success: boolean;
+  data: {
+    // 상태 (failed)
+    status: 'failed';
+    // 에러 메시지
+    error_message: string;
+    // 개선 제안 목록
+    suggestions: string[];
+  };
+}
+
+/**
+ * AI 시간표 생성 상태 조회 응답
+ */
+export type GenerationStatusResponse = GenerationStatusSuccessResponse | GenerationStatusFailureResponse;
