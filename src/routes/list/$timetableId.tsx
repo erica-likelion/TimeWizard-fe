@@ -66,16 +66,16 @@ function RouteComponent() {
   }
 
   return (
-    <div className="flex flex-col px-[72px] gap-[22px] pt-[40px] pb-[72px]">
+    <div className="flex flex-col h-full px-[72px] gap-[22px] pt-[40px] pb-[72px]">
       {/* [위] 시간표 이름 + 목록으로 돌아가기 버튼 */}
       <div className="flex items-end">
         <p className={fontStyles.title}>#{timetable.timetable_name}</p>
         <BasicButton onClick={() => navigate({to: '/list'})} className={cn("ml-auto h-9 w-40 p-1 mb-[-22px] bg-[#000] text-white", fontStyles.caption)}>← 목록으로</BasicButton>
       </div>
 
-      <div className="flex justify-between gap-[22px] items-start h-[513px]">
+      <div className="flex justify-between gap-10 items-start h-full">
         {/* [왼쪽] 등록된 강의 목록 */}
-        <div className="flex-1 flex flex-col max-w-[500px] h-full px-[18px] pb-[18px] bg-[#303030] overflow-y-auto no-scrollbar">
+        <div className="flex-1 flex flex-col max-w-[600px] h-full px-[18px] pb-[18px] bg-[#303030] overflow-y-auto no-scrollbar">
           <p className={cn("py-[18px] text-[#767676]", fontStyles.subtitle, "sticky top-0 bg-[#303030] z-10")}>
             등록된 강의
           </p>
@@ -94,11 +94,13 @@ function RouteComponent() {
         </div>
 
         {/* [오른쪽] 시간표 */}
-        <div className="flex-1 flex flex-col h-full p-[18px] pt-0 bg-[#303030] overflow-y-auto no-scrollbar">
-          <p className={cn("py-[18px] text-[#767676]", fontStyles.subtitle, "sticky top-0 bg-[#303030] z-10")}>
+        <div className="flex-1 flex flex-col h-full p-4 bg-[#303030] overflow-y-auto no-scrollbar">
+          <p className={cn("text-[#767676]", fontStyles.subtitle, "sticky top-0 bg-[#303030] z-10")}>
             시간표
           </p>
-          <TimeTable courses={timetable.courses} activeCourseId={activeCourseId}/>
+          <div className="w-full self-center px-5 py-3">
+            <TimeTable courses={timetable.courses} activeCourseId={activeCourseId}/>
+          </div>
         </div>
       </div>
     </div>

@@ -1,5 +1,5 @@
 import { createFileRoute } from '@tanstack/react-router'
-import TimeTable from "@assets/icons/time_table.svg";
+import TimeTable from "@assets/icons/time_table.png";
 
 
 export const Route = createFileRoute('/main/')({
