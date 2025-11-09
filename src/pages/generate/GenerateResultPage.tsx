@@ -7,7 +7,7 @@ import { PinkButton } from '@/components/buttons/PinkButton';
 import { TimeTable } from '@/components/TimeTable';
 import { TextInput } from '@/components/boxes/InputBox';
 
-import type { TimeTableDetail } from '@/routes/generate/types';
+import type { TimeTableDetail } from './types';
 
 import { fontStyles } from '@/utils/styles';
 import { cn } from '@/utils/util';
