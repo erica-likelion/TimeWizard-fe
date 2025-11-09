@@ -19,7 +19,6 @@ export const BasicButton: React.FC<BasicButtonProps> = ({
         px-[11px] py-[14px]
         border-2 border-[#D7D9DF]
         bg-transparent
-        max-w-60
         ${textColor}
         hover:bg-[#505050]
         hover:cursor-pointer
