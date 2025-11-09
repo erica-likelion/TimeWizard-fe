@@ -4,5 +4,5 @@ export interface CourseItemProps {
   course: CourseType;
   color: string;
   isActive?: boolean;
-  onClick?: () => void;
+  onMouseEnter?: () => void;
 }

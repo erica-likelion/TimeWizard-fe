@@ -49,10 +49,10 @@ function RouteComponent() {
   }, [timetable]);
 
   /*
-    강의 클릭 시 해당 강의를 활성화(하이라이팅)
-    인자 - 클릭한 강의 ID
+    강의 호버 시 해당 강의를 활성화(하이라이팅)
+    인자 - 호버한 강의 ID
   */
-  const handleCourseItemClick = (course_id: number) => {
+  const handleCourseItemHover = (course_id: number) => {
     setActiveCourseId(course_id);
   }
 
@@ -79,7 +79,7 @@ function RouteComponent() {
           <p className={cn("py-[18px] text-[#767676]", fontStyles.subtitle, "sticky top-0 bg-[#303030] z-10")}>
             등록된 강의
           </p>
-          {/* 강의들 (클릭하면 시간표에서 하이라이팅됨) */}
+          {/* 강의들 (호버하면 시간표에서 하이라이팅됨) */}
           <div className="flex flex-col gap-[14px]">
             {timetable.courses.map((course) => (
               <CourseItem
@@ -87,7 +87,7 @@ function RouteComponent() {
                 course={course}
                 color={courseColors.get(course.course_id) || '#f97316'}
                 isActive={activeCourseId === course.course_id}
-                onClick={() => handleCourseItemClick(course.course_id)}
+                onMouseEnter={() => handleCourseItemHover(course.course_id)}
               />
             ))}
           </div>

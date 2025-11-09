@@ -15,11 +15,11 @@ const ScheduleLabelIcon: React.FC<{ color: string }> = ({ color }) => (
 );
 
 
-export const CourseItem: React.FC<CourseItemProps> = ({ course, color, isActive, onClick }) => {
-    const activeColor = isActive ? 'border-[#C1446C]' : 'bg-[#303030] hover:bg-[#767676] border-[#D7D9DF]';
+export const CourseItem: React.FC<CourseItemProps> = ({ course, color, isActive, onMouseEnter }) => {
+    const activeColor = isActive ? 'bg-[#303030] border-[#C1446C]' : 'bg-[#303030] border-[#D7D9DF]';
     return (
     <div className={cn("flex items-center p-[14px] gap-4 border-2 cursor-pointer", activeColor)}
-        onClick={onClick}>
+        onMouseEnter={onMouseEnter}>
         <div className="">
             <ScheduleLabelIcon color={color} />
         </div>
