@@ -7,7 +7,7 @@ import { PinkButton } from '@/components/buttons/PinkButton'
 import { TextInput } from '@/components/boxes/InputBox'
 import { CustomSelect } from '@/components/boxes/SelectBox'
 import { useUser } from '@/contexts/UserContext'
-import { mockGenerateTimetable } from '@/apis/AIGenerateAPI/aiGenerateApi'
+import { mockGenerateTimetable, mockGetGenerationStatus } from '@/apis/AIGenerateAPI/aiGenerateApi'
 import type { GenerateTimetableRequest } from '@/apis/AIGenerateAPI/types'
 import TimeTableIcon from '@/assets/icons/time_table.png'
 
@@ -36,6 +36,15 @@ function RouteComponent() {
 
   // AI 생성 중 상태
   const [isGenerating, setIsGenerating] = useState<boolean>(false)
+
+  // 재학 정보
+  const [university, setUniversity] = useState<string>('')
+  const [major, setMajor] = useState<string>('')
+  const [grade, setGrade] = useState<string>('')
+  const [semester, setSemester] = useState<string>('')
+  const [completedCredits, setCompletedCredits] = useState<string>('')
+  const [majorCreditsCompleted, setMajorCreditsCompleted] = useState<string>('')
+  const [generalCredits, setGeneralCredits] = useState<string>('')
 
   // 목표 학점
   const [totalCredits, setTotalCredits] = useState<string>('')
@@ -69,9 +78,17 @@ function RouteComponent() {
     }
   }
 
-  const userInformation: string = user?.university + '\n' +
-                          user?.major + ' ' + user?.grade + '학년\n' +
-                          user?.completed_credits + '학점' + ' (전공: '+ user?.major_credits + ', 교양: ' + user?.general_credits + ')';
+  // 사용자 정보가 로드되면 초기값 설정
+  useEffect(() => {
+    if (user) {
+      setUniversity(user.university || '')
+      setMajor(user.major || '')
+      setGrade(user.grade?.toString() || '')
+      setCompletedCredits(user.completed_credits?.toString() || '')
+      setMajorCreditsCompleted(user.major_credits?.toString() || '')
+      setGeneralCredits(user.general_credits?.toString() || '')
+    }
+  }, [user])
 
   // 제외 시간대 추가
   const addExcludedTime = (): void => {
@@ -87,12 +104,37 @@ function RouteComponent() {
     setExcludedTimes(excludedTimes.filter(time => time.id !== id))
   }
 
+  // 폼 유효성 검사 - 재학 정보와 목표 학점이 모두 채워졌는지 확인
+  const isFormValid =
+    university.trim() !== '' &&
+    major.trim() !== '' &&
+    grade.trim() !== '' &&
+    semester.trim() !== '' &&
+    completedCredits.trim() !== '' &&
+    majorCreditsCompleted.trim() !== '' &&
+    generalCredits.trim() !== '' &&
+    totalCredits.trim() !== '' &&
+    majorCredits.trim() !== ''
+
   // 초기화
   const handleReset = (): void => {
+    // 재학 정보 초기화 (사용자 정보로 복원)
+    if (user) {
+      setUniversity(user.university || '')
+      setMajor(user.major || '')
+      setGrade(user.grade?.toString() || '')
+      setSemester('') // 학기는 디폴트 없음
+      setCompletedCredits(user.completed_credits?.toString() || '')
+      setMajorCreditsCompleted(user.major_credits?.toString() || '')
+      setGeneralCredits(user.general_credits?.toString() || '')
+    }
+    // 목표 학점 초기화
     setTotalCredits('')
     setMajorCredits('')
+    // 제외 시간대 초기화
     setExcludedTimes([])
     setNextId(1)
+    // 요청 사항 초기화
     setRequests('')
   }
 
@@ -119,16 +161,43 @@ function RouteComponent() {
 
       console.log('AI 시간표 생성 요청:', requestData)
 
+      // 1단계: 시간표 생성 시작
       // TODO: 로그인 구현 후 실제 API로 변경
-      // const response = await generateTimetable(requestData)
-      const response = await mockGenerateTimetable(requestData)
+      // const generateResponse = await generateTimetable(requestData)
+      const generateResponse = await mockGenerateTimetable(requestData)
 
-      console.log('AI 시간표 생성 응답:', response)
+      console.log('AI 시간표 생성 응답:', generateResponse)
 
-      if (response.success) {
-        // 생성 성공 시 시간표 목록 페이지로 이동
-        alert(response.data.message)
-        navigate({ to: '/list' })
+      if (!generateResponse.success) {
+        alert('시간표 생성 요청에 실패했습니다.')
+        return
+      }
+
+      const historyId = generateResponse.data.history_id
+
+      // 2단계: 생성 상태 조회
+      // TODO: 로그인 구현 후 실제 API로 변경
+      // const statusResponse = await getGenerationStatus(historyId)
+      const statusResponse = await mockGetGenerationStatus(historyId)
+
+      console.log('AI 시간표 생성 상태 응답:', statusResponse)
+
+      if (!statusResponse.success) {
+        alert('시간표 생성 상태 조회에 실패했습니다.')
+        return
+      }
+
+      // 상태에 따라 처리
+      if (statusResponse.data.status === 'completed') {
+        // 생성 성공 - 생성된 시간표로 이동
+        navigate({
+          to: `/generate/${statusResponse.data.timetable_id}`,
+          search: { message: statusResponse.data.message }
+        })
+      } else if (statusResponse.data.status === 'failed') {
+        // 생성 실패 - 에러 메시지와 개선 제안 표시
+        const suggestions = statusResponse.data.suggestions.join('\n- ')
+        alert(`${statusResponse.data.error_message}\n\n개선 제안:\n- ${suggestions}`)
       }
     } catch (error) {
       console.error('시간표 생성 실패:', error)
@@ -164,7 +233,7 @@ function RouteComponent() {
                 <img
                   src={TimeTableIcon}
                   alt="Loading"
-                  className="w-70"
+                  className="w-100"
                 />
               </div>
 
@@ -181,146 +250,203 @@ function RouteComponent() {
             </div>
           ) : (
             <>
-              {/* 재학 정보: 사용자 정보에서 자동으로 가져옴 */}
-            <div className="flex gap-14">
-              <p className={cn(fontStyles.subtitle, "mt-5")}>재학 정보</p>
-              <div className="flex-1 flex flex-col max-w-[687.6px]">
-                <p className={cn(fontStyles.caption, "text-[#888] flex self-end")}> 
-                  정보가 다른가요? 
-                  <Link
-                    to={'/main'} // 나중에 마이 페이지로 수정 필요
-                    className="ml-1 text-[#C1446C] underline"
-                  >
-                      수정하기
-                  </Link>
-                </p>
-                <textarea
-                  className="w-full bg-[#767676] text-[#BBB] border-2 border-[#999] px-5 py-2 whitespace-pre-line resize-none no-scrollbar"
-                  value={userInformation}
-                  disabled
-                  rows={3}
-                />
-              </div>
-            </div>
-
-            {/* 목표 학점: 전체 학점, 전공 학점 입력 */}
-            <div className="flex gap-14">
-              <p className={cn(fontStyles.subtitle)}>목표 학점</p>
-              <div className="flex-1 flex gap-5  max-w-[687.6px]">
-
-                <div className="flex-1 flex-col gap-2">
-                  <span className={cn(fontStyles.body, "text-white")}>
-                    전체 (잔여: {user?.graduation_credits || 140})
-                  </span>
-                  <TextInput
-                    value={totalCredits}
-                    onChange={(e) => setTotalCredits(e.target.value)}
-                    className="border-2 border-[#888]"
-                    placeholder="20"
-                  />
-                </div>
-                <div className="flex-1 flex-col gap-2">
-                  <span className={cn(fontStyles.body, "text-white")}>전공</span>
-                  <TextInput
-                    value={majorCredits}
-                    onChange={(e) => setMajorCredits(e.target.value)}
-                    className="border-2 border-[#888]"
-                    placeholder="0"
-                  />
-                </div>
-                <Link
-                    to={'/main'} // 나중에 마이 페이지로 수정 필요
-                    className={cn(fontStyles.caption, "text-[#C1446C] underline self-end")}
-                  >
-                    포털에서 요건 확인 
-                  </Link>
-              </div>
-            </div>
-
-            {/* 제외 시간대: 수업을 배치하지 않을 시간대 지정 */}
-            <div className="flex gap-7">
-              <p className={cn(fontStyles.subtitle)}>제외 시간대</p>
-              <div className="flex-1 flex flex-col gap-6">
-                {excludedTimes.map((time) => (
-                  <div key={time.id} className="flex items-center gap-2">
-                    <CustomSelect
-                      options={dayOptions}
-                      defaultValue={dayOptions.find(d => d.id === time.day) || dayOptions[0]}
-                      onChange={(option) => {
-                        setExcludedTimes(excludedTimes.map(t =>
-                          t.id === time.id ? {...t, day: option.label} : t
-                        ))
-                      }}
-                      size="small"
+            {/* 재학 정보: 사용자 정보에서 자동으로 가져오고 수정 가능 */}
+              <div className="flex gap-14">
+                <p className={cn(fontStyles.subtitle)}>재학 정보 *</p>
+                <div className="flex-1 flex flex-col gap-4 max-w-[687.6px]">
+                  {/* 학교명 */}
+                  <div className="flex flex-col gap-2">
+                    <span className={cn(fontStyles.body, "text-white")}>학교명</span>
+                    <TextInput
+                      value={university}
+                      onChange={(e) => setUniversity(e.target.value)}
+                      className="border-2 border-[#888]"
+                      placeholder="한양대학교 ERICA 캠퍼스"
                     />
-                    <CustomSelect
-                      options={timeOptions}
-                      defaultValue={timeOptions.find(t => t.id === time.startTime) || timeOptions[0]}
-                      onChange={(option) => {
-                        setExcludedTimes(excludedTimes.map(t =>
-                          t.id === time.id ? {...t, startTime: option.label} : t
-                        ))
-                      }}
-                      size="small"
-                    />
-                    <span className="text-white">~</span>
-                    <CustomSelect
-                      options={timeOptions}
-                      defaultValue={timeOptions.find(t => t.id === time.endTime) || timeOptions[0]}
-                      onChange={(option) => {
-                        setExcludedTimes(excludedTimes.map(t =>
-                          t.id === time.id ? {...t, endTime: option.label} : t
-                        ))
-                      }}
-                      size="small"
-                    />
-                    <p
-                      onClick={() => removeExcludedTime(time.id)}
-                      className={cn(fontStyles.caption, "ml-2 text-[#C1446C] underline self-end cursor-pointer")}
-                    >
-                      삭제
-                    </p>
                   </div>
-                ))}
+
+                  {/* 전공 + 학년 + 학기 */}
+                  <div className="flex gap-4">
+                    <div className="flex-1 flex flex-col gap-2">
+                      <span className={cn(fontStyles.body, "text-white")}>전공</span>
+                      <TextInput
+                        value={major}
+                        onChange={(e) => setMajor(e.target.value)}
+                        className="border-2 border-[#888]"
+                        placeholder="컴퓨터학부"
+                      />
+                    </div>
+                    <div className="flex-1 flex flex-col gap-2">
+                      <span className={cn(fontStyles.body, "text-white")}>학년</span>
+                      <TextInput
+                        value={grade}
+                        onChange={(e) => setGrade(e.target.value)}
+                        className="border-2 border-[#888]"
+                        placeholder="1"
+                      />
+                    </div>
+                    <div className="flex-1 flex flex-col gap-2">
+                      <span className={cn(fontStyles.body, "text-white")}>학기</span>
+                      <TextInput
+                        value={semester}
+                        onChange={(e) => setSemester(e.target.value)}
+                        className="border-2 border-[#888]"
+                        placeholder="1"
+                      />
+                    </div>
+                  </div>
+
+                  {/* 이수 학점 + 전공 학점 + 교양 학점 */}
+                  <div className="flex gap-4">
+                    <div className="flex-1 flex flex-col gap-2">
+                      <span className={cn(fontStyles.body)}>이수 학점</span>
+                      <TextInput
+                        value={completedCredits}
+                        onChange={(e) => setCompletedCredits(e.target.value)}
+                        className="border-2 border-[#888]"
+                        placeholder="90"
+                      />
+                    </div>
+                    <div className="flex-1 flex flex-col gap-2">
+                      <span className={cn(fontStyles.body)}>이수 전공 학점</span>
+                      <TextInput
+                        value={majorCreditsCompleted}
+                        onChange={(e) => setMajorCreditsCompleted(e.target.value)}
+                        className="border-2 border-[#888]"
+                        placeholder="65"
+                      />
+                    </div>
+                    <div className="flex-1 flex flex-col gap-2">
+                      <span className={cn(fontStyles.body)}>이수 교양 학점</span>
+                      <TextInput
+                        value={generalCredits}
+                        onChange={(e) => setGeneralCredits(e.target.value)}
+                        className="border-2 border-[#888]"
+                        placeholder="15"
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* 목표 학점: 전체 학점, 전공 학점 입력 */}
+              <div className="flex gap-14">
+                <p className={cn(fontStyles.subtitle)}>목표 학점 *</p>
+                <div className="flex-1 flex gap-5  max-w-[687.6px]">
+
+                  <div className="flex-1 flex-col gap-2">
+                    <span className={cn(fontStyles.body, "text-white")}>
+                      전체
+                    </span>
+                    <TextInput
+                      value={totalCredits}
+                      onChange={(e) => setTotalCredits(e.target.value)}
+                      className="border-2 border-[#888]"
+                      placeholder="20"
+                    />
+                  </div>
+                  <div className="flex-1 flex-col gap-2">
+                    <span className={cn(fontStyles.body, "text-white")}>전공</span>
+                    <TextInput
+                      value={majorCredits}
+                      onChange={(e) => setMajorCredits(e.target.value)}
+                      className="border-2 border-[#888]"
+                      placeholder="0"
+                    />
+                  </div>
+                  <Link
+                      to={'/main'} // 나중에 포털 연결
+                      className={cn(fontStyles.caption, "text-[#C1446C] underline self-end")}
+                    >
+                      포털에서 요건 확인 
+                    </Link>
+                </div>
+              </div>
+
+              {/* 제외 시간대: 수업을 배치하지 않을 시간대 지정 */}
+              <div className="flex gap-7">
+                <p className={cn(fontStyles.subtitle)}>제외 시간대&nbsp;&nbsp;</p>
+                <div className="flex-1 flex flex-col gap-6">
+                  {excludedTimes.map((time) => (
+                    <div key={time.id} className="flex items-center gap-2">
+                      <CustomSelect
+                        options={dayOptions}
+                        defaultValue={dayOptions.find(d => d.id === time.day) || dayOptions[0]}
+                        onChange={(option) => {
+                          setExcludedTimes(excludedTimes.map(t =>
+                            t.id === time.id ? {...t, day: option.label} : t
+                          ))
+                        }}
+                        size="small"
+                      />
+                      <CustomSelect
+                        options={timeOptions}
+                        defaultValue={timeOptions.find(t => t.id === time.startTime) || timeOptions[0]}
+                        onChange={(option) => {
+                          setExcludedTimes(excludedTimes.map(t =>
+                            t.id === time.id ? {...t, startTime: option.label} : t
+                          ))
+                        }}
+                        size="small"
+                      />
+                      <span className="text-white">~</span>
+                      <CustomSelect
+                        options={timeOptions}
+                        defaultValue={timeOptions.find(t => t.id === time.endTime) || timeOptions[0]}
+                        onChange={(option) => {
+                          setExcludedTimes(excludedTimes.map(t =>
+                            t.id === time.id ? {...t, endTime: option.label} : t
+                          ))
+                        }}
+                        size="small"
+                      />
+                      <p
+                        onClick={() => removeExcludedTime(time.id)}
+                        className={cn(fontStyles.caption, "ml-2 text-[#C1446C] underline self-end cursor-pointer")}
+                      >
+                        삭제
+                      </p>
+                    </div>
+                  ))}
+                  <BasicButton
+                    onClick={addExcludedTime}
+                    className="border-[#888] max-w-60"
+                  >
+                    + 제외 시간 추가
+                  </BasicButton>
+                </div>
+              </div>
+
+              {/* 요청 사항: 추가 요구사항 텍스트 입력 */}
+              <div className="flex flex-col gap-4">
+                <p className={cn(fontStyles.subtitle)}>요청 사항</p>
+                <div className="flex-1">
+                  <textarea
+                    value={requests}
+                    onChange={(e) => setRequests(e.target.value)}
+                    className="w-full h-full max-h-[133.2px] border-2 border-[#888] placeholder:text-[#888] p-4 resize-none no-scrollbar"
+                    placeholder="금요일 공강 선호, 되도록이면 9시 수업 제외. "
+                  />
+                </div>
+              </div>
+
+              {/* 하단 버튼: 초기화, 생성 시작 */}
+              <div className="flex justify-end gap-4 mt-auto">
                 <BasicButton
-                  onClick={addExcludedTime}
-                  className="border-[#888]"
+                  onClick={handleReset}
+                  className={cn("px-8 py-2", fontStyles.button)}
                 >
-                  + 제외 시간 추가
+                  초기화
                 </BasicButton>
+                <PinkButton
+                  onClick={handleGenerate}
+                  size="sm"
+                  className={cn("px-8 py-2", fontStyles.button)}
+                  disabled={isGenerating || !isFormValid}
+                >
+                  생성 시작
+                </PinkButton>
               </div>
-            </div>
-
-            {/* 요청 사항: 추가 요구사항 텍스트 입력 */}
-            <div className="flex flex-col gap-4">
-              <p className={cn(fontStyles.subtitle)}>요청 사항</p>
-              <div className="flex-1">
-                <textarea
-                  value={requests}
-                  onChange={(e) => setRequests(e.target.value)}
-                  className="w-full h-full max-w-[847.8px] max-h-[133.2px] border-2 border-[#888] placeholder:text-[#888] p-4 resize-none"
-                  placeholder="금요일 공강 선호, 되도록이면 9시 수업 제외. "
-                />
-              </div>
-            </div>
-
-            {/* 하단 버튼: 초기화, 생성 시작 */}
-            <div className="flex justify-end gap-4 mt-auto">
-              <BasicButton
-                onClick={handleReset}
-                className="px-8 py-2"
-              >
-                초기화
-              </BasicButton>
-              <PinkButton
-                onClick={handleGenerate}
-                size="sm"
-                className="px-8 py-2"
-                disabled={isGenerating}
-              >
-                생성 시작
-              </PinkButton>
-            </div>
             </>
           )}
         </div>
