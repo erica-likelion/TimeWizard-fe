@@ -1,6 +1,6 @@
-/*
-  수업 정보를 나타내는 인터페이스
-*/
+// 시간표
+
+// 시간표 강의 타입
 export interface Course {
   course_id: number;       // 수업 고유 ID
   course_name: string;     // 수업 이름 (예: "데이터구조")
@@ -11,10 +11,10 @@ export interface Course {
   location?: string;       // 강의실 위치 (선택, 예: "공학관 301호")
 }
 
-/*
-  TimeTable 컴포넌트의 Props
-*/
+// TimeTable 컴포넌트의 Props 타입
 export interface TimeTableProps {
   courses: Course[];       // 표시할 수업 목록
-  activeCourseId?: number | undefined; // 활성화된 수업 ID (선택)
+  
+  // list/timetableId 에서 호버링할 경우 강조 표기 위해 사용
+  activeCourseId?: number | undefined; 
 }
