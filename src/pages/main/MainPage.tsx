@@ -1,4 +1,4 @@
-import TimeTable from "@assets/icons/time_table.png";
+import TimeTable from "@assets/icons/time_table.svg";
 
 export function MainPage() {
 

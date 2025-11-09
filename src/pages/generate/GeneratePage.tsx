@@ -12,7 +12,7 @@ import { mockGenerateTimetable, mockGetGenerationStatus } from '@/apis/AIGenerat
 import type { GenerateTimetableRequest } from '@/apis/AIGenerateAPI/types'
 import type { Option, ExcludedTime } from './types'
 
-import TimeTableIcon from '@/assets/icons/time_table.png'
+import TimeTableIcon from '@/assets/icons/time_table.svg'
 
 
 // 시간표 생성 페이지
@@ -227,7 +227,7 @@ export function GeneratePage() {
                 <p className={cn(fontStyles.body, "text-white")}>거의 다 해가요! 잠시만 기다려 주세요!</p>
               </div>
 
-              {/* 프로그레스 바 - indeterminate 스타일 */}
+              {/* 프로그레스 바  */}
               <div className="w-full max-w-250 h-8 bg-[#767676] overflow-hidden">
                 <div className="h-full w-1/3 bg-linear-to-r from-pink-500 to-pink-400 animate-[slide_1.5s_linear_infinite]"></div>
               </div>
@@ -408,7 +408,7 @@ export function GeneratePage() {
                   <textarea
                     value={requests}
                     onChange={(e) => setRequests(e.target.value)}
-                    className="w-full h-full max-h-[133.2px] border-2 border-[#888] placeholder:text-[#888] p-4 resize-none no-scrollbar"
+                    className="w-full h-full max-h-[133.2px] max-w-[900px] border-2 border-[#888] placeholder:text-[#888] p-4 resize-none no-scrollbar"
                     placeholder="금요일 공강 선호, 되도록이면 9시 수업 제외. "
                   />
                 </div>
@@ -418,14 +418,14 @@ export function GeneratePage() {
               <div className="flex justify-end gap-4 mt-auto">
                 <BasicButton
                   onClick={handleReset}
-                  className={cn("px-8 py-2", fontStyles.button)}
+                  className={cn("px-8 py-2 min-h-14", fontStyles.button)}
                 >
                   초기화
                 </BasicButton>
                 <PinkButton
                   onClick={handleGenerate}
                   size="sm"
-                  className={cn("px-8 py-2", fontStyles.button)}
+                  className={cn("px-8 py-2 min-h-14", fontStyles.button)}
                   disabled={isGenerating || !isFormValid}
                 >
                   생성 시작
