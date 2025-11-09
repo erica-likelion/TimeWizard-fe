@@ -10,6 +10,8 @@ const api = axios.create({
   }
 });
 
+
+// 임시 개발 => 추후 로그인 페이지 구현 후 한번 싹다 리팩토링할 예정 
 // Request 인터셉터: JWT 토큰을 자동으로 헤더에 추가
 api.interceptors.request.use(
   (config) => {

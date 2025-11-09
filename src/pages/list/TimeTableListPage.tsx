@@ -17,7 +17,7 @@ export function TimeTableListPage() {
   // 현재 선택된 시간표 ID
   const [activeTimeTable, setActiveTimeTable] = useState<number | null>(1)
   // 선택한 시간표의 상세 정보
-  const [selectedTimeTable, setSelectedTimeTable] = useState<TimeTableDetail | null>(null)
+  const [selectedTimeTableDetail, setSelectedTimeTableDetail] = useState<TimeTableDetail | null>(null)
   const navigate = useNavigate();
 
   /*
@@ -46,7 +46,7 @@ export function TimeTableListPage() {
     try {
       const response = await mockGetTimeTableDetail(timetableId)
       if (response.success) {
-        setSelectedTimeTable(response.data)
+        setSelectedTimeTableDetail(response.data)
         setActiveTimeTable(timetableId)
       }
     } catch (error) {
@@ -93,7 +93,7 @@ export function TimeTableListPage() {
           {/* 시간표 */}
           <div className="flex flex-col h-[513px] p-[18px] pt-0 bg-[#303030] overflow-y-auto no-scrollbar">
             <p className={cn("py-[18px] text-[#767676]", fontStyles.subtitle, "sticky top-0 bg-[#303030] z-10")}> 선택된 시간표 </p>
-            {selectedTimeTable && <TimeTable courses={selectedTimeTable.courses} />}
+            {selectedTimeTableDetail && <TimeTable courses={selectedTimeTableDetail.courses} />}
           </div>
 
           {/* 시간표 관련 버튼들 */}

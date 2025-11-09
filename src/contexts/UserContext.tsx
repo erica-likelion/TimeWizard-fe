@@ -1,3 +1,6 @@
+// 로그인 기능 통합 후 리팩토링 예정
+// 지금은 그냥 사용자 정보 가져오기용
+
 import { createContext, useContext, useState, useEffect } from 'react';
 import type { ReactNode } from 'react';
 import type { User } from '@/apis/UserAPI/types';

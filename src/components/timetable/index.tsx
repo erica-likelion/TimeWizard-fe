@@ -11,13 +11,11 @@ import {
 } from '@/utils/timetable';
 import type { TimeTableProps } from './types';
 
-/**
- * 시간표 컴포넌트
- *
- * Grid 레이아웃을 사용하여 주간 시간표를 렌더링합니다.
- * - 가로축: 요일 (월~금)
- * - 세로축: 시간 (9:00 ~ 21:00, 30분 단위)
- * - 각 수업은 Grid의 특정 영역에 배치됨
+/*
+  그리드 레이아웃을 사용하여 시간표를 렌더링
+  - 가로축: 요일 (월~금)
+  - 세로축: 시간 (9:00 ~ 21:00, 30분 단위)
+  - 각 수업은 Grid의 특정 영역에 배치됨
  */
 export const TimeTable: React.FC<TimeTableProps> = ({ courses, activeCourseId }) => {
 
@@ -26,9 +24,6 @@ export const TimeTable: React.FC<TimeTableProps> = ({ courses, activeCourseId })
 
   // 수업별 색상 할당 (같은 course_id는 같은 색, 다른 course_id는 최대한 다른 색)
   const courseColors = assignCourseColors(courses);
-
-
-
 
   return (
     <div className="w-full">

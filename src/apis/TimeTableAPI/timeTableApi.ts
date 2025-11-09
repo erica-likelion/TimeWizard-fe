@@ -1,6 +1,9 @@
 import api from "@utils/apiClient";
 import type { GetTimeTablesResponse, GetTimeTableDetailResponse } from './types'; 
 
+/*
+  시간표 목록 조회
+*/
 export const getTimeTables = async () => {
     try {
         const response = await api.get(`/timetable`);
@@ -11,9 +14,9 @@ export const getTimeTables = async () => {
   }
 }
 
-/**
- * 개발/테스트용 시간표 목록 모의 API
- */
+/*
+  목업 시간표 목록 조회
+*/
 export const mockGetTimeTables = async (): Promise<GetTimeTablesResponse> => {
   return {
     success: true,
@@ -54,9 +57,9 @@ export const mockGetTimeTables = async (): Promise<GetTimeTablesResponse> => {
   };
 }
 
-/**
- * 시간표 상세 조회
- */
+/*
+  시간표 상세 조회
+*/
 export const getTimeTableDetail = async (timetableId: number) => {
   try {
     const response = await api.get(`/timetables/${timetableId}`);
@@ -67,9 +70,9 @@ export const getTimeTableDetail = async (timetableId: number) => {
   }
 }
 
-/**
- * 개발/테스트용 시간표 상세 조회 모의 API
- */
+/*
+  목업 시간표 상세 조회
+*/
 export const mockGetTimeTableDetail = async (timetableId: number): Promise<GetTimeTableDetailResponse> => {
 
   const mockData: Record<number, GetTimeTableDetailResponse> = {
@@ -78,11 +81,7 @@ export const mockGetTimeTableDetail = async (timetableId: number): Promise<GetTi
       data: {
         timetable_id: 1,
         timetable_name: "25-2학기 플랜A",
-        semester: "2025-2학기",
         total_credits: 18,
-        is_ai_generated: true,
-        is_main: true,
-        course_count: 6,
         courses: [
           {
             course_id: 1,
@@ -146,11 +145,7 @@ export const mockGetTimeTableDetail = async (timetableId: number): Promise<GetTi
       data: {
         timetable_id: 2,
         timetable_name: "25-2학기 플랜B",
-        semester: "2025-2학기",
         total_credits: 15,
-        is_ai_generated: false,
-        is_main: false,
-        course_count: 5,
         courses: [
           {
             course_id: 6,
@@ -187,11 +182,7 @@ export const mockGetTimeTableDetail = async (timetableId: number): Promise<GetTi
       data: {
         timetable_id: 3,
         timetable_name: "25-2학기 플랜C",
-        semester: "2025-1학기",
         total_credits: 21,
-        is_ai_generated: false,
-        is_main: false,
-        course_count: 7,
         courses: [
           {
             course_id: 9,

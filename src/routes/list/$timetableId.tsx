@@ -1,3 +1,5 @@
+/* 시간표 자세히 보기 페이지 */
+
 import { createFileRoute } from '@tanstack/react-router';
 import { TimeTableDetailPage } from '@/pages/list/TimeTableDetailPage';
 

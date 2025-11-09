@@ -8,27 +8,22 @@ import { TimeTable } from '@/components/TimeTable';
 import { TextInput } from '@/components/boxes/InputBox';
 
 import type { TimeTableDetail } from './types';
+import type { GenerateResultPageProps } from './types';
 
 import { fontStyles } from '@/utils/styles';
 import { cn } from '@/utils/util';
 
-interface GenerateResultPageProps {
-  gentimetableId: string;
-  message: string;
-}
 
 export function GenerateResultPage({ gentimetableId, message }: GenerateResultPageProps) {
     const navigate = useNavigate();
     // 조회한 시간표 상세 정보
     const [timetable, setTimetable] = useState<TimeTableDetail | null>(null);
-    // AI 마법사의 메시지
-    const [aiMessage, setAiMessage] = useState<string>(message || '');
+    // AI 마법사 메시지
+    const [aiMessage] = useState<string>(message || '');
     // 시간표 이름
     const [timetableName, setTimetableName] = useState<string>('');
     // 수정 요청 사항
     const [feedback, setFeedback] = useState<string>('');
-    // 현재 선택된(하이라이팅된) 강의 ID
-    const [activeCourseId, setActiveCourseId] = useState<number | undefined>(1);
 
     /*
       마운트 시 URL 파라미터의 timetableId로
@@ -40,7 +35,6 @@ export function GenerateResultPage({ gentimetableId, message }: GenerateResultPa
           const response = await mockGetTimeTableDetail(Number(gentimetableId));
           if (response.success) {
             setTimetable(response.data);
-            //setTimetableName(response.data.timetable_name);
           }
         } catch (error) {
           console.error('시간표 상세 조회 실패:', error);
@@ -54,8 +48,9 @@ export function GenerateResultPage({ gentimetableId, message }: GenerateResultPa
     // 시간표 로딩 중일 때 표시
     if (!timetable) {
       return (
-        <div className="flex items-center justify-center h-screen">
-          <p className={fontStyles.title}>로딩 중...</p>
+        <div className="flex flex-col gap-20 items-center justify-center h-screen ">
+          <p className={cn("text-[#E65787]",fontStyles.title)}>오류 발생</p>
+          <BasicButton onClick={() => navigate({'to': '/generate'})}>생성 페이지로 돌아가기</BasicButton>
         </div>
       );
     }

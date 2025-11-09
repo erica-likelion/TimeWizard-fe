@@ -8,22 +8,12 @@ import { TextInput } from '@/components/boxes/InputBox'
 import { CustomSelect } from '@/components/boxes/SelectBox'
 import { useUser } from '@/contexts/UserContext'
 import { mockGenerateTimetable, mockGetGenerationStatus } from '@/apis/AIGenerateAPI/aiGenerateApi'
+
 import type { GenerateTimetableRequest } from '@/apis/AIGenerateAPI/types'
+import type { Option, ExcludedTime } from './types'
+
 import TimeTableIcon from '@/assets/icons/time_table.png'
 
-// 옵션 타입
-type Option = {
-  id: string | number
-  label: string
-}
-
-// 제외 시간대 타입
-type ExcludedTime = {
-  id: number
-  day: string
-  startTime: string
-  endTime: string
-}
 
 // 시간표 생성 페이지
 export function GeneratePage() {
@@ -90,7 +80,7 @@ export function GeneratePage() {
   const addExcludedTime = (): void => {
     setExcludedTimes([
       ...excludedTimes,
-      { id: nextId, day: '월요일', startTime: '09:00', endTime: '12:00' }
+      { id: nextId, day: '월요일', startTime: '09:00', endTime: '12:00' } // 추가할 때, 디폴트로 이렇게 나타난다는 거임
     ])
     setNextId(nextId + 1)
   }
@@ -139,26 +129,25 @@ export function GeneratePage() {
     try {
       setIsGenerating(true)
 
-      // 제외 시간대를 요일 배열로 변환
-      const excludedDays: string[] = excludedTimes.map(time => time.day)
-
       // API 요청 데이터 구성
+      // 폼에서는 제외 시간(excludedTimes)가 존재하나
+      // API 명세에는 없음 오히려 선호시간대가 존재
+      // 또한 시간대는 array가 아니라 하나밖에 지정안되는 상황
       const requestData: GenerateTimetableRequest = {
-        semester: "2025-1", // TODO: 실제 학기 정보로 변경
+        semester: semester || "1", 
         target_credits: Number(totalCredits) || 0,
         preferences: {
-          preferred_days: excludedDays.length > 0 ? excludedDays : undefined,
-          preferred_start_time: excludedTimes[0]?.startTime,
-          preferred_end_time: excludedTimes[0]?.endTime,
-          required_courses: undefined, // TODO: 필요시 추가
-          excluded_courses: undefined, // TODO: 필요시 추가
+          preferred_days: undefined,
+          preferred_start_time: undefined,
+          preferred_end_time: undefined,
+          required_courses: undefined, 
+          excluded_courses: undefined
         }
       }
 
       console.log('AI 시간표 생성 요청:', requestData)
 
       // 1단계: 시간표 생성 시작
-      // TODO: 로그인 구현 후 실제 API로 변경
       // const generateResponse = await generateTimetable(requestData)
       const generateResponse = await mockGenerateTimetable(requestData)
 
@@ -172,7 +161,6 @@ export function GeneratePage() {
       const historyId = generateResponse.data.history_id
 
       // 2단계: 생성 상태 조회
-      // TODO: 로그인 구현 후 실제 API로 변경
       // const statusResponse = await getGenerationStatus(historyId)
       const statusResponse = await mockGetGenerationStatus(historyId)
 
@@ -185,10 +173,10 @@ export function GeneratePage() {
 
       // 상태에 따라 처리
       if (statusResponse.data.status === 'completed') {
-        // 생성 성공 - 생성된 시간표로 이동
+        // 생성 성공 - 생성된 시간표로 이동 (state로 message 전달하여 URL 노출 방지)
         navigate({
           to: `/generate/${statusResponse.data.timetable_id}`,
-          search: { message: statusResponse.data.message }
+          state: { message: statusResponse.data.message } as any
         })
       } else if (statusResponse.data.status === 'failed') {
         // 생성 실패 - 에러 메시지와 개선 제안 표시

@@ -1,15 +1,29 @@
 import type { Course } from '@/components/TimeTable/types';
 
-/**
- * 시간표 상세 정보
- */
+// 옵션 타입
+export interface Option {
+  id: string | number
+  label: string
+}
+
+// 제외 시간대 타입
+export interface ExcludedTime {
+  id: number
+  day: string
+  startTime: string
+  endTime: string
+}
+
+// 시간표 상세 정보
 export interface TimeTableDetail {
   timetable_id: number;
   timetable_name: string;
-  semester: string;
   total_credits: number;
-  is_ai_generated: boolean;
-  is_main: boolean;
-  course_count: number;
   courses: Course[];
+}
+
+// GenerateResultPage 컴포넌트의 Props 타입
+export interface GenerateResultPageProps {
+  gentimetableId: string;
+  message: string;
 }

@@ -1,6 +1,6 @@
-/**
- * 회원 정보 타입
- */
+/*
+  회원 정보 타입
+*/
 export interface User {
   user_id: number;
   email: string;
@@ -16,9 +16,9 @@ export interface User {
   created_at: string;
 }
 
-/**
- * 회원 정보 조회 API 응답
- */
+/*
+  회원 정보 조회 API 응답
+*/
 export interface GetUserResponse {
   success: boolean;
   data: User;

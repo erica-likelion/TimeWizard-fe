@@ -1,18 +1,19 @@
-import { createFileRoute } from '@tanstack/react-router';
+/* AI 생성 결과 페이지 */
+
+import { createFileRoute, useLocation } from '@tanstack/react-router';
 import { GenerateResultPage } from '@/pages/generate/GenerateResultPage';
 
 export const Route = createFileRoute('/generate/$gentimetableId')({
   component: RouteComponent,
-  validateSearch: (search: Record<string, unknown>) => {
-    return {
-      message: (search.message as string) || '',
-    }
-  },
 })
 
 function RouteComponent() {
   const { gentimetableId } = Route.useParams();
-  const search = Route.useSearch();
+  const location = useLocation();
 
-  return <GenerateResultPage gentimetableId={gentimetableId} message={search.message} />;
+  // state로부터 message 읽기 (URL 노출 방지)
+  const message = (location.state as { message?: string })?.message || '';
+
+  return <GenerateResultPage gentimetableId={gentimetableId} message={message} />;
 }
+
