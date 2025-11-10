@@ -65,7 +65,7 @@ export function GenerateResultPage({ gentimetableId, message }: GenerateResultPa
 
              {/* [왼쪽] AI 설명 및 입력 영역 */}
              <div className="w-full lg:flex-4 lg:w-auto">
-               <Card className="w-full lg:w-auto gap-7 min-h-[800px] lg:h-full">
+               <Card className="w-full lg:w-auto gap-7 lg:h-full">
                 {/* AI 마법사의 설명 */}
                 <div className="flex flex-col gap-3">
                   <p className={cn(fontStyles.subtitle, "text-[#888]")}>AI 마법사의 설명</p>
@@ -117,8 +117,8 @@ export function GenerateResultPage({ gentimetableId, message }: GenerateResultPa
 
              {/* [오른쪽] 시간표 */}
               <div className="w-full lg:flex-6 lg:w-auto">
-                <Card title="시간표" className="w-full lg:w-auto min-h-[800px] lg:h-full">
-                  <div className="w-full overflow-y-auto no-scrollbar">
+                <Card title="시간표" className="w-full lg:w-auto lg:h-full">
+                  <div className="flex flex-col overflow-y-auto no-scrollbar lg:h-full">
                     {timetable && <TimeTable courses={timetable.courses} />}
                   </div>
                 </Card>

@@ -95,7 +95,7 @@ export function TimeTableDetailPage({ timetableId }: TimeTableDetailPageProps) {
         {/* [오른쪽] 시간표 */}
         <div className="w-full lg:flex-6 lg:w-auto">
           <Card title="시간표" className="w-full lg:w-auto lg:h-[90%]">
-            <div className="w-full overflow-y-auto no-scrollbar">
+            <div className="w-full overflow-y-auto no-scrollbar lg:h-full">
               {timetable && <TimeTable courses={timetable.courses} activeCourseId={activeCourseId}/>}
             </div>
           </Card>

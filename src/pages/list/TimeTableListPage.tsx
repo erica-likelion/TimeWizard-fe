@@ -87,7 +87,7 @@ export function TimeTableListPage() {
         <div className="w-full lg:flex-6 lg:w-auto flex flex-col gap-5">
           <Card title="선택된 시간표" className="w-full lg:w-auto lg:h-[70%]">
             {/* 시간표 */}
-            <div className="flex flex-col overflow-y-auto no-scrollbar">
+            <div className="flex flex-col overflow-y-auto no-scrollbar lg:h-full">
               {selectedTimeTableDetail && <TimeTable courses={selectedTimeTableDetail.courses} />}
             </div>
           </Card>
