@@ -1,5 +1,7 @@
 import { Link } from '@tanstack/react-router';
 import logoIcon from '@assets/icons/billnut_col_noneoutline.svg';
+import { cn } from '@/utils/util';
+import { fontStyles } from '@/utils/styles';
 
 const navItems = [
     { to: '/main', label: '메인' },
@@ -13,23 +15,23 @@ const navItems = [
 const SideBar = () => {
 
     return (
-        <div className="flex flex-col min-w-[313px] min-h-screen z-10">
-            <div className="flex items-end px-7.5 w-full min-h-40 bg-[#E65787]">
+        <div className="flex flex-col min-w-55 min-h-screen z-10">
+            <div className="flex items-end px-3 w-full min-h-32 bg-[#E65787]">
                 <img
                     src={logoIcon}
                     alt="빌넣 로고"
-                    className="h-25"
+                    className="w-30"
                 />
             </div>
 
-            <nav className="py-[37px] bg-[#0D0D0D] h-full">
-                <ul className="flex flex-col">
+            <nav className="py-10 bg-[#0D0D0D] h-full">
+                <ul className="flex flex-col gap-5">
                     {navItems.map((item) => (
                         <li key={item.to}
-                            className="px-7.5 py-4.5">
+                            className="px-7">
                             <Link
                                 to={item.to}
-                                className="text-[28px]"
+                                className={cn(fontStyles.body)}
                                 activeProps={{
                                     className: "text-[#C1446C]"
                                 }}

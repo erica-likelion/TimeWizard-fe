@@ -1,5 +1,6 @@
 import React from 'react';
 import { cn } from '@utils/util';
+import { fontStyles } from '@/utils/styles';
 
 interface PinkButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   children: React.ReactNode;
@@ -40,9 +41,9 @@ export const PinkButton: React.FC<PinkButtonProps> = ({
   };
 
   const sizeStyles = {
-    sm: 'h-[44px] px-8 text-xl',
-    md: 'h-[54px] px-10 text-[28px]',
-    lg: 'h-[64px] px-12 text-3xl',
+    sm: cn(fontStyles.button, "p-1"),
+    md: cn(fontStyles.body, "p-2"),
+    lg: cn(fontStyles.subtitle, "p-3"),
     custom: '', 
   };
 

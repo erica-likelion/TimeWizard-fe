@@ -6,6 +6,7 @@ import { BasicButton } from '@/components/buttons/BasicButton'
 import { PinkButton } from '@/components/buttons/PinkButton'
 import { TextInput } from '@/components/boxes/InputBox'
 import { CustomSelect } from '@/components/boxes/SelectBox'
+import { Card } from '@/components/Card'
 import { useUser } from '@/contexts/UserContext'
 import { mockGenerateTimetable, mockGetGenerationStatus } from '@/apis/AIGenerateAPI/aiGenerateApi'
 
@@ -201,14 +202,13 @@ export function GeneratePage() {
   }
 
   return (
-      <div className="flex flex-col px-[72px] gap-9 pt-[40px] pb-[72px] h-full">
+      <div className="flex flex-col px-18 gap-5 py-10 flex-1">
         {/* [위] 페이지 제목 + 메인으로 돌아가기 버튼 */}
         <div className="flex items-end">
           <p className={fontStyles.title}>시간표 생성</p>
-          {isGenerating ?  <></> : <BasicButton onClick={() => navigate({to: '/main'})} className={cn("ml-auto h-[32.4px] w-[144px] p-1 bg-[#000] text-white", fontStyles.caption)}>← 메인으로</BasicButton>}
+          {isGenerating ?  <></> : <BasicButton onClick={() => navigate({to: '/main'})} className={cn("ml-auto px-5 py-1 bg-[#000]", fontStyles.caption)}>← 메인으로</BasicButton>}
         </div>
-        <div className="flex flex-col bg-[#303030] p-6 gap-10 h-full">
-
+        <Card className="gap-10 h-full">
           {/* AI 생성 중 로딩 화면 */}
           {isGenerating ? (
             <div className="flex flex-col items-center justify-center h-full gap-8">
@@ -235,14 +235,15 @@ export function GeneratePage() {
           ) : (
             <>
             {/* 재학 정보: 사용자 정보에서 자동으로 가져오고 수정 가능 */}
-              <div className="flex gap-14">
-                <p className={cn(fontStyles.subtitle)}>재학 정보 *</p>
-                <div className="flex-1 flex flex-col gap-4 max-w-[687.6px]">
+              <div className="w-full flex flex-col lg:flex-row gap-4 lg:gap-14">
+                <p className={cn(fontStyles.subtitle, "lg:min-w-[120px]")}>재학 정보 *</p>
+                <div className="flex-1 flex flex-col gap-4 lg:max-w-[687.6px]">
                   {/* 학교명 */}
                   <div className="flex flex-col gap-2">
-                    <span className={cn(fontStyles.body, "text-white")}>학교명</span>
+                    <span className={cn(fontStyles.body)}>학교명</span>
                     <TextInput
                       value={university}
+                      size='md'
                       onChange={(e) => setUniversity(e.target.value)}
                       className="border-2 border-[#888]"
                       placeholder="한양대학교 ERICA 캠퍼스"
@@ -250,29 +251,32 @@ export function GeneratePage() {
                   </div>
 
                   {/* 전공 + 학년 + 학기 */}
-                  <div className="flex gap-4">
+                  <div className="flex flex-col lg:flex-row gap-4">
                     <div className="flex-1 flex flex-col gap-2">
-                      <span className={cn(fontStyles.body, "text-white")}>전공</span>
+                      <span className={cn(fontStyles.body)}>전공</span>
                       <TextInput
                         value={major}
+                        size='md'
                         onChange={(e) => setMajor(e.target.value)}
                         className="border-2 border-[#888]"
                         placeholder="컴퓨터학부"
                       />
                     </div>
                     <div className="flex-1 flex flex-col gap-2">
-                      <span className={cn(fontStyles.body, "text-white")}>학년</span>
+                      <span className={cn(fontStyles.body)}>학년</span>
                       <TextInput
                         value={grade}
+                        size='md'
                         onChange={(e) => setGrade(e.target.value)}
                         className="border-2 border-[#888]"
                         placeholder="1"
                       />
                     </div>
                     <div className="flex-1 flex flex-col gap-2">
-                      <span className={cn(fontStyles.body, "text-white")}>학기</span>
+                      <span className={cn(fontStyles.body)}>학기</span>
                       <TextInput
                         value={semester}
+                        size='md'
                         onChange={(e) => setSemester(e.target.value)}
                         className="border-2 border-[#888]"
                         placeholder="1"
@@ -281,11 +285,12 @@ export function GeneratePage() {
                   </div>
 
                   {/* 이수 학점 + 전공 학점 + 교양 학점 */}
-                  <div className="flex gap-4">
+                  <div className="flex flex-col lg:flex-row gap-4">
                     <div className="flex-1 flex flex-col gap-2">
                       <span className={cn(fontStyles.body)}>이수 학점</span>
                       <TextInput
                         value={completedCredits}
+                        size='md'
                         onChange={(e) => setCompletedCredits(e.target.value)}
                         className="border-2 border-[#888]"
                         placeholder="90"
@@ -295,6 +300,7 @@ export function GeneratePage() {
                       <span className={cn(fontStyles.body)}>이수 전공 학점</span>
                       <TextInput
                         value={majorCreditsCompleted}
+                        size='md'
                         onChange={(e) => setMajorCreditsCompleted(e.target.value)}
                         className="border-2 border-[#888]"
                         placeholder="65"
@@ -304,6 +310,7 @@ export function GeneratePage() {
                       <span className={cn(fontStyles.body)}>이수 교양 학점</span>
                       <TextInput
                         value={generalCredits}
+                        size='md'
                         onChange={(e) => setGeneralCredits(e.target.value)}
                         className="border-2 border-[#888]"
                         placeholder="15"
@@ -314,9 +321,9 @@ export function GeneratePage() {
               </div>
 
               {/* 목표 학점: 전체 학점, 전공 학점 입력 */}
-              <div className="flex gap-14">
-                <p className={cn(fontStyles.subtitle)}>목표 학점 *</p>
-                <div className="flex-1 flex gap-5  max-w-[687.6px]">
+              <div className="flex flex-col lg:flex-row gap-4 lg:gap-14">
+                <p className={cn(fontStyles.subtitle, "lg:min-w-[120px]")}>목표 학점 *</p>
+                <div className="flex-1 flex flex-col lg:flex-row gap-5 lg:max-w-[687.6px]">
 
                   <div className="flex-1 flex-col gap-2">
                     <span className={cn(fontStyles.body, "text-white")}>
@@ -324,6 +331,7 @@ export function GeneratePage() {
                     </span>
                     <TextInput
                       value={totalCredits}
+                      size='md'
                       onChange={(e) => setTotalCredits(e.target.value)}
                       className="border-2 border-[#888]"
                       placeholder="20"
@@ -333,6 +341,7 @@ export function GeneratePage() {
                     <span className={cn(fontStyles.body, "text-white")}>전공</span>
                     <TextInput
                       value={majorCredits}
+                      size='md'
                       onChange={(e) => setMajorCredits(e.target.value)}
                       className="border-2 border-[#888]"
                       placeholder="0"
@@ -348,11 +357,11 @@ export function GeneratePage() {
               </div>
 
               {/* 제외 시간대: 수업을 배치하지 않을 시간대 지정 */}
-              <div className="flex gap-7">
-                <p className={cn(fontStyles.subtitle)}>제외 시간대&nbsp;&nbsp;</p>
+              <div className="flex flex-col lg:flex-row gap-4 lg:gap-7">
+                <p className={cn(fontStyles.subtitle, "lg:min-w-[120px]")}>제외 시간대&nbsp;&nbsp;</p>
                 <div className="flex-1 flex flex-col gap-6">
                   {excludedTimes.map((time) => (
-                    <div key={time.id} className="flex items-center gap-2">
+                    <div key={time.id} className="flex flex-wrap items-center gap-2">
                       <CustomSelect
                         options={dayOptions}
                         defaultValue={dayOptions.find(d => d.id === time.day) || dayOptions[0]}
@@ -415,17 +424,17 @@ export function GeneratePage() {
               </div>
 
               {/* 하단 버튼: 초기화, 생성 시작 */}
-              <div className="flex justify-end gap-4 mt-auto">
+              <div className="flex flex-col lg:flex-row justify-end gap-4 mt-auto">
                 <BasicButton
                   onClick={handleReset}
-                  className={cn("px-8 py-2 min-h-14", fontStyles.button)}
+                  className={cn("w-full lg:w-auto px-8 py-2 min-h-14", fontStyles.button)}
                 >
                   초기화
                 </BasicButton>
                 <PinkButton
                   onClick={handleGenerate}
                   size="sm"
-                  className={cn("px-8 py-2 min-h-14", fontStyles.button)}
+                  className={cn("w-full lg:w-auto px-8 py-2 min-h-14", fontStyles.button)}
                   disabled={isGenerating || !isFormValid}
                 >
                   생성 시작
@@ -433,7 +442,7 @@ export function GeneratePage() {
               </div>
             </>
           )}
-        </div>
+        </Card>
       </div>
   )
 }

@@ -7,6 +7,7 @@ import { assignCourseColors } from '@/utils/timetable';
 import { BasicButton } from '@/components/buttons/BasicButton';
 import { TimeTable } from '@/components/TimeTable';
 import { CourseItem } from '@/pages/list/CourseItem';
+import { Card } from '@/components/Card';
 import { mockGetTimeTableDetail } from '@/apis/TimeTableAPI/timeTableApi';
 import type { TimeTableDetail } from './types';
 
@@ -65,41 +66,39 @@ export function TimeTableDetailPage({ timetableId }: TimeTableDetailPageProps) {
   }
 
   return (
-    <div className="flex flex-col h-full px-[72px] gap-[22px] pt-[40px] pb-[72px]">
+    <div className="flex flex-col px-18 gap-5 py-10 flex-1">
       {/* [위] 시간표 이름 + 목록으로 돌아가기 버튼 */}
       <div className="flex items-end">
         <p className={fontStyles.title}>#{timetable.timetable_name}</p>
-        <BasicButton onClick={() => navigate({to: '/list'})} className={cn("ml-auto h-9 w-40 p-1 mb-[-22px] bg-[#000] text-white", fontStyles.caption)}>← 목록으로</BasicButton>
+        <BasicButton onClick={() => navigate({to: '/list'})} className={cn("ml-auto px-5 py-1 bg-[#000]", fontStyles.caption)}>← 목록으로</BasicButton>
       </div>
 
-      <div className="flex justify-between gap-10 items-start h-full">
+      <div className="flex flex-col gap-10 lg:flex-row justify-between flex-1">
         {/* [왼쪽] 등록된 강의 목록 */}
-        <div className="flex-1 flex flex-col max-w-[600px] h-full px-[18px] pb-[18px] bg-[#303030] overflow-y-auto no-scrollbar">
-          <p className={cn("py-[18px] text-[#767676]", fontStyles.subtitle, "sticky top-0 bg-[#303030] z-10")}>
-            등록된 강의
-          </p>
-          {/* 강의들 (호버하면 시간표에서 하이라이팅됨) */}
-          <div className="flex flex-col gap-[14px]">
-            {timetable.courses.map((course) => (
-              <CourseItem
-                key={`${course.course_id}-${course.day_of_week}`}
-                course={course}
-                color={courseColors.get(course.course_id) || '#f97316'}
-                isActive={activeCourseId === course.course_id}
-                onMouseEnter={() => handleCourseItemHover(course.course_id)}
-              />
-            ))}
-          </div>
+        <div className="w-full lg:flex-4 lg:w-auto">
+          <Card title="등록된 강의" className="w-full lg:w-auto lg:h-[90%]">
+            {/* 강의들 (호버하면 시간표에서 하이라이팅됨) */}
+            <div className="flex flex-col gap-[14px]">
+              {timetable.courses.map((course) => (
+                <CourseItem
+                  key={`${course.course_id}-${course.day_of_week}`}
+                  course={course}
+                  color={courseColors.get(course.course_id) || '#f97316'}
+                  isActive={activeCourseId === course.course_id}
+                  onMouseEnter={() => handleCourseItemHover(course.course_id)}
+                />
+              ))}
+            </div>
+          </Card>
         </div>
 
         {/* [오른쪽] 시간표 */}
-        <div className="flex-1 flex flex-col h-full p-4 bg-[#303030] overflow-y-auto no-scrollbar">
-          <p className={cn("text-[#767676]", fontStyles.subtitle, "sticky top-0 bg-[#303030] z-10")}>
-            시간표
-          </p>
-          <div className="w-full self-center px-5 py-3">
-            <TimeTable courses={timetable.courses} activeCourseId={activeCourseId}/>
-          </div>
+        <div className="w-full lg:flex-6 lg:w-auto">
+          <Card title="시간표" className="w-full lg:w-auto lg:h-[90%]">
+            <div className="w-full overflow-y-auto no-scrollbar">
+              {timetable && <TimeTable courses={timetable.courses} activeCourseId={activeCourseId}/>}
+            </div>
+          </Card>
         </div>
       </div>
     </div>
