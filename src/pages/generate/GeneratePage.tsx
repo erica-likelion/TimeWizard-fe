@@ -13,7 +13,7 @@ import { mockGenerateTimetable, mockGetGenerationStatus } from '@/apis/AIGenerat
 import type { GenerateTimetableRequest } from '@/apis/AIGenerateAPI/types'
 import type { Option, ExcludedTime } from './types'
 
-import TimeTableIcon from '@/assets/icons/time_table.svg'
+import TimeTableIcon from '@/assets/icons/time_table.png'
 
 
 // 시간표 생성 페이지

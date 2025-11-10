@@ -1,4 +1,4 @@
-import TimeTable from "@assets/icons/time_table.svg";
+import TimeTable from "@assets/icons/time_table.png";
 import { Card } from "@/components/Card";
 import { fontStyles } from "@/utils/styles";
 import { cn } from "@/utils/util";
