@@ -4,14 +4,7 @@ import { BasicButton } from '@/components/buttons/BasicButton';
 
 import { cn } from '@/utils/util';
 import { fontStyles } from '@/utils/styles';
-
-interface CardProps {
-    title?: string;
-    buttonText?: string;
-    onClick?: () => void;
-    children: React.ReactNode;
-    className?: string;
-}
+import type {CardProps} from './types';
 
 export const Card: React.FC<CardProps> = ({ title, buttonText, onClick, children, className }) => {
 
