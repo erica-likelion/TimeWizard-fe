@@ -1,63 +1,101 @@
 import TimeTable from "@assets/icons/time_table.svg";
+import { Card } from "@/components/Card";
+import { fontStyles } from "@/utils/styles";
+import { cn } from "@/utils/util";
+import { useUser } from "@/contexts/UserContext";
 
 export function MainPage() {
+  const { user, loading } = useUser();
+
+  // 수강신청 날짜까지 남은 일수 계산
+  const calculateDaysLeft = () => {
+    const targetDate = new Date('2026-02-09');
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    targetDate.setHours(0, 0, 0, 0);
+    const diffTime = targetDate.getTime() - today.getTime();
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    return diffDays > 0 ? diffDays : 0;
+  };
+
+  const daysLeft = calculateDaysLeft();
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center h-screen">
+        <p className={fontStyles.title}>로딩 중...</p>
+      </div>
+    );
+  }
 
   return (
-    <div className="flex flex-col gap-6 px-20 pt-31">
-      <div className="flex justify-between">
+    <div className="flex flex-col px-18 gap-5 py-10 flex-1">
+      <div className="flex flex-col lg:flex-row justify-between gap-6 items-start lg:items-center flex-1">
         <div>
-          <p className="text-[40px]">안녕하세요 <span className="font-bold">TimeWizard</span>님!</p>
-          <p className="text-[40px] text-[#C1446C]">수강신청까지 <span className="font-bold">12일</span> 남았어요</p>
+          <p className={cn(fontStyles.title, "text-[#FBFBFB]")}>안녕하세요 <span className="font-bold">{user?.nickname || 'User'}</span>님!</p>
+          <p className={cn(fontStyles.title, "text-[#C1446C]")}>수강신청까지 <span className="font-bold">{daysLeft}일</span> 남았어요</p>
         </div>
         <img
             src={TimeTable}
             alt="시간표 아이콘"
-            className="w-[200px]"
+            className="w-0 lg:w-[150px]"
         />
       </div>
 
-      <div className="flex gap-[91px]">
-        <section className="flex-1 bg-[#303030] p-5">
-          <div className="flex justify-between items-center">
-            <h3 className="text-[32px] text-[#767676]">나의 정보</h3>
-            <button className="bg-[#111] px-[21px] py-[5px] hover:bg-white/5 transition-colors">
-              수정 →
-            </button>
+      <div className="flex flex-col lg:flex-row gap-5 lg:gap-10 flex-2">
+        <Card
+          title="나의 정보"
+          buttonText="수정 →"
+          onClick={() => {}} // 나중에 연결 추가
+          className="w-full lg:flex-1 lg:h-[80%]"
+        >
+          <div className="flex-1 flex flex-col justify-between">
+            <div className="flex">
+              <span className={cn(fontStyles.body, "flex-1")}>학교</span>
+              <span className={cn(fontStyles.body, "flex-2 break-words")}>{user?.university || '-'}</span>
+            </div>
+            <div className="flex">
+              <span className={cn(fontStyles.body, "flex-1")}>전공</span>
+              <span className={cn(fontStyles.body, "flex-2 break-words")}>{user?.major || '-'}</span>
+            </div>
+            <div className="flex">
+              <span className={cn(fontStyles.body, "flex-1")}>학년</span>
+              <span className={cn(fontStyles.body, "flex-2")}>{user?.grade ? `${user.grade}학년` : '-'}</span>
+            </div>
+            <div className="flex">
+              <span className={cn(fontStyles.body, "flex-1")}>이수 학점</span>
+              <span className={cn(fontStyles.body, "flex-2")}>{user?.completed_credits || 0}학점</span>
+            </div>
+            <div className="flex">
+              <span className={cn(fontStyles.body, "flex-1")}>전공 학점</span>
+              <span className={cn(fontStyles.body, "flex-2")}>{user?.major_credits || 0}학점</span>
+            </div>
           </div>
-          <div>
-            <div className="flex justify-between py-2.5"><span className="text-gray-400">학교</span><span>한양대학교 ERICA캠퍼스</span></div>
-            <div className="flex justify-between py-2.5"><span className="text-gray-400">학번</span><span>2023456789</span></div>
-            <div className="flex justify-between py-2.5"><span className="text-gray-400">대학 / 학과</span><span>소프트웨어융합대학 컴퓨터학부</span></div>
-            <div className="flex justify-between py-2.5"><span className="text-gray-400">학년 / 학기</span><span>3학년 2학기</span></div>
-            <div className="flex justify-between py-2.5"><span className="text-gray-400">상태</span><span>재학중</span></div>
-          </div>
-        </section>
+        </Card>
 
-        <aside className="flex-1 bg-[#303030] p-5 text-gray-200">
-          <div className="mb-3.5">
-            <h3 className="text-lg font-normal m-0">남은 크레딧</h3>
-          </div>
-          <div>
-            <div className="text-[44px] font-bold text-gray-200 mb-2">3,800</div>
-            <div className="space-y-2 text-gray-300 mt-3">
-              <div className="flex justify-between">
-                <span className="text-gray-400 w-[120px]">플랜</span>
-                <span>라이트</span>
+        <Card title="남은 크레딧" className="w-full lg:flex-1 lg:h-[80%]">
+          <div className="flex-1 flex flex-col gap-10">
+            <div className="flex-1 flex items-end">
+                <span className={cn(fontStyles.title, "text-[60px]")}>3,800</span>
+                <span>&nbsp;/&nbsp;</span>
+                <span className={cn(fontStyles.title, "text-[30px]")}>5,000</span>
               </div>
-              <div className="flex justify-between">
-                <span className="text-gray-400 w-[120px]">오늘 사용량</span>
-                <span>100</span>
+            <div className="flex-3 flex flex-col justify-between">
+              <div className="flex">
+                <span className={cn(fontStyles.body, "flex-1")}>플랜</span>
+                <span className={cn(fontStyles.body, "flex-2")}>라이트</span>
               </div>
-              <div className="flex justify-between">
-                <span className="text-gray-400 w-[120px]">최근 7일</span>
-                <span>1,200</span>
+              <div className="flex">
+                <span className={cn(fontStyles.body, "flex-1")}>오늘 사용량</span>
+                <span className={cn(fontStyles.body, "flex-2")}>100</span>
+              </div>
+              <div className="flex">
+                <span className={cn(fontStyles.body, "flex-1")}>최근 7일</span>
+                <span className={cn(fontStyles.body, "flex-2")}>1,200</span>
               </div>
             </div>
-            <button className="w-full mt-4 bg-transparent border border-white/5 text-gray-300 px-3 py-2 rounded hover:bg-white/5 transition-colors">
-              시간표 페이지로 →
-            </button>
           </div>
-        </aside>
+        </Card>
       </div>
     </div>
   )
