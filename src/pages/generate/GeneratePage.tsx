@@ -135,13 +135,13 @@ export function GeneratePage() {
       // API 명세에는 없음 오히려 선호시간대가 존재
       // 또한 시간대는 array가 아니라 하나밖에 지정안되는 상황
       const requestData: GenerateTimetableRequest = {
-        semester: semester || "1", 
+        semester: semester || "1",
         target_credits: Number(totalCredits) || 0,
         preferences: {
           preferred_days: undefined,
           preferred_start_time: undefined,
           preferred_end_time: undefined,
-          required_courses: undefined, 
+          required_courses: undefined,
           excluded_courses: undefined
         }
       }
@@ -161,33 +161,60 @@ export function GeneratePage() {
 
       const historyId = generateResponse.data.history_id
 
-      // 2단계: 생성 상태 조회
-      // const statusResponse = await getGenerationStatus(historyId)
-      const statusResponse = await mockGetGenerationStatus(historyId)
+      // 2단계: 폴링으로 생성 상태 확인 (5초마다, 최대 20번 시도 = 100초)
+      const MAX_ATTEMPTS = 20
+      const POLLING_INTERVAL = 5000 
+      let attempts = 0
 
-      console.log('AI 시간표 생성 상태 응답:', statusResponse)
+      const checkStatus = async (): Promise<void> => {
+        try {
+          attempts++
+          console.log(`시간표 생성 상태 확인 시도 ${attempts}/${MAX_ATTEMPTS}`)
 
-      if (!statusResponse.success) {
-        alert('시간표 생성 상태 조회에 실패했습니다.')
-        return
+          // const statusResponse = await getGenerationStatus(historyId)
+          const statusResponse = await mockGetGenerationStatus(historyId)
+
+          console.log('AI 시간표 생성 상태 응답:', statusResponse)
+
+          if (!statusResponse.success) {
+            alert('시간표 생성 상태 조회에 실패했습니다.')
+            setIsGenerating(false)
+            return
+          }
+
+          // 상태에 따라 처리
+          if (statusResponse.data.status === 'completed') {
+            // 생성 성공 - 생성된 시간표로 이동 (state로 message 전달하여 URL 노출 방지)
+            setIsGenerating(false)
+            navigate({
+              to: `/generate/${statusResponse.data.timetable_id}`,
+              state: { message: statusResponse.data.message } as any
+            })
+          } else if (statusResponse.data.status === 'failed') {
+            // 생성 실패 - 에러 메시지와 개선 제안 표시
+            setIsGenerating(false)
+            const suggestions = statusResponse.data.suggestions?.join('\n- ') || '없음'
+            alert(`${statusResponse.data.error_message}\n\n개선 제안:\n- ${suggestions}`)
+          } else if (statusResponse.data.status === 'pending') {
+            if (attempts >= MAX_ATTEMPTS) { // 타임 아웃 처리
+              setIsGenerating(false)
+              alert('시간표 생성이 너무 오래 걸립니다.\n다시 시도해주세요.')
+              navigate({ to: '/generate' })
+            } else {
+              setTimeout(checkStatus, POLLING_INTERVAL) // 5초 후 다시 시도
+            }
+          }
+        } catch (error) {
+          console.error('시간표 생성 상태 확인 실패:', error)
+          setIsGenerating(false)
+          alert('시간표 생성 상태 확인에 실패했습니다. 다시 시도해주세요.')
+        }
       }
 
-      // 상태에 따라 처리
-      if (statusResponse.data.status === 'completed') {
-        // 생성 성공 - 생성된 시간표로 이동 (state로 message 전달하여 URL 노출 방지)
-        navigate({
-          to: `/generate/${statusResponse.data.timetable_id}`,
-          state: { message: statusResponse.data.message } as any
-        })
-      } else if (statusResponse.data.status === 'failed') {
-        // 생성 실패 - 에러 메시지와 개선 제안 표시
-        const suggestions = statusResponse.data.suggestions.join('\n- ')
-        alert(`${statusResponse.data.error_message}\n\n개선 제안:\n- ${suggestions}`)
-      }
+      checkStatus()
     } catch (error) {
       console.error('시간표 생성 실패:', error)
       alert('시간표 생성에 실패했습니다. 다시 시도해주세요.')
-    } finally {
       setIsGenerating(false)
     }
   }
