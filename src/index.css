@@ -19,7 +19,33 @@ body {
   font-family: 'Galmuri11';
   font-style: normal;
   font-size: 24px;
-  height: 100vh;
+  min-height: 100vh;
+  min-width:  100vw;
   background-color: #111;
+
+  -ms-overflow-style: none;
+}
+
+body::-webkit-scrollbar {
+  display: none;
+}
+
+@layer utilities {
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  @keyframes slide {
+    0% {
+      transform: translateX(-100%);
+    }
+    100% {
+      transform: translateX(400%);
+    }
+  }
 }
 

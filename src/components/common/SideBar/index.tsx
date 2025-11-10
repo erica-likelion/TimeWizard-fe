@@ -13,8 +13,8 @@ const navItems = [
 const SideBar = () => {
 
     return (
-        <div className="flex flex-col w-[313px] h-full">
-            <div className="flex items-end px-7.5 w-full min-h-[160px] bg-[#E65787]">
+        <div className="flex flex-col min-w-[313px] min-h-screen z-10">
+            <div className="flex items-end px-7.5 w-full min-h-40 bg-[#E65787]">
                 <img
                     src={logoIcon}
                     alt="빌넣 로고"
@@ -22,7 +22,7 @@ const SideBar = () => {
                 />
             </div>
 
-            <nav className="my-[37px]">
+            <nav className="py-[37px] bg-[#0D0D0D] h-full">
                 <ul className="flex flex-col">
                     {navItems.map((item) => (
                         <li key={item.to}

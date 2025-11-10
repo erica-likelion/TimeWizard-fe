@@ -80,6 +80,8 @@ export const CustomSelect: React.FC<CustomSelectProps> = ({
             bg-[#303030]
             border border-[#D7D9DF] 
             focus:outline-none
+            max-h-80
+            no-scrollbar
           "
         >
           {options.map((option) => (
