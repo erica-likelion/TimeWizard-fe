@@ -9,7 +9,7 @@ export const fontStyles = {
   /** 일반 부제목 또는 섹션 제목 */
   subtitle: 'text-[18px] font-semibold leading-[130%] tracking-[-0.45px]',
 
-  /** 작은 제목 (카드 헤더, 강조 텍스트) - 새로 추가 */
+  /** 작은 제목 (카드 헤더, 강조 텍스트) */
   subtitleSmall: 'text-[16px] font-semibold leading-[130%] tracking-[-0.4px]',
 
   // ============ 본문 스타일 ============
@@ -19,18 +19,18 @@ export const fontStyles = {
   /** 일반 본문 텍스트 (기본 텍스트) */
   body: 'text-[16px] leading-[140%] tracking-[-0.32px]',
 
-  /** 작은 본문 텍스트 - 새로 추가 */
+  /** 작은 본문 텍스트 */
   bodySmall: 'text-[14px] leading-[140%] tracking-[-0.28px]',
 
   // ============ 보조 텍스트 ============
   /** 설명 텍스트, 부가 정보 - 16px → 12px */
   caption: 'text-[12px] leading-[130%] tracking-[-0.24px]',
 
-  /** 아주 작은 라벨, 힌트 텍스트 - 새로 추가 */
+  /** 아주 작은 라벨, 힌트 텍스트 */
   label: 'text-[11px] leading-[130%] tracking-[-0.22px]',
 
   // ============ 버튼 스타일 ============
-  /** 큰 버튼 텍스트 (주요 CTA) */
+  /** 큰 버튼 텍스트 */
   buttonLarge: 'text-[18px] font-medium leading-[130%] tracking-[-0.36px]',
 
   /** 일반 버튼 텍스트 */
@@ -46,6 +46,6 @@ export const fontStyles = {
   /** 링크 텍스트 - 새로 추가 */
   link: 'text-[16px] leading-[140%] tracking-[-0.32px] underline',
 
-  /** 시간표 시간 텍스트 등 숫자 표시 - 새로 추가 */
+  /** 시간표 시간 텍스트 등 숫자 표시 */
   numeric: 'text-[14px] font-medium leading-[130%] tracking-[-0.28px]',
 }
