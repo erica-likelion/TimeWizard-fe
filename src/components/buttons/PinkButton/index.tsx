@@ -22,6 +22,7 @@ export const PinkButton: React.FC<PinkButtonProps> = ({
     font-galmuri font-normal text-white
     transition-colors duration-150
     border-4
+    p-5
     bg-[#E65787]
     border-[#E65787]
     hover:bg-[#FF6096]

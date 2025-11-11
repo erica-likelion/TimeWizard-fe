@@ -5,7 +5,7 @@ import { PinkButton } from '@/components/buttons/PinkButton';
 import { CustomSelect } from '@/components/boxes/SelectBox';
 import { DarkOutlineButton } from '@/pages/SignUp/buttons/DarkButton';
 import SignupBgImage from '@assets/images/signup.png';
-import Cologo from '@assets/icons/billnut_col.svg';
+import TitleSvg from '@assets/icons/billnut_col.svg';
 import PixelLogo from '@assets/icons/time_table.png';
 
 export const Route = createFileRoute('/signup/')({
@@ -130,29 +130,30 @@ function SchoolInfoInputs({
         disabled
         className="bg-gray-700 text-gray-400"
       />
-      <div className="flex flex-col md:flex-row md:items-baseline md:gap-4">
-        {/* 전공 블록 */}
-        <div className="w-full md:w-[400px]">
-          {/* 전공 레이블 + 버튼 */}
-          <div className="inline-flex items-baseline gap-x-2 mb-1"> 
-            <label className="font-galmuri text-sm text-white">전공</label> 
-            <DarkOutlineButton
-              size="default"
-              type="button" 
-              onClick={addMajor}
-              disabled={!canAddMajor}
-              className={!canAddMajor ? 'opacity-50 cursor-not-allowed' : ''}
-            >
-              + 다전공 추가
-            </DarkOutlineButton>
-          </div>
+      <div className="flex flex-col md:items-baseline md:gap-4">
 
+        {/* 전공 레이블 + 버튼 */}
+        <div className="inline-flex items-baseline gap-x-2 mb-1"> 
+          <label className="font-galmuri text-md text-white">전공</label> 
+          <DarkOutlineButton
+            size="default"
+            type="button" 
+            onClick={addMajor}
+            disabled={!canAddMajor}
+            className={!canAddMajor ? 'opacity-50 cursor-not-allowed' : ''}
+          >
+            + 부전공
+          </DarkOutlineButton>
+        </div>
+
+        {/* 전공 블록 */}
+        <div className="w-full">
           <div className="space-y-2">
             {majorsList.map((majorId, index) => (
               <div key={index} className="flex items-center gap-x-2">
                 <div className="flex-grow">
                   <CustomSelect
-                    size="large"
+                    size="full"
                     options={majorOptions}
                     defaultValue={majorOptions.find(
                       (opt) => opt.id === majorId,
@@ -237,20 +238,7 @@ function CreditInfoInputs({ formData, handleChange }: Pick<SignupFormProps, 'for
 
 function SubmitSection({ formData, handleChange }: Pick<SignupFormProps, 'formData' | 'handleChange'>) {
   return (
-    <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 pt-4">
-      <PinkButton
-        type="submit"
-        size="custom"
-        disabled={!formData.isAgreed || !formData.id || !formData.password || formData.password !== formData.passwordCheck}
-        className={
-          (!formData.isAgreed || !formData.id || !formData.password || formData.password !== formData.passwordCheck)
-            ? 'opacity-50 cursor-not-allowed w-full md:w-auto whitespace-nowrap h-[30px] px-35 text-xl'
-            : 'w-full md:w-auto whitespace-nowrap h-[30px] px-35 text-xl'
-        }
-      >
-        회원가입!
-      </PinkButton>
-      
+    <div className="flex flex-wrap md:items-center md:justify-between gap-4 pt-4">
       <div className="flex items-center flex-shrink-0"> 
         <input
           id="agree"
@@ -264,6 +252,18 @@ function SubmitSection({ formData, handleChange }: Pick<SignupFormProps, 'formDa
           빌넣 이용약관, 개인정보 수집·이용약관에 동의합니다.
         </label>
       </div>
+      <PinkButton
+        type="submit"
+        size="custom"
+        disabled={!formData.isAgreed || !formData.id || !formData.password || formData.password !== formData.passwordCheck}
+        className={
+          (!formData.isAgreed || !formData.id || !formData.password || formData.password !== formData.passwordCheck)
+            ? 'opacity-50 cursor-not-allowed w-full md:w-auto whitespace-nowrap h-[30px] px-35 text-xl'
+            : 'w-full md:w-auto whitespace-nowrap h-[30px] px-35 text-xl'
+        }
+      >
+        회원가입!
+      </PinkButton>
     </div>
   );
 }
@@ -384,14 +384,16 @@ function SignupPage() {
           className="relative z-10 w-full max-w-3xl space-y-12 text-white p-6"
         >
           {/* 회원가입 헤더 */}
-          <div className="text-left">
-            <h1 className="text-3xl font-bold flex items-center">
-              <span className="h-8 w-8 mr-2">
-                <img src={Cologo} />
-              </span>
-              회원가입
-            </h1>
-            <p className="text-gray-400">빌넣을 선택해주셔서 감사합니다.</p>
+          <div>
+            <div className="flex items-center gap-x-2">
+            <img 
+              src={TitleSvg} 
+              alt="빌넣 로고" 
+              className="w-20 h-auto ms-[-6px]" 
+            />
+            <span className="font-galmuri text-3xl text-white">회원가입</span>
+            </div>
+            <p className="text-gray-400">빌넣에 오신 것을 환영합니다!</p> 
           </div>
 
           {/* 3-1. 기본정보 섹션 */}
