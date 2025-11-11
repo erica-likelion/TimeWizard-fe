@@ -15,23 +15,23 @@ const navItems = [
 const SideBar = () => {
 
     return (
-        <div className="flex flex-col min-w-55 min-h-screen z-10">
-            <div className="flex items-end px-3 w-full min-h-32 bg-[#E65787]">
+        <div className="flex flex-col min-w-60 min-h-screen z-10">
+            <div className="flex items-end ps-5 pb-4 w-full min-h-32 bg-[#E65787]">
                 <img
                     src={logoIcon}
                     alt="빌넣 로고"
-                    className="w-30"
+                    className="w-20"
                 />
             </div>
 
-            <nav className="py-10 bg-[#0D0D0D] h-full">
+            <nav className="pt-10 bg-[#111111] h-full">
                 <ul className="flex flex-col gap-5">
                     {navItems.map((item) => (
                         <li key={item.to}
-                            className="px-7">
+                            className="px-8">
                             <Link
                                 to={item.to}
-                                className={cn(fontStyles.body)}
+                                className={cn(fontStyles.bodyLarge)}
                                 activeProps={{
                                     className: "text-[#C1446C]"
                                 }}
