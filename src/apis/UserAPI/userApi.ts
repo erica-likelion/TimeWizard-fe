@@ -28,7 +28,7 @@ export const mockGetUserInfo = async (): Promise<GetUserResponse> => {
     data: {
       user_id: 1,
       email: "student@example.com",
-      nickname: "테스트유저",
+      nickname: "TimeWizard",
       phone_number: "010-1234-5678",
       university: "한양대학교 ERICA 캠퍼스",
       major: "컴퓨터학부",

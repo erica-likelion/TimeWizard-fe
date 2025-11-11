@@ -9,7 +9,7 @@ import {
   getTimeRow,
   generateTimeSlots,
 } from '@/utils/timetable';
-import type { TimeTableProps } from './types';
+import type { TimeTableProps } from './types'
 
 /*
   그리드 레이아웃을 사용하여 시간표를 렌더링
@@ -26,7 +26,7 @@ export const TimeTable: React.FC<TimeTableProps> = ({ courses, activeCourseId })
   const courseColors = assignCourseColors(courses);
 
   return (
-    <div className="w-full">
+    <div className="w-full h-full">
       {/*
         Grid 컨테이너 설정:
         - gridTemplateColumns:
@@ -35,13 +35,13 @@ export const TimeTable: React.FC<TimeTableProps> = ({ courses, activeCourseId })
 
         - gridTemplateRows:
           - 첫 번째 행(40px): 요일 헤더
-          - 나머지 행들(각 30px): 시간 슬롯 수만큼 반복 (총 25개)
+          - 나머지 행들(각 1fr): 시간 슬롯 수만큼 반복 (총 25개)
       */}
       <div
-        className="grid gap-0"
+        className="grid gap-0 h-full"
         style={{
           gridTemplateColumns: '30px repeat(5, 1fr)',
-          gridTemplateRows: `40px repeat(${timeSlots.length}, 30px)`,
+          gridTemplateRows: `40px repeat(${timeSlots.length}, 1fr)`,
         }}
       >
         {/* 좌측 상단 빈 칸 (1행 1열) - 명시적 배치 */}
@@ -133,16 +133,16 @@ export const TimeTable: React.FC<TimeTableProps> = ({ courses, activeCourseId })
               style={{
                 gridColumn: dayColumn,
                 gridRow: `${startRow} / ${endRow}`,
-                backgroundColor: color
+                backgroundColor: color,
               }}
             >
               {/* 수업 이름 */}
-              <p className="font-bold text-center">{course.course_name}</p>
+              <p className="font-bold text-center overflow-hidden text-ellipsis whitespace-nowrap w-full">{course.course_name}</p>
               {/* 교수명 */}
-              <p className="font-bold text-center">{course.professor}</p>
+              <p className="font-bold text-center overflow-hidden text-ellipsis whitespace-nowrap w-full">{course.professor}</p>
               {/* 강의실 위치 */}
               {course.location && (
-                <p className="text-center">{course.location}</p>
+                <p className="text-center overflow-hidden text-ellipsis whitespace-nowrap w-full">{course.location}</p>
               )}
             </div>
           );

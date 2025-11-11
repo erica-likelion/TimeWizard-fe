@@ -45,7 +45,7 @@ export interface GenerationStatusSuccessResponse {
 export interface GenerationStatusFailureResponse {
   success: boolean;
   data: {
-    
+
     status: 'failed'; // 상태 (failed)
     error_message: string; // 에러 메시지
     suggestions: string[]; // 개선 제안 목록
@@ -53,6 +53,19 @@ export interface GenerationStatusFailureResponse {
 }
 
 /*
-  AI 시간표 생성 상태 조회 응답 
+  AI 시간표 생성 상태 조회 응답 - 진행 중 (pending)
+  API 명세에는 진행중의 경우가 없음
 */
-export type GenerationStatusResponse = GenerationStatusSuccessResponse | GenerationStatusFailureResponse;
+export interface GenerationStatusPendingResponse {
+  success: boolean;
+  data: {
+    history_id: number; // 생성 이력 ID
+    status: 'pending'; // 상태 (pending)
+    message: string; // 응답 메시지
+  };
+}
+
+/*
+  AI 시간표 생성 상태 조회 응답
+*/
+export type GenerationStatusResponse = GenerationStatusSuccessResponse | GenerationStatusFailureResponse | GenerationStatusPendingResponse;

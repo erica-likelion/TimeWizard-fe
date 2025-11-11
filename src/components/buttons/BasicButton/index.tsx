@@ -15,8 +15,7 @@ export const BasicButton: React.FC<BasicButtonProps> = ({
   return (
     <button
       onClick={onClick}
-      className={cn(`
-        px-[11px] py-[14px]
+      className={cn(`p-2
         border-2 border-[#D7D9DF]
         bg-transparent
         ${textColor}

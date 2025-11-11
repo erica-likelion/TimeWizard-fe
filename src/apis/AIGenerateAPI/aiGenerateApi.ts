@@ -17,7 +17,7 @@ export const generateTimetable = async (request: GenerateTimetableRequest): Prom
 /*
   목업 AI 시간표 생성 API
 */
-export const mockGenerateTimetable = async (request: GenerateTimetableRequest): Promise<GenerateTimetableResponse> => {
+export const mockGenerateTimetable = async (_request: GenerateTimetableRequest): Promise<GenerateTimetableResponse> => {
   await new Promise(resolve => setTimeout(resolve, 3000));
 
   return {
