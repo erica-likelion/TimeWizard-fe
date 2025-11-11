@@ -173,22 +173,17 @@ export function UserProvider({ children }: UserProviderProps) {
       */
 
       // === 개발용: Mock 데이터 자동 로드 ===
-      // 개발 환경에서는 자동으로 Mock 사용자 정보 불러오기
-      const isDevelopment = import.meta.env.DEV;
-      if (isDevelopment) {
-        try {
-          setLoading(true);
-          // Mock 데이터 로드 (토큰 검사 없이)
-          const response = await mockGetUserInfo();
-          if (response.success) {
-            setUser(response.data);
-          }
-        } catch (err) {
-          console.error('개발용 Mock 데이터 로드 실패:', err);
-        } finally {
-          setLoading(false);
+      // 로그인 구현 전까지 Mock 사용자 정보 자동 불러오기
+      try {
+        setLoading(true);
+        // Mock 데이터 로드 (토큰 검사 없이)
+        const response = await mockGetUserInfo();
+        if (response.success) {
+          setUser(response.data);
         }
-      } else {
+      } catch (err) {
+        console.error('Mock 데이터 로드 실패:', err);
+      } finally {
         setLoading(false);
       }
       // === 개발용 코드 끝 ===
