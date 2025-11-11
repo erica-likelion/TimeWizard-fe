@@ -133,16 +133,16 @@ export const TimeTable: React.FC<TimeTableProps> = ({ courses, activeCourseId })
               style={{
                 gridColumn: dayColumn,
                 gridRow: `${startRow} / ${endRow}`,
-                backgroundColor: color
+                backgroundColor: color,
               }}
             >
               {/* 수업 이름 */}
-              <p className="font-bold text-center">{course.course_name}</p>
+              <p className="font-bold text-center overflow-hidden text-ellipsis whitespace-nowrap w-full">{course.course_name}</p>
               {/* 교수명 */}
-              <p className="font-bold text-center">{course.professor}</p>
+              <p className="font-bold text-center overflow-hidden text-ellipsis whitespace-nowrap w-full">{course.professor}</p>
               {/* 강의실 위치 */}
               {course.location && (
-                <p className="text-center">{course.location}</p>
+                <p className="text-center overflow-hidden text-ellipsis whitespace-nowrap w-full">{course.location}</p>
               )}
             </div>
           );
