@@ -37,7 +37,7 @@ function LoginPage() {
       localStorage.setItem('authToken', accessToken);
       
       alert('로그인되었습니다. 메인 페이지로 이동합니다.');
-      navigate({ to: '/' }); // 메인 페이지로 이동
+      navigate({ to: '/main' }); // 메인 페이지로 이동
 
     } catch (error: any) {
       // 3. 에러 핸들링
