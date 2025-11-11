@@ -1,4 +1,4 @@
-import { createFileRoute } from '@tanstack/react-router';
+import { createFileRoute, useNavigate } from '@tanstack/react-router'; 
 import React, { useState } from 'react';
 import { TextInput } from '@/components/boxes/InputBox';
 import { PinkButton } from '@/components/buttons/PinkButton';
@@ -7,6 +7,8 @@ import { DarkOutlineButton } from '@/pages/SignUp/buttons/DarkButton';
 import SignupBgImage from '@assets/images/signup.png';
 import Cologo from '@assets/icons/billnut_col.svg';
 import PixelLogo from '@assets/icons/time_table.svg';
+import { signupUser } from '@/apis/Auth/authService'; 
+import axios from 'axios'; // [✨ 신규]
 
 export const Route = createFileRoute('/signup/')({
   component: SignupPage,
@@ -108,7 +110,7 @@ function BasicInfoInputs({ formData, handleChange }: Pick<SignupFormProps, 'form
 }
 
 
-// [✨ 수정됨] 3. 학교정보 입력 컴포넌트
+
 function SchoolInfoInputs({
   formData,
   handleSelectChange,
@@ -130,7 +132,6 @@ function SchoolInfoInputs({
         disabled
         className="bg-gray-700 text-gray-400"
       />
-      {/* [✨ 수정됨] md:items-start -> md:items-baseline */}
       <div className="flex flex-col md:flex-row md:items-baseline md:gap-4">
         {/* 전공 블록 */}
         <div className="w-full md:w-[400px]">
@@ -177,7 +178,6 @@ function SchoolInfoInputs({
         
         {/* 학년 블록 */}
         <div className="w-full mt-4 md:mt-0 md:w-[192px]">
-          {/* [✨ 수정됨] h-[32px], pt-1, flex 등 불필요한 스타일 제거 */}
           <div className="mb-1">
             <label className="font-galmuri text-sm text-white block">학년</label> 
           </div>
@@ -272,6 +272,7 @@ function SubmitSection({ formData, handleChange }: Pick<SignupFormProps, 'formDa
 
 // ... (SignupPage 컴포넌트) ...
 function SignupPage() {
+  const navigate = useNavigate(); 
   const [formData, setFormData] = useState({
     id: '',
     password: '',
@@ -336,9 +337,10 @@ function SignupPage() {
   };
 
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
+    // 1. 폼 유효성 검사
     if (formData.password !== formData.passwordCheck) {
       alert('비밀번호가 일치하지 않습니다.');
       return;
@@ -348,8 +350,41 @@ function SignupPage() {
       return;
     }
     
-    console.log('폼 제출:', formData); 
-    alert('회원가입 시도! (콘솔 로그 확인)');
+    // 2. API 명세에 맞게 데이터 가공
+    const mainMajorId = formData.majors[0];
+    const majorLabel = majorOptions.find(opt => opt.id === mainMajorId)?.label;
+
+    if (!majorLabel) {
+      alert('주전공을 선택해주세요.');
+      return;
+    }
+    
+    const signupData = {
+      email: formData.id,
+      password: formData.password,
+      nickname: formData.nickname,
+      university: "한양대학교 ERICA 캠퍼스", // 폼에서 하드코딩된 값
+      major: majorLabel, // API 스펙: string
+      grade: Number(formData.grade), // API 스펙: number
+    };
+
+    // 3. API 호출
+    try {
+      await signupUser(signupData); 
+      
+      alert('회원가입이 완료되었습니다. 로그인 페이지로 이동합니다.');
+      navigate({ to: '/login' });
+
+    } catch (error: any) {
+      // 4. 에러 핸들링
+      console.error('회원가입 실패:', error);
+      // service에서 throw한 에러 메시지를 표시
+      if (axios.isAxiosError(error)) {
+        alert(error.response?.data?.message || '회원가입 중 오류가 발생했습니다.');
+      } else {
+        alert(error.message || '알 수 없는 오류가 발생했습니다.');
+      }
+    }
   };
 
   return (
