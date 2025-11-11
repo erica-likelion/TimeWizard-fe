@@ -18,10 +18,8 @@
 body {
   font-family: 'Galmuri11';
   font-style: normal;
-  font-size: 24px;
-  background-color: #111;
+  background-color: #1c1c1c;
   color: white;
-
   -ms-overflow-style: none;
 }
 

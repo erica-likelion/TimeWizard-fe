@@ -27,11 +27,12 @@ export const DarkOutlineButton: React.FC<DarkOutlineButtonProps> = ({
     bg-[#303030]
     hover:bg-[#4a4a4a]
     active:bg-[#2a2a2a]
+    px-3
   `;
 
   // [✨ 수정됨] size prop이 너비(w)와 높이(h)를 모두 제어
   const sizeStyles = {
-    default: 'w-[120px] h-[32px] text-sm',
+    default: 'h-[32px] text-sm',
     full: 'w-full h-[32px] text-sm',
     custom: '',
   };
