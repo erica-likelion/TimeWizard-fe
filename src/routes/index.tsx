@@ -20,8 +20,9 @@ function Index() {
       <div className="absolute inset-0 z-0 bg-black/60" />
 
       <div className="relative z-10 flex min-h-screen flex-col">
-        <nav className="flex w-full h-[88px] items-center justify-between bg-[#303030]/45 px-8 text-gray-300 md:px-12 
-                      text-2xl font-bold font-['Galmuri11'] backdrop-blur-md">
+        <nav className="flex w-full h-[60px] items-center text-[12px]
+                        justify-between bg-[#303030]/45 px-8 text-gray-300 md:px-12 
+                        text-xl font-bold backdrop-blur-md">
           <div className="flex items-center gap-6">
             <div className="flex items-center gap-2">
               <img src={timewizardLogo} alt="TimeWizard Logo" className="h-8 w-auto" />
@@ -33,14 +34,14 @@ function Index() {
         </nav>
 
         <main className="flex-grow flex flex-col items-center justify-center text-center p-8 md:p-12">
-          <h2 className="mb-6 text-[32px] font-bold whitespace-nowrap font-['Galmuri11']">
+          <h2 className="mb-6 text-[16px] font-bold whitespace-nowrap font-['Galmuri11']">
             대학생들의 든든한 시간표 & 수강신청 AI 플래너
           </h2>
           
           <img 
             src={logoIcon} 
             alt="빌넣 로고" 
-            className="mb-12 w-[400px] h-[264px] drop-shadow-[0_0_15px_rgba(236,72,153,0.7)]" 
+            className="mb-12 w-[300px] h-[auto] drop-shadow-[0_0_15px_rgba(236,72,153,0.7)]" 
           />
 
           

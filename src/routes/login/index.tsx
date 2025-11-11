@@ -5,6 +5,8 @@ import { PinkButton } from '@/components/buttons/PinkButton';
 import LoginBgImage from '@assets/images/login.png'; 
 import LogoSvg from '@assets/icons/time_table.png'; 
 import TitleSvg from '@assets/icons/billnut_col.svg'; 
+import { cn } from '@/utils/util';
+import { fontStyles } from '@/utils/styles';
 
 
 export const Route = createFileRoute('/login/')({
@@ -87,11 +89,11 @@ function LoginPage() {
             <img 
               src={TitleSvg} 
               alt="빌넣 로고" 
-              className="w-20 h-auto" 
+              className="w-20 h-auto ms-[-6px]" 
             />
             <span className="font-galmuri text-3xl text-white">로그인</span>
           </div>
-          <p>
+          <p className={cn(fontStyles.bodySmall, "mb-2 text-gray-400")}>
             시간마법사는 당신의 올클을 기원합니다.
           </p>
 

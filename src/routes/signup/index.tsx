@@ -130,7 +130,6 @@ function SchoolInfoInputs({
         disabled
         className="bg-gray-700 text-gray-400"
       />
-      {/* [✨ 수정됨] md:items-start -> md:items-baseline */}
       <div className="flex flex-col md:flex-row md:items-baseline md:gap-4">
         {/* 전공 블록 */}
         <div className="w-full md:w-[400px]">
@@ -355,11 +354,15 @@ function SignupPage() {
   return (
     <div className="flex min-h-screen w-full">
       {/* 1. 왼쪽 로고 영역 */}
-      <div className="w-[433px] bg-[#303030] relative flex items-center justify-center p-8">
-        <img
+      <div className="
+        hidden md:flex md:w-1/3 lg:w-1/4 
+        items-center justify-center 
+        bg-[#2C2C2C] p-8
+      ">
+        <img 
           src={PixelLogo}
-          alt="픽셀 로고"
-          className="w-auto h-auto object-contain"
+          alt="로고" 
+          className="w-full max-w-[150px]"
         />
       </div>
 
@@ -369,12 +372,11 @@ function SignupPage() {
           backgroundImage: `url(${SignupBgImage})`,
         }}
         className="
-          flex-grow
-          relative flex 
-          py-10 px-4 md:px-16 lg:px-24
-          bg-[#332A33] 
-          bg-cover bg-no-repeat bg-center
-          justify-center md:justify-start
+          flex w-full md:w-2/3 lg:w-3/4 
+          items-center justify-center md:justify-start /* 폼을 왼쪽 정렬 (디자인 시안 기준) */
+          p-8 md:p-16 lg:p-24 /* 폼의 왼쪽 여백 */
+          bg-[#1A1A1A] /* 이미지 로드 실패 시 배경색 */
+          bg-cover bg-center bg-no-repeat
         "
       >
         <form
