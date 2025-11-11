@@ -6,7 +6,7 @@ import { CustomSelect } from '@/components/boxes/SelectBox';
 import { DarkOutlineButton } from '@/pages/SignUp/buttons/DarkButton';
 import SignupBgImage from '@assets/images/signup.png';
 import Cologo from '@assets/icons/billnut_col.svg';
-import PixelLogo from '@assets/icons/time_table.svg';
+import PixelLogo from '@assets/icons/time_table.png';
 import { signupUser } from '@/apis/Auth/authService'; 
 import axios from 'axios'; // [✨ 신규]
 
