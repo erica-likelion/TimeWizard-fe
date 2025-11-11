@@ -29,8 +29,8 @@ export function MainPage() {
   }
 
   return (
-    <div className="flex flex-col px-18 gap-5 py-10 flex-1">
-      <div className="flex flex-col lg:flex-row justify-between gap-6 items-start lg:items-center flex-1">
+    <div className="flex flex-col px-18 gap-8 py-10 min-h-screen">
+      <div className="flex flex-col lg:flex-row justify-between gap-6 items-start lg:items-center">
         <div>
           <p className={cn(fontStyles.title, "text-[#FBFBFB]")}>안녕하세요 <span className="font-bold">{user?.nickname || 'User'}</span>님!</p>
           <p className={cn(fontStyles.title, "text-[#C1446C]")}>수강신청까지 <span className="font-bold">{daysLeft}일</span> 남았어요</p>
@@ -42,14 +42,14 @@ export function MainPage() {
         />
       </div>
 
-      <div className="flex flex-col lg:flex-row gap-5 lg:gap-10 flex-2">
+      <div className="flex flex-col xl:flex-row gap-5 xl:gap-10">
         <Card
           title="나의 정보"
           buttonText="수정 →"
           onClick={() => {}} // 나중에 연결 추가
-          className="w-full lg:flex-1 lg:h-[80%]"
+          className="w-full xl:flex-1"
         >
-          <div className="flex-1 flex flex-col justify-between">
+          <div className="flex flex-col gap-4">
             <div className="flex">
               <span className={cn(fontStyles.body, "flex-1")}>학교</span>
               <span className={cn(fontStyles.body, "flex-2 break-words")}>{user?.university || '-'}</span>
@@ -73,14 +73,14 @@ export function MainPage() {
           </div>
         </Card>
 
-        <Card title="남은 크레딧" className="w-full lg:flex-1 lg:h-[80%]">
-          <div className="flex-1 flex flex-col gap-10">
-            <div className="flex-1 flex items-end">
-                <span className={cn(fontStyles.title, "text-[60px]")}>3,800</span>
-                <span>&nbsp;/&nbsp;</span>
-                <span className={cn(fontStyles.title, "text-[30px]")}>5,000</span>
+        <Card title="남은 크레딧" className="w-full xl:flex-1">
+          <div className="flex flex-col gap-6">
+            <div className="flex items-end">
+                <span className={cn(fontStyles.title, "text-[60px] leading-none")}>3,800</span>
+                <span className="text-[24px] pb-1">&nbsp;/&nbsp;</span>
+                <span className={cn(fontStyles.title, "text-[30px] leading-none")}>5,000</span>
               </div>
-            <div className="flex-3 flex flex-col justify-between">
+            <div className="flex flex-col gap-4">
               <div className="flex">
                 <span className={cn(fontStyles.body, "flex-1")}>플랜</span>
                 <span className={cn(fontStyles.body, "flex-2")}>라이트</span>
