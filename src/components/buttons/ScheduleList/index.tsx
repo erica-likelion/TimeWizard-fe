@@ -1,6 +1,7 @@
 import React from 'react';
 import type { PlanButtonProps } from './types';
-
+import { fontStyles } from '@/utils/styles';
+import { cn } from '@/utils/util';
 export const PlanButton: React.FC<PlanButtonProps> = ({
     title,
     date,
@@ -17,10 +18,7 @@ export const PlanButton: React.FC<PlanButtonProps> = ({
         flex items-center justify-between
 
         w-full
-        min-w-70
-        h-[72px]
-        px-[28px]
-        py-[18px]
+        p-4
         border-2
 
         transition-colors duration-150 ease-in-out
@@ -37,13 +35,7 @@ export const PlanButton: React.FC<PlanButtonProps> = ({
      >
 
     <span
-        className={`
-        /* 기본 폰트 명세 */
-        font-normal
-         text-[28px]
-         leading-[130%]
-         tracking-[-0.02em]
-
+        className={cn(`
          ${isActive
             ? 'text-[#1EC6AA]'
             : 'text-[#FFFFFF] group-hover:text-[#D7D9DF]'
@@ -51,20 +43,14 @@ export const PlanButton: React.FC<PlanButtonProps> = ({
 
          /* 2. OnClick (active) 색상 (Brand_Color_FT_Mint_BN) */
          group-active:text-[#1EC6AA]
-        `}
+        `, fontStyles.button)}
     >
         {title}
     </span>
 
 
     <span
-        className={`
-
-         font-normal
-         text-[28px]
-         leading-[130%]
-         tracking-[-0.02em]
-
+        className={cn(`
          ${isActive
             ? 'text-[#FFFFFF]'
             : 'text-[#888888] group-hover:text-[#999999]'
@@ -72,7 +58,7 @@ export const PlanButton: React.FC<PlanButtonProps> = ({
 
          /* 2. OnClick (active) 색상 (White_BN) */
          group-active:text-[#FFFFFF]
-         `}
+         `, fontStyles.button)}
     >
         {date}
      </span>

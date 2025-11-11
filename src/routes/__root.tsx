@@ -8,7 +8,7 @@ const RootLayout = () => {
   console.log(location.pathname);
 
   return (
-    <div className="min-h-screen min-w-screen bg-black text-white">
+    <div>
       {locatation.pathname == '/' || locatation.pathname == '/signup' || locatation.pathname == '/login' || locatation.pathname == '/mypage' ? 
       <Outlet/>
       : 

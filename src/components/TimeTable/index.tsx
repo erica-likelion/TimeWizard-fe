@@ -26,7 +26,7 @@ export const TimeTable: React.FC<TimeTableProps> = ({ courses, activeCourseId })
   const courseColors = assignCourseColors(courses);
 
   return (
-    <div className="w-full">
+    <div className="w-full h-full">
       {/*
         Grid 컨테이너 설정:
         - gridTemplateColumns:
@@ -35,13 +35,13 @@ export const TimeTable: React.FC<TimeTableProps> = ({ courses, activeCourseId })
 
         - gridTemplateRows:
           - 첫 번째 행(40px): 요일 헤더
-          - 나머지 행들(각 30px): 시간 슬롯 수만큼 반복 (총 25개)
+          - 나머지 행들(각 1fr): 시간 슬롯 수만큼 반복 (총 25개)
       */}
       <div
-        className="grid gap-0"
+        className="grid gap-0 h-full"
         style={{
           gridTemplateColumns: '30px repeat(5, 1fr)',
-          gridTemplateRows: `40px repeat(${timeSlots.length}, 30px)`,
+          gridTemplateRows: `40px repeat(${timeSlots.length}, 1fr)`,
         }}
       >
         {/* 좌측 상단 빈 칸 (1행 1열) - 명시적 배치 */}

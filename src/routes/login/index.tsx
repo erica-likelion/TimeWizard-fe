@@ -3,7 +3,7 @@ import { createFileRoute, useNavigate, Link } from '@tanstack/react-router';
 import { TextInput } from '@/components/boxes/InputBox';
 import { PinkButton } from '@/components/buttons/PinkButton';
 import LoginBgImage from '@assets/images/login.png'; 
-import LogoSvg from '@assets/icons/time_table.svg'; 
+import LogoSvg from '@assets/icons/time_table.png'; 
 import TitleSvg from '@assets/icons/billnut_col.svg'; 
 
 
