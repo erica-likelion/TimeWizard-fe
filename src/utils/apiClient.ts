@@ -1,29 +1,26 @@
 import axios from 'axios';
-import type { InternalAxiosRequestConfig, AxiosResponse, AxiosError } from 'axios';
+import type { AxiosError } from 'axios';
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 const api = axios.create({
-  baseURL: API_BASE_URL || 'http://localhost:8080/',
+  baseURL: API_BASE_URL,
   timeout: 60000,
   headers: {
     'Content-Type': 'application/json'
-  }
+  },
+  
+  withCredentials: true, 
 });
 
 
-// 임시 개발 => 추후 로그인 페이지 구현 후 한번 싹다 리팩토링할 예정
-// Request 인터셉터: JWT 토큰을 자동으로 헤더에 추가
+// Request 인터셉터 (변경 없음)
 api.interceptors.request.use(
-  (config: InternalAxiosRequestConfig) => {
-    // localStorage에서 토큰 가져오기
+  (config) => {
     const token = localStorage.getItem('authToken');
-
     if (token) {
-      // Authorization 헤더에 Bearer 토큰 추가
       config.headers.Authorization = `Bearer ${token}`;
     }
-
     return config;
   },
   (error: AxiosError) => {
@@ -31,23 +28,51 @@ api.interceptors.request.use(
   }
 );
 
-// Response 인터셉터: 401 에러 시 토큰 제거 및 로그인 페이지로 이동
+
 api.interceptors.response.use(
-  (response: AxiosResponse) => {
+  (response) => {
+    // 1. 성공한 응답은 그대로 반환
     return response;
   },
-  (error: AxiosError) => {
-    // 401 Unauthorized 에러 처리
-    if (error.response?.status === 401) {
-      // 토큰 제거
-      localStorage.removeItem('authToken');
+  async (error) => {
+    // 2. 원래 요청 정보
+    const originalRequest = error.config;
 
-      // 로그인 페이지로 리다이렉트 (필요시 활성화)
-      // window.location.href = '/login';
+    // 3. 401 에러이고, 아직 재시도하지 않은 요청인 경우
+    // (로그인/회원가입 요청이 401일 때는 갱신 시도 안 함)
+    if (error.response?.status === 401 && !originalRequest._retry &&
+        originalRequest.url !== '/auth/login' && 
+        originalRequest.url !== '/auth/register') {
+      
+      originalRequest._retry = true; // 재시도 플래그 설정 (무한 루프 방지)
 
-      console.error('인증 오류: 토큰이 만료되었거나 유효하지 않습니다.');
+      try {
+        // 4. 토큰 갱신 API 호출 (API 명세서 기준)
+        const refreshResponse = await api.post('/auth/refresh');
+        
+        // 5. 새로 발급받은 accessToken 추출
+        const { accessToken } = refreshResponse.data;
+
+        // 6. 새 토큰 저장
+        localStorage.setItem('authToken', accessToken);
+        
+        // 7. 원래 요청의 헤더를 새 토큰으로 변경
+        originalRequest.headers['Authorization'] = `Bearer ${accessToken}`;
+
+        // 8. 원래 요청을 다시 시도
+        return api(originalRequest);
+
+      } catch (refreshError) {
+        // 9. 토큰 갱신 자체를 실패한 경우 (예: Refresh Token 만료)
+        console.error('토큰 갱신 실패:', refreshError);
+        // localStorage를 비우고 로그인 페이지로 강제 이동
+        localStorage.removeItem('authToken');
+        window.location.href = '/login'; // (Tanstack Router 대신 window 사용)
+        return Promise.reject(refreshError);
+      }
     }
 
+    // 10. 401 에러가 아니거나, 이미 재시도한 요청은 에러를 그대로 반환
     return Promise.reject(error);
   }
 );
