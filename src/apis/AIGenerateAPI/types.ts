@@ -1,5 +1,5 @@
 /*
-  AI 시간표 생성 요청 파라미터
+  AI 시간표 생성 요청
 */
 export interface GenerateTimetableRequest {
   requestText: string;
@@ -14,28 +14,27 @@ export type GenerateTimetableResponse = string;
 
 /*
   AI 시간표 생성 상태 조회 응답에서 반환되는 강의 정보
-  (flat 구조 - 각 시간대별로 개별 항목)
 */
 export interface GeneratedCourse {
   course_id: string;
   course_name: string;
   professor: string;
-  day_of_week: string; // "mon", "tue", "wed", "thu", "fri"
-  start_time: number; // 분 단위
-  end_time: number; // 분 단위
+  day_of_week: string; 
+  start_time: number;
+  end_time: number;
 }
 
 /*
-  AI 시간표 생성 상태 조회 응답 - 완료 (COMPLETE)
+  AI 시간표 생성 상태 조회 응답 - COMPLETE
 */
 export interface GenerationStatusCompleteResponse {
   status: 'COMPLETE';
   message: string;
-  data: string; // JSON 문자열 형태로 courses와 ai_comment 포함
+  data: string; // GeneratedCourse[], ai_comment를 JSON 문자열 반환
 }
 
 /*
-  AI 시간표 생성 상태 조회 응답 - 대기 중 (WAITING)
+  AI 시간표 생성 상태 조회 응답 - WAITING
 */
 export interface GenerationStatusWaitingResponse {
   status: 'WAITING';
@@ -44,7 +43,7 @@ export interface GenerationStatusWaitingResponse {
 }
 
 /*
-  AI 시간표 생성 상태 조회 응답 - 에러 (ERROR)
+  AI 시간표 생성 상태 조회 응답 - ERROR
 */
 export interface GenerationStatusErrorResponse {
   status: 'ERROR';
@@ -53,7 +52,7 @@ export interface GenerationStatusErrorResponse {
 }
 
 /*
-  AI 시간표 생성 상태 조회 응답 - 찾을 수 없음 (NOT_FOUND)
+  AI 시간표 생성 상태 조회 응답 - NOT_FOUND
 */
 export interface GenerationStatusNotFoundResponse {
   status: 'NOT_FOUND';
