@@ -115,37 +115,40 @@ export const TimeTable: React.FC<TimeTableProps> = ({ courses, activeCourseId })
         ))}
 
         {courses.map((course) => {
-          const dayColumn = getDayColumn(course.day_of_week);     // 요일 → 열 번호 (2~6)
-          const startRow = getTimeRow(course.start_time);         // 시작 시간 → 시작 행
-          const endRow = getTimeRow(course.finish_time) + 1;      // 종료 시간 → 종료 행 (+1은 exclusive)
-          const color = courseColors.get(course.course_id);       // 수업별 색상
+          const color = courseColors.get(course.courseId);       // 수업별 색상
+          const isActive = activeCourseId === undefined || course.courseId === activeCourseId;
 
-          const isActive = activeCourseId === undefined || course.course_id === activeCourseId;
+          // 각 강의의 여러 시간대를 모두 렌더링
+          return course.courseTimes.map((courseTime, index) => {
+            const dayColumn = getDayColumn(courseTime.dayOfWeek);     // 요일 → 열 번호 (2~6)
+            const startRow = getTimeRow(courseTime.startTime);         // 시작 시간 → 시작 행
+            const endRow = getTimeRow(courseTime.endTime) + 1;         // 종료 시간 → 종료 행 (+1은 exclusive)
 
-          return (
-            <div
-              key={`${course.course_id}-${course.day_of_week}`}
-              className={cn(
-                `p-2 flex flex-col justify-evenly items-center overflow-hidden`,
-                fontStyles.caption,
-                !isActive && "opacity-30"
-              )}
-              style={{
-                gridColumn: dayColumn,
-                gridRow: `${startRow} / ${endRow}`,
-                backgroundColor: color,
-              }}
-            >
-              {/* 수업 이름 */}
-              <p className="font-bold text-center overflow-hidden text-ellipsis whitespace-nowrap w-full">{course.course_name}</p>
-              {/* 교수명 */}
-              <p className="font-bold text-center overflow-hidden text-ellipsis whitespace-nowrap w-full">{course.professor}</p>
-              {/* 강의실 위치 */}
-              {course.location && (
-                <p className="text-center overflow-hidden text-ellipsis whitespace-nowrap w-full">{course.location}</p>
-              )}
-            </div>
-          );
+            return (
+              <div
+                key={`${course.courseId}-${courseTime.dayOfWeek}-${index}`}
+                className={cn(
+                  `p-2 flex flex-col justify-evenly items-center overflow-hidden`,
+                  fontStyles.caption,
+                  !isActive && "opacity-30"
+                )}
+                style={{
+                  gridColumn: dayColumn,
+                  gridRow: `${startRow} / ${endRow}`,
+                  backgroundColor: color,
+                }}
+              >
+                {/* 수업 이름 */}
+                <p className="font-bold text-center overflow-hidden text-ellipsis whitespace-nowrap w-full">{course.courseName}</p>
+                {/* 교수명 */}
+                <p className="font-bold text-center overflow-hidden text-ellipsis whitespace-nowrap w-full">{course.professor}</p>
+                {/* 강의실 위치 */}
+                {courseTime.classroom && (
+                  <p className="text-center overflow-hidden text-ellipsis whitespace-nowrap w-full">{courseTime.classroom}</p>
+                )}
+              </div>
+            );
+          });
         })}
       </div>
     </div>
