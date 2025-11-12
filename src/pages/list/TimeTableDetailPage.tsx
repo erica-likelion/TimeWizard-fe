@@ -8,7 +8,7 @@ import { BasicButton } from '@/components/buttons/BasicButton';
 import { TimeTable } from '@/components/TimeTable';
 import { CourseItem } from '@/pages/list/CourseItem';
 import { Card } from '@/components/Card';
-import { mockGetTimeTableDetail } from '@/apis/TimeTableAPI/timeTableApi';
+import { getTimeTableDetail } from '@/apis/TimeTableAPI/timeTableApi';
 import type { Course } from '@/apis/TimeTableAPI/types';
 
 interface TimeTableDetailPageProps {
@@ -43,7 +43,7 @@ export function TimeTableDetailPage({ timetableId }: TimeTableDetailPageProps) {
     // state가 없으면 API 호출
     const fetchCourses = async () => {
       try {
-        const coursesData = await mockGetTimeTableDetail(timetableId);
+        const coursesData = await getTimeTableDetail(timetableId);
         setCourses(coursesData);
       } catch (error) {
         console.error('시간표 강의 목록 조회 실패:', error);
@@ -62,8 +62,8 @@ export function TimeTableDetailPage({ timetableId }: TimeTableDetailPageProps) {
     강의 호버 시 해당 강의를 활성화(하이라이팅)
     인자 - 호버한 강의 ID
   */
-  const handleCourseItemHover = (course_id: number) => {
-    setActiveCourseId(course_id);
+  const handleCourseItemHover = (courseId: number) => {
+    setActiveCourseId(courseId);
   }
 
   return (
@@ -82,11 +82,11 @@ export function TimeTableDetailPage({ timetableId }: TimeTableDetailPageProps) {
             <div className="flex flex-col gap-[14px]">
               {courses.map((course) => (
                 <CourseItem
-                  key={`${course.course_id}-${course.day_of_week}`}
+                  key={course.courseId}
                   course={course}
-                  color={courseColors.get(course.course_id) || '#f97316'}
-                  isActive={activeCourseId === course.course_id}
-                  onMouseEnter={() => handleCourseItemHover(course.course_id)}
+                  color={courseColors.get(course.courseId) || '#f97316'}
+                  isActive={activeCourseId === course.courseId}
+                  onMouseEnter={() => handleCourseItemHover(course.courseId)}
                 />
               ))}
             </div>
