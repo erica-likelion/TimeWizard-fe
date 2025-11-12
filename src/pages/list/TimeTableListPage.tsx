@@ -10,16 +10,17 @@ import { TimeTable } from '@/components/TimeTable';
 import { Card } from '@/components/Card';
 
 import { mockGetTimeTables, mockGetTimeTableDetail } from '@/apis/TimeTableAPI/timeTableApi';
-import type { TimeTableItem, TimeTableDetail } from './types';
+
+import type { Course, TimeTableAPI } from '@/apis/TimeTableAPI/types';
 
 // 시간표 목록 페이지
 export function TimeTableListPage() {
   // 사용자의 시간표 목록들
-  const [timeTables, setTimeTables] = useState<TimeTableItem[]>([])
+  const [timeTables, setTimeTables] = useState<TimeTableAPI[]>([])
   // 현재 선택된 시간표 ID
-  const [activeTimeTable, setActiveTimeTable] = useState<number | null>(1)
-  // 선택한 시간표의 상세 정보
-  const [selectedTimeTableDetail, setSelectedTimeTableDetail] = useState<TimeTableDetail | null>(null)
+  const [activeTimeTable, setActiveTimeTable] = useState<string | null>("1")
+  // 선택한 시간표의 강의 목록
+  const [selectedCourses, setSelectedCourses] = useState<Course[]>([])
   const navigate = useNavigate();
 
   /*
@@ -29,30 +30,30 @@ export function TimeTableListPage() {
   useEffect(() => {
     const fetchTimeTables = async () => {
       try {
-        const response = await mockGetTimeTables()
-        setTimeTables(response.data.timetables)
+        const timeTables = await mockGetTimeTables()
+        setTimeTables(timeTables)
       } catch (error) {
         console.error('시간표 목록 조회 실패:', error)
       }
     }
 
     fetchTimeTables()
-    handleTimeTableClick(Number(activeTimeTable))
+    if (activeTimeTable) {
+      handleTimeTableClick(activeTimeTable)
+    }
   }, [])
 
   /*
-    시간표 클릭 시 상세 정보 조회
+    시간표 클릭 시 강의 목록 조회 (새 API mock 사용)
     인자 - 조회할 시간표 ID
   */
-  const handleTimeTableClick = async (timetableId: number) => {
+  const handleTimeTableClick = async (timetableId: string) => {
     try {
-      const response = await mockGetTimeTableDetail(timetableId)
-      if (response.success) {
-        setSelectedTimeTableDetail(response.data)
-        setActiveTimeTable(timetableId)
-      }
+      const courses = await mockGetTimeTableDetail(timetableId)
+      setSelectedCourses(courses)
+      setActiveTimeTable(timetableId)
     } catch (error) {
-      console.error('시간표 상세 조회 실패:', error)
+      console.error('시간표 강의 목록 조회 실패:', error)
     }
   }
 
@@ -68,11 +69,10 @@ export function TimeTableListPage() {
             <div className="flex flex-col gap-[22px] mb-5">
               {timeTables.map((timetable) => (
                 <PlanButton
-                  key={timetable.timetable_id}
-                  title={"#" + timetable.timetable_name}
-                  date={timetable.created_at}
-                  onClick={() => handleTimeTableClick(timetable.timetable_id)}
-                  isActive={activeTimeTable === timetable.timetable_id}
+                  key={timetable.timetableId}
+                  title={"#" + timetable.name}
+                  onClick={() => handleTimeTableClick(timetable.timetableId)}
+                  isActive={activeTimeTable === timetable.timetableId}
                 />
               ))}
             </div>
@@ -88,7 +88,7 @@ export function TimeTableListPage() {
           <Card title="선택된 시간표" className="w-full lg:w-auto lg:h-[70%]">
             {/* 시간표 */}
             <div className="flex flex-col overflow-y-auto no-scrollbar lg:h-full">
-              {selectedTimeTableDetail && <TimeTable courses={selectedTimeTableDetail.courses} />}
+              {selectedCourses.length > 0 && <TimeTable courses={selectedCourses} />}
             </div>
           </Card>
           
@@ -98,7 +98,19 @@ export function TimeTableListPage() {
               <div className="flex justify-evenly gap-5">
                 <BasicButton variant="danger" onClick={() => {}} className="flex-1">삭제</BasicButton>
                 <BasicButton onClick={() => {}} className="flex-1">튜닝</BasicButton>
-                <BasicButton onClick={() => navigate({to: '/list/$timetableId', params: {timetableId: String(activeTimeTable)}})} className="flex-2">
+                <BasicButton
+                  onClick={() => {
+                    const selectedTimeTable = timeTables.find(t => t.timetableId === activeTimeTable);
+                    navigate({
+                      to: '/list/$timetableId',
+                      params: {timetableId: String(activeTimeTable)},
+                      state: {
+                        courses: selectedCourses as Course[],
+                        name: selectedTimeTable?.name
+                      } as any
+                    });
+                  }}
+                  className="flex-2">
                     자세히보기
                 </BasicButton>
               </div>

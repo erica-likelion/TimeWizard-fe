@@ -124,3 +124,22 @@ export const generateTimeSlots = (): string[] => {
   }
   return timeSlots;
 };
+
+// =============================
+// API 변환 관련 함수
+
+/*
+  요일 변환 (API의 대문자 영어 → 기존 소문자 영어)
+  인자 - API 요일 ('MON', 'TUE', 'WED', 'THU', 'FRI')
+  반환 - 기존 형식 요일 ('mon', 'tue', 'wed', 'thu', 'fri')
+*/
+export const convertDayOfWeek = (day: string): string => {
+  const dayMap: Record<string, string> = {
+    'MON': 'mon',
+    'TUE': 'tue',
+    'WED': 'wed',
+    'THU': 'thu',
+    'FRI': 'fri'
+  };
+  return dayMap[day] || day.toLowerCase();
+};
