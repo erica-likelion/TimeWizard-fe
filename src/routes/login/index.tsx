@@ -38,7 +38,7 @@ function LoginPage() {
       // 2. 토큰을 localStorage에 저장 (interceptor가 사용)
       localStorage.setItem('authToken', accessToken);
       
-      alert('로그인되었습니다. 메인 페이지로 이동합니다.');
+      //alert('로그인되었습니다. 메인 페이지로 이동합니다.');
       navigate({ to: '/main' }); // 메인 페이지로 이동
 
     } catch (error: any) {
@@ -58,11 +58,12 @@ function LoginPage() {
 
   // 6. 렌더링 (디자인 수정 없음)
   return (
-    <div className="flex min-h-screen w-full">
+    <div className="relative min-h-screen w-full">
       
-      {/* 6-1. 왼쪽 섹션: 로고 (회색 벽) */}
+      {/* 6-1. 왼쪽 섹션: 로고 (회색 벽) - fixed로 고정 */}
       <div className="
         hidden md:flex md:w-1/3 lg:w-1/4 
+        fixed left-0 top-0 h-screen
         items-center justify-center 
         bg-[#2C2C2C] p-8
       ">
@@ -73,13 +74,15 @@ function LoginPage() {
         />
       </div>
 
-      {/* 6-2. 오른쪽 섹션: 폼 + 배경 이미지 */}
+      {/* 6-2. 오른쪽 섹션: 폼 + 배경 이미지 - 왼쪽 여백 추가 */}
       <div 
         style={{
           backgroundImage: `url(${LoginBgImage})`, 
         }}
         className="
           flex w-full md:w-2/3 lg:w-3/4 
+          md:ml-[33.333333%] lg:ml-[25%]
+          min-h-screen
           items-center justify-center md:justify-start 
           p-8 md:p-16 lg:p-24 
           bg-[#1A1A1A] 

@@ -55,7 +55,7 @@ export const logoutUser = async () => {
 const handleApiError = (error: any) => {
   if (axios.isAxiosError(error) && error.response) {
     // 백엔드에서 보낸 에러 메시지를 그대로 던짐
-    throw new Error(error.response.data.message || 'API 요청 중 오류가 발생했습니다.');
+    throw new Error(error.response.data.message || '아이디 또는 비밀번호가 올바르지 않습니다.');
   }
   // 그 외의 에러 (네트워크 문제 등)
   throw new Error('알 수 없는 오류가 발생했습니다.');
