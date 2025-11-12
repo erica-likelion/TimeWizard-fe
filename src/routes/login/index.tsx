@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { createFileRoute, useNavigate, Link } from '@tanstack/react-router';
 import { TextInput } from '@/components/boxes/InputBox';
 import { PinkButton } from '@/components/buttons/PinkButton';
@@ -9,8 +9,10 @@ import { cn } from '@/utils/util';
 import { fontStyles } from '@/utils/styles';
 import { loginUser } from '@/apis/Auth/authService'; 
 import axios from 'axios'; 
+import { useUser } from '@/contexts/UserContext'; 
 
 export const Route = createFileRoute('/login/')({
+
   component: LoginPage,
 });
 
@@ -25,7 +27,22 @@ function LoginPage() {
   // 4. 라우터 네비게이션
   const navigate = useNavigate();
 
-  // [✨ 수정됨] 5. 폼 제출 핸들러 (API 연동)
+  // 5. Context에서 로그인 상태와 로딩 상태를 가져옵니다.
+  const { login, isAuthenticated, loading: authLoading } = useUser();
+
+  // 6. 로그인 상태 감지 및 리디렉션
+  useEffect(() => {
+    // Context가 유저 정보 로딩 중이면 대기
+    if (authLoading) return;
+
+    // 로딩이 끝났는데, 이미 로그인된 상태라면
+    if (isAuthenticated) {
+      alert("이미 로그인되어 있습니다."); // 1. Alert 띄우기
+      navigate({ to: '/main', replace: true }); // 2. /main으로 이동
+    }
+  }, [isAuthenticated, authLoading, navigate]); // 상태 변경 시마다 검사
+
+  // 7. 폼 제출 핸들러 (API 연동)
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setIsLoading(true);
@@ -35,20 +52,17 @@ function LoginPage() {
       // 1. authService.ts의 loginUser 함수 호출
       const accessToken = await loginUser(email, password);
 
-      // 2. 토큰을 localStorage에 저장 (interceptor가 사용)
-      localStorage.setItem('authToken', accessToken);
+      // 2. Context의 login 함수 호출 (토큰 저장 + 유저 정보 조회)
+      await login(accessToken);
       
-      //alert('로그인되었습니다. 메인 페이지로 이동합니다.');
       navigate({ to: '/main' }); // 메인 페이지로 이동
 
     } catch (error: any) {
       // 3. 에러 핸들링
       console.error('로그인 실패:', error);
       if (axios.isAxiosError(error) && error.response) {
-        // API 명세에 따른 401 오류 등
         setError(error.response.data.message || '로그인에 실패했습니다.');
       } else {
-        // service에서 throw한 에러
         setError(error.message || '로그인 중 알 수 없는 오류가 발생했습니다.');
       }
     } finally {
@@ -56,7 +70,8 @@ function LoginPage() {
     }
   };
 
-  // 6. 렌더링 (디자인 수정 없음)
+
+  // 8. 렌더링 
   return (
     <div className="relative min-h-screen w-full">
       
