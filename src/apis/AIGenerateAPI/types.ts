@@ -1,3 +1,5 @@
+import type { CourseTime } from '@/apis/TimeTableAPI/types';
+
 /*
   AI 시간표 생성 요청
 */
@@ -23,6 +25,14 @@ export interface GeneratedCourse {
   start_time: number;
   end_time: number;
 }
+
+// 백엔드에서 수정 후 사용할 타입 
+// export interface GeneratedCourse {
+//   course_id: string;
+//   course_name: string;
+//   professor: string;
+//   courseTimes: CourseTime[];
+// }
 
 /*
   AI 시간표 생성 상태 조회 응답 - COMPLETE

@@ -1,3 +1,5 @@
+import type { GeneratedCourse } from '@/apis/AIGenerateAPI/types'
+
 // 옵션 타입
 export interface Option {
   id: string | number
@@ -15,6 +17,6 @@ export interface ExcludedTime {
 // GenerateResultPage 컴포넌트의 Props 타입
 export interface GenerateResultPageProps {
   gentimetableId: string;
-  courses: import('@/apis/AIGenerateAPI/types').GeneratedCourse[];
+  courses: GeneratedCourse[];
   ai_comment: string;
 }
