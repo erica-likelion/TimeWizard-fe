@@ -2,70 +2,70 @@
   AI 시간표 생성 요청 파라미터
 */
 export interface GenerateTimetableRequest {
-  semester: string; // 학기
-  target_credits: number; // 목표 학점
-  // 선호 사항
-  preferences: {
-    preferred_days?: string[]; // 선호 요일
-    preferred_start_time?: string; // 선호 시작 시간
-    preferred_end_time?: string; // 선호 종료 시간
-    required_courses?: number[]; // 필수 과목 ID
-    excluded_courses?: number[]; // 제외 과목 ID
-  };
+  requestText: string;
+  maxCredit: number;
+  targetCredit: number;
 }
 
 /*
   AI 시간표 생성 응답
 */
-export interface GenerateTimetableResponse {
-  success: boolean;
-  data: {
-    history_id: number; // 생성 이력 ID
-    status: string; // 상태 (pending)
-    message: string; // 응답 메시지
-  };
+export type GenerateTimetableResponse = string;
+
+/*
+  AI 시간표 생성 상태 조회 응답에서 반환되는 강의 정보
+  (flat 구조 - 각 시간대별로 개별 항목)
+*/
+export interface GeneratedCourse {
+  course_id: string;
+  course_name: string;
+  professor: string;
+  day_of_week: string; // "mon", "tue", "wed", "thu", "fri"
+  start_time: number; // 분 단위
+  end_time: number; // 분 단위
 }
 
 /*
-  AI 시간표 생성 상태 조회 응답 - 성공 (completed)
+  AI 시간표 생성 상태 조회 응답 - 완료 (COMPLETE)
 */
-export interface GenerationStatusSuccessResponse {
-  success: boolean;
-  data: {
-    history_id: number; // 생성 이력 ID
-    status: 'completed'; // 상태 (completed)
-    timetable_id: number; // 생성된 시간표 ID
-    message: string; // 응답 메시지
-  };
+export interface GenerationStatusCompleteResponse {
+  status: 'COMPLETE';
+  message: string;
+  data: string; // JSON 문자열 형태로 courses와 ai_comment 포함
 }
 
 /*
-  AI 시간표 생성 상태 조회 응답 - 실패 (failed)
+  AI 시간표 생성 상태 조회 응답 - 대기 중 (WAITING)
 */
-export interface GenerationStatusFailureResponse {
-  success: boolean;
-  data: {
-
-    status: 'failed'; // 상태 (failed)
-    error_message: string; // 에러 메시지
-    suggestions: string[]; // 개선 제안 목록
-  };
+export interface GenerationStatusWaitingResponse {
+  status: 'WAITING';
+  message: string;
+  data?: null;
 }
 
 /*
-  AI 시간표 생성 상태 조회 응답 - 진행 중 (pending)
-  API 명세에는 진행중의 경우가 없음
+  AI 시간표 생성 상태 조회 응답 - 에러 (ERROR)
 */
-export interface GenerationStatusPendingResponse {
-  success: boolean;
-  data: {
-    history_id: number; // 생성 이력 ID
-    status: 'pending'; // 상태 (pending)
-    message: string; // 응답 메시지
-  };
+export interface GenerationStatusErrorResponse {
+  status: 'ERROR';
+  message: string;
+  data?: null;
+}
+
+/*
+  AI 시간표 생성 상태 조회 응답 - 찾을 수 없음 (NOT_FOUND)
+*/
+export interface GenerationStatusNotFoundResponse {
+  status: 'NOT_FOUND';
+  message: string;
+  data?: null;
 }
 
 /*
   AI 시간표 생성 상태 조회 응답
 */
-export type GenerationStatusResponse = GenerationStatusSuccessResponse | GenerationStatusFailureResponse | GenerationStatusPendingResponse;
+export type GenerationStatusResponse =
+  | GenerationStatusCompleteResponse
+  | GenerationStatusWaitingResponse
+  | GenerationStatusErrorResponse
+  | GenerationStatusNotFoundResponse;
