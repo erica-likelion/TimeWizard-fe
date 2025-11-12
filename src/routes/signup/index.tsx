@@ -388,10 +388,11 @@ function SignupPage() {
   };
 
   return (
-    <div className="flex min-h-screen w-full">
-      {/* 1. 왼쪽 로고 영역 */}
+    <div className="relative min-h-screen w-full">
+      {/* 1. 왼쪽 로고 영역 - fixed로 고정 */}
       <div className="
         hidden md:flex md:w-1/3 lg:w-1/4 
+        fixed left-0 top-0 h-screen
         items-center justify-center 
         bg-[#2C2C2C] p-8
       ">
@@ -402,13 +403,15 @@ function SignupPage() {
         />
       </div>
 
-      {/* 2. 오른쪽 폼 영역 */}
+      {/* 2. 오른쪽 폼 영역 - 왼쪽 여백 추가 */}
       <div
         style={{
           backgroundImage: `url(${SignupBgImage})`,
         }}
         className="
           flex w-full md:w-2/3 lg:w-3/4 
+          md:ml-[33.333333%] lg:ml-[25%]
+          min-h-screen
           items-center justify-center md:justify-start /* 폼을 왼쪽 정렬 (디자인 시안 기준) */
           p-8 md:p-16 lg:p-24 /* 폼의 왼쪽 여백 */
           bg-[#1A1A1A] /* 이미지 로드 실패 시 배경색 */
