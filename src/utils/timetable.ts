@@ -22,23 +22,23 @@ export const COLORS = [
   인자 - courses
   반환 - course_id를 키로, 색상을 값으로 가지는 Map
  */
-export const assignCourseColors = <T extends { course_id: number }>(
+export const assignCourseColors = <T extends { courseId: number }>(
   courses: T[]
 ): Map<number, string> => {
   const courseColors = new Map<number, string>();
   const usedColorIndices = new Set<number>(); // 이미 사용된 색들
 
   courses.forEach((course) => {
-    if (!courseColors.has(course.course_id)) {
+    if (!courseColors.has(course.courseId)) {
       // courseId로 일단 하나 정함
-      let colorIndex = course.course_id % COLORS.length;
+      let colorIndex = course.courseId % COLORS.length;
 
       // 이미 사용된 색이면 다음 색으로 계속 넘어가는데 모든 색이 사용되었으면 중복될 수 있음
       while (usedColorIndices.has(colorIndex) && usedColorIndices.size < COLORS.length) {
         colorIndex = (colorIndex + 1) % COLORS.length;
       }
 
-      courseColors.set(course.course_id, COLORS[colorIndex]);
+      courseColors.set(course.courseId, COLORS[colorIndex]);
       usedColorIndices.add(colorIndex);
     }
   });
@@ -51,25 +51,25 @@ export const assignCourseColors = <T extends { course_id: number }>(
 
 // 요일 한글이랑 영문
 export const DAYS_KR = ['월', '화', '수', '목', '금'];
-export const DAYS_EN = ['mon', 'tue', 'wed', 'thu', 'fri'];
+export const DAYS_EN = ['MON', 'TUE', 'WED', 'THU', 'FRI'];
 
 // 영문 요일을 한글로 매핑
 // 현재는 사용안함 => 나중에 필요할 수 있어서 일단 만듬
 export const DAY_MAP: { [key: string]: string } = {
-  'mon': '월',
-  'tue': '화',
-  'wed': '수',
-  'thu': '목',
-  'fri': '금',
+  'MON': '월',
+  'TUE': '화',
+  'WED': '수',
+  'THU': '목',
+  'FRI': '금',
 };
 
 /*
   요일을 그리드 열 번호로 바꿔주는 함수
-  인자 - 영문 요일
+  인자 - 영문 요일 (대문자: "MON", "TUE", "WED", "THU", "FRI")
   반환 - 그리드 열 번호 (월:2, 화:3, 수:4, 목:5, 금:6) => 1열은 시간 배열이라서 그럼
  */
 export const getDayColumn = (day: string): number => {
-  const index = DAYS_EN.indexOf(day.toLowerCase());
+  const index = DAYS_EN.indexOf(day);
   return index + 2;
 };
 
@@ -125,21 +125,3 @@ export const generateTimeSlots = (): string[] => {
   return timeSlots;
 };
 
-// =============================
-// API 변환 관련 함수
-
-/*
-  요일 변환 (API의 대문자 영어 → 기존 소문자 영어)
-  인자 - API 요일 ('MON', 'TUE', 'WED', 'THU', 'FRI')
-  반환 - 기존 형식 요일 ('mon', 'tue', 'wed', 'thu', 'fri')
-*/
-export const convertDayOfWeek = (day: string): string => {
-  const dayMap: Record<string, string> = {
-    'MON': 'mon',
-    'TUE': 'tue',
-    'WED': 'wed',
-    'THU': 'thu',
-    'FRI': 'fri'
-  };
-  return dayMap[day] || day.toLowerCase();
-};
