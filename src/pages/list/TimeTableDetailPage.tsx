@@ -26,7 +26,7 @@ export function TimeTableDetailPage({ timetableId }: TimeTableDetailPageProps) {
   // 조회한 시간표의 강의 목록
   const [courses, setCourses] = useState<Course[]>(stateData?.courses || []);
   // 시간표 이름
-  const [timetableName, setTimetableName] = useState<string>(stateData?.name || '');
+  const [timetableName, _setTimetableName] = useState<string>(stateData?.name || '');
   // 현재 선택된(하이라이팅된) 강의 ID
   const [activeCourseId, setActiveCourseId] = useState<number | undefined>(1);
 
