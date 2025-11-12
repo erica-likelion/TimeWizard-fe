@@ -85,7 +85,7 @@ export const getDayColumn = (day: string, visibleDays: string[] = DAYS_EN): numb
 // 시간표 시작 / 끝 시간 / 간격
 export const START_HOUR = 9;
 export const END_HOUR = 21;
-export const SLOT_DURATION = 30;
+export const SLOT_DURATION = 10;  // 10분 단위로 변경
 
 /*
   시간(분 단위)을 HH:MM 형식으로 변환
@@ -105,27 +105,34 @@ export const formatTime = (minutes: number): string => {
   반환 - 그리드 행 번호 (2부터 시작, 1행은 요일 헤더)
 
   1행은 요일 헤더라서 2행부터 시작
-  - 540분(9:00) -> (540 - 540) / 30 = 0 -> row 2
-  - 570분(9:30) -> (570 - 540) / 30 = 1 -> row 3
-  - 630분(10:30) -> (630 - 540) / 30 = 3 -> row 5
+  10분 단위로 계산:
+  - 540분(9:00) -> (540 - 540) / 10 = 0 -> row 2
+  - 550분(9:10) -> (550 - 540) / 10 = 1 -> row 3
+  - 560분(9:20) -> (560 - 540) / 10 = 2 -> row 4
+  - 570분(9:30) -> (570 - 540) / 10 = 3 -> row 5
  */
 export const getTimeRow = (minutes: number): number => {
   const startMinutes = START_HOUR * 60;
   const slotIndex = Math.floor((minutes - startMinutes) / SLOT_DURATION);
-  return slotIndex + 2; 
+  return slotIndex + 2;
 };
 
 /*
   시간 슬롯 배열 생성
-  반환 - 시간 슬롯 배열 ['9', '9:30', '10', '10:30', ..., '21']
-  30분 단위는 저장은 하지만 화면에는 표시 안하고 있음
+  반환 - 시간 슬롯 배열 ['9', '9:10', '9:20', '9:30', '9:40', '9:50', '10', ...]
+  10분 단위이나 UI에는 정시만 표시
 */
 export const generateTimeSlots = (): string[] => {
   const timeSlots: string[] = [];
   for (let hour = START_HOUR; hour <= END_HOUR; hour++) {
-    timeSlots.push(`${hour}`);
-    if (hour < END_HOUR) {
-      timeSlots.push(`${hour}:30`);
+    for (let min = 0; min < 60; min += SLOT_DURATION) {
+      if (hour === END_HOUR && min > 0) break; // 마지막 시간은 정시만
+
+      if (min === 0) {
+        timeSlots.push(`${hour}`);
+      } else {
+        timeSlots.push(`${hour}:${min.toString().padStart(2, '0')}`);
+      }
     }
   }
   return timeSlots;

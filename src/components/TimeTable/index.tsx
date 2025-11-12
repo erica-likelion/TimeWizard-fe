@@ -142,7 +142,7 @@ export const TimeTable: React.FC<TimeTableProps> = ({ courses, activeCourseId })
                 gridRow: timeIndex + 2,     // 2행부터 시작 (1행은 헤더)
               }}
             >
-              {timeIndex % 2 ? "": time}
+              {time.includes(':') ? "" : time}
             </div>
 
             {/* 각 요일별 빈 셀 (동적으로 생성)*/}
@@ -176,7 +176,7 @@ export const TimeTable: React.FC<TimeTableProps> = ({ courses, activeCourseId })
           return course.courseTimes.map((courseTime, index) => {
             const dayColumn = getDayColumn(courseTime.dayOfWeek, visibleDays);     // 요일 → 열 번호 (동적)
             const startRow = getTimeRow(courseTime.startTime);         // 시작 시간 → 시작 행
-            const endRow = getTimeRow(courseTime.endTime) + 1;         // 종료 시간 → 종료 행 (+1은 exclusive)
+            const endRow = getTimeRow(courseTime.endTime);             // 종료 시간 → 종료 행
 
             return (
               <div
