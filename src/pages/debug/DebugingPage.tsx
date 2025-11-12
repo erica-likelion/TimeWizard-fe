@@ -103,7 +103,7 @@ export function DebugingPage() {
 
              {/* [오른쪽] 시간표 */}
               <div className="w-full lg:flex-6 lg:w-auto">
-                <Card title="테이블" className="w-full lg:w-auto lg:h-full">
+                <Card title="시간표" className="w-full lg:w-auto lg:h-full">
                   <div className="flex flex-col overflow-y-auto no-scrollbar lg:h-full">
                     {courses.length > 0 ? (
                       <TimeTable courses={courses} />
