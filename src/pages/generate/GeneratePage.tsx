@@ -8,7 +8,7 @@ import { TextInput } from '@/components/boxes/InputBox'
 import { CustomSelect } from '@/components/boxes/SelectBox'
 import { Card } from '@/components/Card'
 import { useUser } from '@/contexts/UserContext'
-import { mockGenerateTimetable, mockGetGenerationStatus } from '@/apis/AIGenerateAPI/aiGenerateApi'
+import { generateTimetable, getGenerationStatus } from '@/apis/AIGenerateAPI/aiGenerateApi'
 
 import type { GenerateTimetableRequest } from '@/apis/AIGenerateAPI/types'
 import type { Option, ExcludedTime } from './types'
@@ -25,7 +25,7 @@ export function GeneratePage() {
   const [isGenerating, setIsGenerating] = useState<boolean>(false)
 
   // 재학 정보
-  const [university, setUniversity] = useState<string>('')
+  const [university, setUniversity] = useState<string>('한양대학교 ERICA 캠퍼스')
   const [major, setMajor] = useState<string>('')
   const [grade, setGrade] = useState<string>('')
   const [semester, setSemester] = useState<string>('')
@@ -129,40 +129,24 @@ export function GeneratePage() {
   const handleGenerate = async (): Promise<void> => {
     try {
       setIsGenerating(true)
-
-      // API 요청 데이터 구성
-      // 폼에서는 제외 시간(excludedTimes)가 존재하나
-      // API 명세에는 없음 오히려 선호시간대가 존재
-      // 또한 시간대는 array가 아니라 하나밖에 지정안되는 상황
       const requestData: GenerateTimetableRequest = {
-        semester: semester || "1",
-        target_credits: Number(totalCredits) || 0,
-        preferences: {
-          preferred_days: undefined,
-          preferred_start_time: undefined,
-          preferred_end_time: undefined,
-          required_courses: undefined,
-          excluded_courses: undefined
-        }
+        requestText: requests,
+        maxCredit: 20,
+        targetCredit: Number(totalCredits) || 0
       }
 
       console.log('AI 시간표 생성 요청:', requestData)
 
       // 1단계: 시간표 생성 시작
-      // const generateResponse = await generateTimetable(requestData)
-      const generateResponse = await mockGenerateTimetable(requestData)
+      const uuid = await generateTimetable(requestData)
 
-      console.log('AI 시간표 생성 응답:', generateResponse)
+      console.log('AI 시간표 생성 응답:', uuid)
 
-      if (!generateResponse.success) {
-        alert('시간표 생성 요청에 실패했습니다.')
-        return
-      }
+      // UUID를 taskId
+      const taskId = uuid
 
-      const historyId = generateResponse.data.history_id
-
-      // 2단계: 폴링으로 생성 상태 확인 (5초마다, 최대 20번 시도 = 100초)
-      const MAX_ATTEMPTS = 20
+      // 2단계: 폴링으로 생성 상태 확인 (5초마다, 최대 24번 시도 = 120초)
+      const MAX_ATTEMPTS = 24
       const POLLING_INTERVAL = 5000 
       let attempts = 0
 
@@ -171,31 +155,31 @@ export function GeneratePage() {
           attempts++
           console.log(`시간표 생성 상태 확인 시도 ${attempts}/${MAX_ATTEMPTS}`)
 
-          // const statusResponse = await getGenerationStatus(historyId)
-          const statusResponse = await mockGetGenerationStatus(historyId)
+          const statusResponse = await getGenerationStatus(taskId)
 
           console.log('AI 시간표 생성 상태 응답:', statusResponse)
 
-          if (!statusResponse.success) {
-            alert('시간표 생성 상태 조회에 실패했습니다.')
-            setIsGenerating(false)
-            return
-          }
-
           // 상태에 따라 처리
-          if (statusResponse.data.status === 'completed') {
-            // 생성 성공 - 생성된 시간표로 이동 (state로 message 전달하여 URL 노출 방지)
+          if (statusResponse.status === 'COMPLETE') {
+            // 생성 성공 - JSON 파싱하여 데이터 추출
             setIsGenerating(false)
+            const courseData = JSON.parse(statusResponse.data);
             navigate({
-              to: `/generate/${statusResponse.data.timetable_id}`,
-              state: { message: statusResponse.data.message } as any
+              to: `/generate/${taskId}`,
+              state: {
+                courses: courseData.courses,
+                ai_comment: courseData.ai_comment
+              } as any
             })
-          } else if (statusResponse.data.status === 'failed') {
-            // 생성 실패 - 에러 메시지와 개선 제안 표시
+          } else if (statusResponse.status === 'ERROR') {
+            // 생성 실패 - 에러 메시지 표시
             setIsGenerating(false)
-            const suggestions = statusResponse.data.suggestions?.join('\n- ') || '없음'
-            alert(`${statusResponse.data.error_message}\n\n개선 제안:\n- ${suggestions}`)
-          } else if (statusResponse.data.status === 'pending') {
+            alert(`${statusResponse.message}`)
+          } else if (statusResponse.status === 'NOT_FOUND') {
+            // 찾을 수 없음
+            setIsGenerating(false)
+            alert(`${statusResponse.message}`)
+          } else if (statusResponse.status === 'WAITING') {
             if (attempts >= MAX_ATTEMPTS) { // 타임 아웃 처리
               setIsGenerating(false)
               alert('시간표 생성이 너무 오래 걸립니다.\n다시 시도해주세요.')
