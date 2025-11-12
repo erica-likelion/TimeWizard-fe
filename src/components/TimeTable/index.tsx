@@ -219,7 +219,7 @@ export const TimeTable: React.FC<TimeTableProps> = ({ courses, activeCourseId })
                 <div
                   key={course.courseId}
                   className={cn(
-                    "p-4 rounded-lg flex flex-col gap-2",
+                    "p-4 flex flex-col gap-2",
                     !isActive && "opacity-30"
                   )}
                   style={{ backgroundColor: color }}
