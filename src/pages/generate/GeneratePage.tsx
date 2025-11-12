@@ -44,6 +44,16 @@ export function GeneratePage() {
   // 요청 사항
   const [requests, setRequests] = useState<string>('')
 
+  const [loadingIndex, setLoadingIndex] = useState(0);
+
+  const loadingMessages = [
+    "거의 다 해가요! 잠시만 기다려 주세요!",
+    "마법사가 열심히 시간표를 만들고 있어요!",
+    "조금만 더 기다려 주세요, 곧 완성됩니다!",
+    "AI가 땀 흘리며 작업 중입니다!",
+    "시간표가 곧 도착할 예정입니다! 기대해 주세요!"
+  ];
+
   // 요일 옵션
   const dayOptions: Option[] = [
     { id: '월요일', label: '월요일' },
@@ -76,6 +86,14 @@ export function GeneratePage() {
       setGeneralCredits(user.general_credits?.toString() || '')
     }
   }, [user])
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setLoadingIndex(prev => (prev + 1) % loadingMessages.length);
+    }, 10000); // 10초마다 변경
+
+    return () => clearInterval(interval);
+  }, []);
 
   // 제외 시간대 추가
   const addExcludedTime = (): void => {
@@ -235,7 +253,7 @@ export function GeneratePage() {
               {/* 로딩 텍스트 */}
               <div className="text-center">
                 <p className={cn(fontStyles.title, "text-pink-400 mb-2")}>시간표 생성 중입니다...</p>
-                <p className={cn(fontStyles.body, "text-white")}>거의 다 해가요! 잠시만 기다려 주세요!</p>
+                <p className={cn(fontStyles.body, "text-white")}>{loadingMessages[loadingIndex]}</p>
               </div>
 
               {/* 프로그레스 바  */}

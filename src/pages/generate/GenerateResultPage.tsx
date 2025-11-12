@@ -66,7 +66,7 @@ export function GenerateResultPage({ gentimetableId, courses: generatedCourses, 
       return Array.from(courseMap.values());
     }, [generatedCourses]);
 
-    // 저장 버튼 클릭 시 호출되는 함수
+    // 시간표 저장 버튼 핸들 함수
     const handleSaveTimetable = async () => {
       if (!timetableName.trim()) {
         alert('시간표 이름을 입력해주세요.');
