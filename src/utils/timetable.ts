@@ -49,27 +49,33 @@ export const assignCourseColors = <T extends { courseId: number }>(
 // =============================
 // 요일 관련 함수랑 상수
 
-// 요일 한글이랑 영문
-export const DAYS_KR = ['월', '화', '수', '목', '금'];
+// 요일 영문 (평일)
 export const DAYS_EN = ['MON', 'TUE', 'WED', 'THU', 'FRI'];
 
 // 영문 요일을 한글로 매핑
-// 현재는 사용안함 => 나중에 필요할 수 있어서 일단 만듬
 export const DAY_MAP: { [key: string]: string } = {
   'MON': '월',
   'TUE': '화',
   'WED': '수',
   'THU': '목',
   'FRI': '금',
+  'SAT': '토',
+  'SUN': '일',
+};
+
+// 영문 요일 배열을 한글로 변환하는 헬퍼 함수
+export const convertDaysToKorean = (daysEn: string[]): string[] => {
+  return daysEn.map(day => DAY_MAP[day]);
 };
 
 /*
   요일을 그리드 열 번호로 바꿔주는 함수
-  인자 - 영문 요일 (대문자: "MON", "TUE", "WED", "THU", "FRI")
-  반환 - 그리드 열 번호 (월:2, 화:3, 수:4, 목:5, 금:6) => 1열은 시간 배열이라서 그럼
+  인자 - 영문 요일 (대문자: "MON", "TUE", "WED", "THU", "FRI", "SAT", "SUN")
+  인자 - 표시할 요일 배열 (기본값: DAYS_EN)
+  반환 - 그리드 열 번호 (월:2, 화:3, 수:4, 목:5, 금:6, 토:7, 일:8) => 1열은 시간 배열이라서 그럼
  */
-export const getDayColumn = (day: string): number => {
-  const index = DAYS_EN.indexOf(day);
+export const getDayColumn = (day: string, visibleDays: string[] = DAYS_EN): number => {
+  const index = visibleDays.indexOf(day);
   return index + 2;
 };
 
