@@ -21,6 +21,7 @@ import { Route as MainIndexRouteImport } from './routes/main/index'
 import { Route as LoginIndexRouteImport } from './routes/login/index'
 import { Route as ListIndexRouteImport } from './routes/list/index'
 import { Route as GenerateIndexRouteImport } from './routes/generate/index'
+import { Route as DebugIndexRouteImport } from './routes/debug/index'
 import { Route as ListTimetableIdRouteImport } from './routes/list/$timetableId'
 import { Route as GenerateGentimetableIdRouteImport } from './routes/generate/$gentimetableId'
 
@@ -83,6 +84,11 @@ const GenerateIndexRoute = GenerateIndexRouteImport.update({
   path: '/generate/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const DebugIndexRoute = DebugIndexRouteImport.update({
+  id: '/debug/',
+  path: '/debug/',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ListTimetableIdRoute = ListTimetableIdRouteImport.update({
   id: '/list/$timetableId',
   path: '/list/$timetableId',
@@ -99,6 +105,7 @@ export interface FileRoutesByFullPath {
   '/about': typeof AboutRoute
   '/generate/$gentimetableId': typeof GenerateGentimetableIdRoute
   '/list/$timetableId': typeof ListTimetableIdRoute
+  '/debug': typeof DebugIndexRoute
   '/generate': typeof GenerateIndexRoute
   '/list': typeof ListIndexRoute
   '/login': typeof LoginIndexRoute
@@ -114,6 +121,7 @@ export interface FileRoutesByTo {
   '/about': typeof AboutRoute
   '/generate/$gentimetableId': typeof GenerateGentimetableIdRoute
   '/list/$timetableId': typeof ListTimetableIdRoute
+  '/debug': typeof DebugIndexRoute
   '/generate': typeof GenerateIndexRoute
   '/list': typeof ListIndexRoute
   '/login': typeof LoginIndexRoute
@@ -131,6 +139,7 @@ export interface FileRoutesById {
   '/about': typeof AboutRoute
   '/generate/$gentimetableId': typeof GenerateGentimetableIdRoute
   '/list/$timetableId': typeof ListTimetableIdRoute
+  '/debug/': typeof DebugIndexRoute
   '/generate/': typeof GenerateIndexRoute
   '/list/': typeof ListIndexRoute
   '/login/': typeof LoginIndexRoute
@@ -148,6 +157,7 @@ export interface FileRouteTypes {
     | '/about'
     | '/generate/$gentimetableId'
     | '/list/$timetableId'
+    | '/debug'
     | '/generate'
     | '/list'
     | '/login'
@@ -163,6 +173,7 @@ export interface FileRouteTypes {
     | '/about'
     | '/generate/$gentimetableId'
     | '/list/$timetableId'
+    | '/debug'
     | '/generate'
     | '/list'
     | '/login'
@@ -179,6 +190,7 @@ export interface FileRouteTypes {
     | '/about'
     | '/generate/$gentimetableId'
     | '/list/$timetableId'
+    | '/debug/'
     | '/generate/'
     | '/list/'
     | '/login/'
@@ -196,6 +208,7 @@ export interface RootRouteChildren {
   AboutRoute: typeof AboutRoute
   GenerateGentimetableIdRoute: typeof GenerateGentimetableIdRoute
   ListTimetableIdRoute: typeof ListTimetableIdRoute
+  DebugIndexRoute: typeof DebugIndexRoute
   GenerateIndexRoute: typeof GenerateIndexRoute
   ListIndexRoute: typeof ListIndexRoute
   LoginIndexRoute: typeof LoginIndexRoute
@@ -293,6 +306,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof GenerateIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/debug/': {
+      id: '/debug/'
+      path: '/debug'
+      fullPath: '/debug'
+      preLoaderRoute: typeof DebugIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/list/$timetableId': {
       id: '/list/$timetableId'
       path: '/list/$timetableId'
@@ -316,6 +336,7 @@ const rootRouteChildren: RootRouteChildren = {
   AboutRoute: AboutRoute,
   GenerateGentimetableIdRoute: GenerateGentimetableIdRoute,
   ListTimetableIdRoute: ListTimetableIdRoute,
+  DebugIndexRoute: DebugIndexRoute,
   GenerateIndexRoute: GenerateIndexRoute,
   ListIndexRoute: ListIndexRoute,
   LoginIndexRoute: LoginIndexRoute,
