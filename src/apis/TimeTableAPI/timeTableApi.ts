@@ -1,5 +1,5 @@
 import api from "@utils/apiClient";
-import type { GetTimeTablesResponse, GetTimeTableDetailResponse, Course } from './types';
+import type { GetTimeTablesResponse, GetTimeTableDetailResponse, Course, SaveTimetableRequest } from './types';
 
 /*
   시간표 목록 조회
@@ -35,14 +35,14 @@ export const mockGetTimeTables = async (): Promise<GetTimeTablesResponse> => {
 };
 
 /*
-  시간표의 강의 목록 조회 (새 API)
+  시간표의 강의 목록 조회
   인자 - 시간표 ID
   반환 - Course 배열
 */
 export const getTimeTableDetail = async (timetableId: string): Promise<Course[]> => {
   try {
     const response = await api.get<GetTimeTableDetailResponse>(`/timetable/${timetableId}/courses`);
-    return response.data;  // Course[] 바로 반환
+    return response.data;
   } catch (error) {
     console.error('시간표 강의 목록 조회 에러:', error);
     throw error;
@@ -50,9 +50,7 @@ export const getTimeTableDetail = async (timetableId: string): Promise<Course[]>
 };
 
 /*
-  목업 시간표 강의 목록 조회 (새 API 형식)
-  인자 - 시간표 ID
-  반환 - Course 배열
+  목업 시간표 강의 목록 조회
 */
 export const mockGetTimeTableDetail = async (timetableId: string): Promise<Course[]> => {
   const mockData: Record<string, GetTimeTableDetailResponse> = {
@@ -350,4 +348,16 @@ export const mockGetTimeTableDetail = async (timetableId: string): Promise<Cours
   }
 
   return mockData[timetableId];
+};
+
+/*
+  시간표 저장 API
+*/
+export const saveTimetable = async (request: SaveTimetableRequest): Promise<void> => {
+  try {
+    await api.post('/save-timetable', request);
+  } catch (error) {
+    console.error('시간표 저장 에러:', error);
+    throw error;
+  }
 };
