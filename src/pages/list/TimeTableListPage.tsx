@@ -9,16 +9,16 @@ import { BasicButton } from '@/components/buttons/BasicButton';
 import { TimeTable } from '@/components/TimeTable';
 import { Card } from '@/components/Card';
 
-import { mockGetTimeTables, mockGetTimeTableDetail } from '@/apis/TimeTableAPI/timeTableApi';
+import { getTimeTables, getTimeTableDetail } from '@/apis/TimeTableAPI/timeTableApi';
 
-import type { Course, TimeTableAPI } from '@/apis/TimeTableAPI/types';
+import type { Course, TimeTable as TimeTableAPI } from '@/apis/TimeTableAPI/types';
 
 // 시간표 목록 페이지
 export function TimeTableListPage() {
   // 사용자의 시간표 목록들
   const [timeTables, setTimeTables] = useState<TimeTableAPI[]>([])
   // 현재 선택된 시간표 ID
-  const [activeTimeTable, setActiveTimeTable] = useState<string | null>("1")
+  const [activeTimeTable, setActiveTimeTable] = useState<string | null>()
   // 선택한 시간표의 강의 목록
   const [selectedCourses, setSelectedCourses] = useState<Course[]>([])
   const navigate = useNavigate();
@@ -30,26 +30,30 @@ export function TimeTableListPage() {
   useEffect(() => {
     const fetchTimeTables = async () => {
       try {
-        const timeTables = await mockGetTimeTables()
+        const timeTables = await getTimeTables()
         setTimeTables(timeTables)
+
+        // 첫 번째 시간표가 있으면 자동 선택
+        if (timeTables.length > 0) {
+          const firstId = timeTables[0].timetableId
+          setActiveTimeTable(firstId)
+          handleTimeTableClick(firstId)
+        }
       } catch (error) {
         console.error('시간표 목록 조회 실패:', error)
       }
     }
 
     fetchTimeTables()
-    if (activeTimeTable) {
-      handleTimeTableClick(activeTimeTable)
-    }
   }, [])
 
   /*
-    시간표 클릭 시 강의 목록 조회 (새 API mock 사용)
+    시간표 클릭 시 강의 목록 조회
     인자 - 조회할 시간표 ID
   */
   const handleTimeTableClick = async (timetableId: string) => {
     try {
-      const courses = await mockGetTimeTableDetail(timetableId)
+      const courses = await getTimeTableDetail(timetableId)
       setSelectedCourses(courses)
       setActiveTimeTable(timetableId)
     } catch (error) {
@@ -96,8 +100,8 @@ export function TimeTableListPage() {
           <Card className="w-full lg:w-auto gap-3">
               {/* 삭제, 튜닝, 자세히보기 */}
               <div className="flex justify-evenly gap-5">
-                <BasicButton variant="danger" onClick={() => {}} className="flex-1">삭제</BasicButton>
-                <BasicButton onClick={() => {}} className="flex-1">튜닝</BasicButton>
+                <BasicButton variant="danger" onClick={() => {}} className="flex-1" disabled={!activeTimeTable}>삭제</BasicButton>
+                <BasicButton onClick={() => {}} className="flex-1" disabled={!activeTimeTable}>튜닝</BasicButton>
                 <BasicButton
                   onClick={() => {
                     const selectedTimeTable = timeTables.find(t => t.timetableId === activeTimeTable);
@@ -110,6 +114,7 @@ export function TimeTableListPage() {
                       } as any
                     });
                   }}
+                  disabled={!activeTimeTable}
                   className="flex-2">
                     자세히보기
                 </BasicButton>
@@ -120,7 +125,8 @@ export function TimeTableListPage() {
                 width='full'
                 size='lg'
                 onClick={() => {}}
-                className={cn(fontStyles.button)}>
+                className={cn(fontStyles.button)}
+                disabled={!activeTimeTable}>
                   플래너 짜기
               </PinkButton>
           </Card>
