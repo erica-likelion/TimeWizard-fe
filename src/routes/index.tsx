@@ -1,18 +1,11 @@
-import { createFileRoute, useNavigate, redirect } from '@tanstack/react-router'
+
+import { createFileRoute, useNavigate } from '@tanstack/react-router'
+
 import backgroundImage from '../assets/images/background.png'
 import logoIcon from '../assets/icons/billnut_col.svg'
 import timewizardLogo from '../assets/icons/timewizard.svg' 
-import { TokenManager } from '@/contexts/UserContext' 
 
 export const Route = createFileRoute('/')({
-  beforeLoad: () => {
-    if (TokenManager.isTokenValid()) {
-      throw redirect({
-        to: '/main',
-        replace: true,
-      });
-    }
-  },
   component: Index,
 })
 
@@ -28,8 +21,8 @@ function Index() {
 
       <div className="relative z-10 flex min-h-screen flex-col">
         <nav className="flex w-full h-[60px] items-center text-[12px]
-                       justify-between bg-[#303030]/45 px-8 text-gray-300 md:px-12 
-                       text-xl font-bold backdrop-blur-md">
+                        justify-between bg-[#303030]/45 px-8 text-gray-300 md:px-12 
+                        text-xl font-bold backdrop-blur-md">
           <div className="flex items-center gap-6">
             <div className="flex items-center gap-2">
               <img src={timewizardLogo} alt="TimeWizard Logo" className="h-8 w-auto" />
