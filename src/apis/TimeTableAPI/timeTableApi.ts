@@ -361,3 +361,15 @@ export const saveTimetable = async (request: SaveTimetableRequest): Promise<void
     throw error;
   }
 };
+
+/*
+  시간표 삭제 API
+*/
+export const deleteTimetable = async (timetableId: string): Promise<void> => {
+  try {
+    await api.post(`/timetable/${timetableId}`);
+  } catch (error) {
+    console.error('시간표 삭제 에러:', error);
+    throw error;
+  }
+};

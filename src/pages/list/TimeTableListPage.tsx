@@ -9,7 +9,7 @@ import { BasicButton } from '@/components/buttons/BasicButton';
 import { TimeTable } from '@/components/TimeTable';
 import { Card } from '@/components/Card';
 
-import { getTimeTables, getTimeTableDetail } from '@/apis/TimeTableAPI/timeTableApi';
+import { getTimeTables, getTimeTableDetail, deleteTimetable } from '@/apis/TimeTableAPI/timeTableApi';
 
 import type { Course, TimeTable as TimeTableAPI } from '@/apis/TimeTableAPI/types';
 
@@ -61,6 +61,25 @@ export function TimeTableListPage() {
     }
   }
 
+  /*
+    시간표 삭제 클릭 시 삭제
+  */
+  const handleDeleteTimetable = async () => {
+    const confirmed = window.confirm("정말 이 시간표를 삭제하시겠습니까?");
+    if (!confirmed){return}
+
+    try {
+      if(activeTimeTable){
+        await deleteTimetable(activeTimeTable);
+        alert('시간표가 삭제되었습니다!');
+        navigate({to: '/list'});
+      }
+    } catch (error) {
+      console.error('시간표 삭제 실패:', error);
+      alert('시간표 삭제에 실패했습니다. 다시 시도해주세요.');
+    } 
+  };
+
   return (
     <div className="flex flex-col px-18 gap-5 py-10 flex-1">
       {/* 페이지 제목 */}
@@ -100,7 +119,7 @@ export function TimeTableListPage() {
           <Card className="w-full lg:w-auto gap-3">
               {/* 삭제, 튜닝, 자세히보기 */}
               <div className="flex justify-evenly gap-5">
-                <BasicButton variant="danger" onClick={() => {}} className="flex-1" disabled={!activeTimeTable}>삭제</BasicButton>
+                <BasicButton variant="danger" onClick={() => handleDeleteTimetable()} className="flex-1" disabled={!activeTimeTable}>삭제</BasicButton>
                 <BasicButton onClick={() => {}} className="flex-1" disabled={!activeTimeTable}>튜닝</BasicButton>
                 <BasicButton
                   onClick={() => {
