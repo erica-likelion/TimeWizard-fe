@@ -1,4 +1,4 @@
-import type { CourseTime } from '@/apis/TimeTableAPI/types';
+//import type { CourseTime } from '@/apis/TimeTableAPI/types'; => 백엔드에서 수정 후 사용할 타입
 
 /*
   AI 시간표 생성 요청
