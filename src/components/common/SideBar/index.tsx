@@ -9,7 +9,8 @@ const navItems = [
     { to: '/generate', label: '생성' },
     { to: '/tuning', label: '튜닝' },
     { to: '/planner', label: '플래너' },
-    { to: '/planb', label: '플랜B' }
+    { to: '/planb', label: '플랜B' },
+    { to: '/debug', label: '디버깅'}
 ];
 
 const SideBar = () => {
