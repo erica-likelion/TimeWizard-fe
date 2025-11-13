@@ -8,12 +8,11 @@ import { TextInput } from '@/components/boxes/InputBox'
 import { CustomSelect } from '@/components/boxes/SelectBox'
 import { Card } from '@/components/Card'
 import { useUser } from '@/contexts/UserContext'
-import { generateTimetable, getGenerationStatus } from '@/apis/AIGenerateAPI/aiGenerateApi'
+import { useGenerateTimetable } from '@/hooks/useGenerateTimetable'
+import { GenerateLoading } from './Loading'
 
 import type { GenerateTimetableRequest } from '@/apis/AIGenerateAPI/types'
 import type { Option, ExcludedTime } from './types'
-
-import TimeTableIcon from '@/assets/icons/time_table.png'
 
 
 // 시간표 생성 페이지
@@ -21,8 +20,8 @@ export function GeneratePage() {
   const navigate = useNavigate();
   const { user, loading } = useUser();
 
-  // AI 생성 중 상태
-  const [isGenerating, setIsGenerating] = useState<boolean>(false)
+  // AI 시간표 생성 훅
+  const { isGenerating, loadingIndex, loadingMessages, handleGenerate } = useGenerateTimetable();
 
   // 재학 정보
   const [university, setUniversity] = useState<string>('한양대학교 ERICA 캠퍼스')
@@ -43,16 +42,6 @@ export function GeneratePage() {
 
   // 요청 사항
   const [requests, setRequests] = useState<string>('')
-
-  const [loadingIndex, setLoadingIndex] = useState(0);
-
-  const loadingMessages = [
-    "거의 다 해가요! 잠시만 기다려 주세요!",
-    "마법사가 열심히 시간표를 만들고 있어요!",
-    "조금만 더 기다려 주세요, 곧 완성됩니다!",
-    "AI가 땀 흘리며 작업 중입니다!",
-    "시간표가 곧 도착할 예정입니다! 기대해 주세요!"
-  ];
 
   // 요일 옵션
   const dayOptions: Option[] = [
@@ -85,15 +74,7 @@ export function GeneratePage() {
       setMajorCreditsCompleted(user.major_credits?.toString() || '')
       setGeneralCredits(user.general_credits?.toString() || '')
     }
-  }, [user])
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setLoadingIndex(prev => (prev + 1) % loadingMessages.length);
-    }, 10000); // 10초마다 변경
-
-    return () => clearInterval(interval);
-  }, []);
+  }, [user]);
 
   // 제외 시간대 추가
   const addExcludedTime = (): void => {
@@ -143,85 +124,18 @@ export function GeneratePage() {
     setRequests('')
   }
 
-  // 생성 시작
-  const handleGenerate = async (): Promise<void> => {
-    try {
-      setIsGenerating(true)
-      const requestData: GenerateTimetableRequest = {
-        requestText: requests,
-        maxCredit: 20,
-        targetCredit: Number(totalCredits) || 0
-      }
+  // 생성 시작 - 훅의 handleGenerate 호출
+  const onGenerateClick = async (): Promise<void> => {
+    const requestData: GenerateTimetableRequest = {
+      requestText: requests,
+      maxCredit: 20,
+      targetCredit: Number(totalCredits) || 0
+    };
 
-      console.log('AI 시간표 생성 요청:', requestData)
-
-      // 1단계: 시간표 생성 시작
-      const uuid = await generateTimetable(requestData)
-
-      console.log('AI 시간표 생성 응답:', uuid)
-
-      // UUID를 taskId
-      const taskId = uuid
-
-      // 2단계: 폴링으로 생성 상태 확인 (5초마다, 최대 24번 시도 = 120초)
-      const MAX_ATTEMPTS = 24
-      const POLLING_INTERVAL = 5000 
-      let attempts = 0
-
-      const checkStatus = async (): Promise<void> => {
-        try {
-          attempts++
-          console.log(`시간표 생성 상태 확인 시도 ${attempts}/${MAX_ATTEMPTS}`)
-
-          const statusResponse = await getGenerationStatus(taskId)
-
-          console.log('AI 시간표 생성 상태 응답:', statusResponse)
-
-          // 상태에 따라 처리
-          if (statusResponse.status === 'COMPLETE') {
-            // 생성 성공 - JSON 파싱하여 데이터 추출
-            setIsGenerating(false)
-            const courseData = JSON.parse(statusResponse.data);
-            navigate({
-              to: `/generate/${taskId}`,
-              state: {
-                courses: courseData.courses,
-                ai_comment: courseData.ai_comment
-              } as any
-            })
-          } else if (statusResponse.status === 'ERROR') {
-            // 생성 실패 - 에러 메시지 표시
-            setIsGenerating(false)
-            alert(`${statusResponse.message}`)
-          } else if (statusResponse.status === 'NOT_FOUND') {
-            // 찾을 수 없음
-            setIsGenerating(false)
-            alert(`${statusResponse.message}`)
-          } else if (statusResponse.status === 'WAITING') {
-            if (attempts >= MAX_ATTEMPTS) { // 타임 아웃 처리
-              setIsGenerating(false)
-              alert('시간표 생성이 너무 오래 걸립니다.\n다시 시도해주세요.')
-              navigate({ to: '/generate' })
-            } else {
-              setTimeout(checkStatus, POLLING_INTERVAL) // 5초 후 다시 시도
-            }
-          }
-        } catch (error) {
-          console.error('시간표 생성 상태 확인 실패:', error)
-          setIsGenerating(false)
-          alert('시간표 생성 상태 확인에 실패했습니다. 다시 시도해주세요.')
-        }
-      }
-
-      checkStatus()
-    } catch (error) {
-      console.error('시간표 생성 실패:', error)
-      alert('시간표 생성에 실패했습니다. 다시 시도해주세요.')
-      setIsGenerating(false)
-    }
+    await handleGenerate(requestData);
   }
 
-  // 로딩 중일 때 표시
+  // 로딩 중일 때 표시 => AI 생성 로딩이 아니라 처음에 유저 정보 불러올 때 로딩
   if (loading) {
     return (
       <div className="flex items-center justify-center h-screen">
@@ -240,27 +154,11 @@ export function GeneratePage() {
         <Card className="gap-10 h-full">
           {/* AI 생성 중 로딩 화면 */}
           {isGenerating ? (
-            <div className="flex flex-col items-center justify-center h-full gap-8">
-              {/* TimeTable 아이콘 애니메이션 */}
-              <div className="relative">
-                <img
-                  src={TimeTableIcon}
-                  alt="Loading"
-                  className="w-100"
-                />
-              </div>
-
-              {/* 로딩 텍스트 */}
-              <div className="text-center">
-                <p className={cn(fontStyles.title, "text-pink-400 mb-2")}>시간표 생성 중입니다...</p>
-                <p className={cn(fontStyles.body, "text-white")}>{loadingMessages[loadingIndex]}</p>
-              </div>
-
-              {/* 프로그레스 바  */}
-              <div className="w-full max-w-250 h-8 bg-[#767676] overflow-hidden">
-                <div className="h-full w-1/3 bg-linear-to-r from-pink-500 to-pink-400 animate-[slide_1.5s_linear_infinite]"></div>
-              </div>
-            </div>
+            <GenerateLoading
+              loadingMessages={loadingMessages}
+              loadingIndex={loadingIndex}
+              title="시간표 생성 중입니다..."
+            />
           ) : (
             <>
             {/* 재학 정보: 사용자 정보에서 자동으로 가져오고 수정 가능 */}
@@ -461,7 +359,7 @@ export function GeneratePage() {
                   초기화
                 </BasicButton>
                 <PinkButton
-                  onClick={handleGenerate}
+                  onClick={onGenerateClick}
                   size="sm"
                   className={cn("w-full lg:w-auto px-8 py-2 min-h-14", fontStyles.button)}
                   disabled={isGenerating || !isFormValid}
