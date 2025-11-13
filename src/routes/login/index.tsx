@@ -38,7 +38,7 @@ function LoginPage() {
       // 2. 토큰을 localStorage에 저장 (interceptor가 사용)
       localStorage.setItem('authToken', accessToken);
       
-      alert('로그인되었습니다. 메인 페이지로 이동합니다.');
+      //alert('로그인되었습니다. 메인 페이지로 이동합니다.');
       navigate({ to: '/main' }); // 메인 페이지로 이동
 
     } catch (error: any) {

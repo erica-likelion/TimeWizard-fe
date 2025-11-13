@@ -3,4 +3,5 @@ export interface BasicButtonProps {
   onClick?: () => void;
   variant?: 'default' | 'danger';
   className?: string;
+  disabled?: boolean;
 }
