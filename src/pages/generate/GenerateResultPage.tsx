@@ -52,25 +52,17 @@ export function GenerateResultPage({ gentimetableId, courses: generatedCourses, 
             courseTimes: []
           });
         }
+        
         // courseTimes에 추가
-        const course = courseMap.get(genCourse.course_id)!;
-        course.courseTimes.push({
-          dayOfWeek: genCourse.day_of_week.toUpperCase(),
-          startTime: genCourse.start_time,
-          endTime: genCourse.end_time,
-          classroom: ''
-        });
-
-        // 백엔드에서 수정 후 사용할 로직 (GeneratedCourse도 맞게 변경해줘야함)
-        // genCourse.courseTimes.forEach((courseTime) => {
-        //   const course = courseMap.get(genCourse.course_id)!;
-        //   course.courseTimes.push({
-        //     dayOfWeek: courseTime.dayOfWeek.toUpperCase(),
-        //     startTime: courseTime.startTime,
-        //     endTime: courseTime.endTime,
-        //     classroom: ''
-        //   })
-        // })
+        genCourse.courseTimes.forEach((courseTime) => {
+          const course = courseMap.get(genCourse.course_id)!;
+          course.courseTimes.push({
+            dayOfWeek: courseTime.dayOfWeek.toUpperCase(),
+            startTime: courseTime.startTime,
+            endTime: courseTime.endTime,
+            classroom: ''
+          })
+        })
 
         
       });

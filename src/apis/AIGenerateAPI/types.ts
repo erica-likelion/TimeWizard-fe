@@ -1,4 +1,4 @@
-//import type { CourseTime } from '@/apis/TimeTableAPI/types'; => 백엔드에서 수정 후 사용할 타입
+import type { CourseTime } from '@/apis/TimeTableAPI/types';
 
 /*
   AI 시간표 생성 요청
@@ -15,9 +15,9 @@ export interface GenerateTimetableRequest {
 export type GenerateTimetableResponse = string;
 
 /*
-  AI 시간표 생성 상태 조회 응답에서 반환되는 강의 정보
+  Debuging 페이지에서 사용할 강의 타입
 */
-export interface GeneratedCourse {
+export interface DebugGeneratedCourse {
   course_id: string;
   course_name: string;
   professor: string;
@@ -26,13 +26,15 @@ export interface GeneratedCourse {
   end_time: number;
 }
 
-// 백엔드에서 수정 후 사용할 타입 
-// export interface GeneratedCourse {
-//   course_id: string;
-//   course_name: string;
-//   professor: string;
-//   courseTimes: CourseTime[];
-// }
+/*
+  AI 시간표 생성 상태 조회 응답에서 반환되는 강의 정보
+*/
+export interface GeneratedCourse {
+  course_id: string;
+  course_name: string;
+  professor: string;
+  courseTimes: CourseTime[];
+}
 
 /*
   AI 시간표 생성 상태 조회 응답 - COMPLETE
