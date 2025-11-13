@@ -88,7 +88,12 @@ export function TimeTableListPage() {
     } catch (error) {
       console.error('시간표 삭제 실패:', error);
       alert('시간표 삭제에 실패했습니다. 다시 시도해주세요.');
-    } 
+    } finally {
+      window.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+      });
+    }
   };
 
   return (
