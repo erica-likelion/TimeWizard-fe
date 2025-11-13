@@ -92,10 +92,10 @@ export const TimeTable: React.FC<TimeTableProps> = ({ courses, activeCourseId })
           - 나머지 행들(각 1fr): 시간 슬롯 수만큼 반복 (총 25개)
       */}
       <div
-        className="grid gap-0 h-full"
+        className="grid gap-0"
         style={{
           gridTemplateColumns: `30px repeat(${visibleDays.length}, 1fr)`,
-          gridTemplateRows: `40px repeat(${timeSlots.length}, 1fr)`,
+          gridTemplateRows: `40px repeat(${timeSlots.length}, 1dvh)`,
         }}
       >
         {/* 좌측 상단 빈 칸 (1행 1열) - 명시적 배치 */}
@@ -113,7 +113,7 @@ export const TimeTable: React.FC<TimeTableProps> = ({ courses, activeCourseId })
             key={day}
             className={cn("flex items-center justify-center font-bold border-b-2 border-[#BBB]",
               fontStyles.caption,
-              index % 2 === 0 ? "bg-[#767676]" : "bg-[#505050]")
+              index % 2 === 0 ? "bg-[#3f3f3f]" : "bg-[#383838]")
             }
             style={{
                 gridColumn: index + 2,  // 2, 3, 4, 5, 6, 7, 8열 (동적)
@@ -147,10 +147,10 @@ export const TimeTable: React.FC<TimeTableProps> = ({ courses, activeCourseId })
 
             {/* 각 요일별 빈 셀 (동적으로 생성)*/}
             {visibleDaysKr.map((day, dayIndex) => {
-              // 짝수 인덱스: #767676, 홀수 인덱스: #505050
+              // 짝수 인덱스: #3f3f3f, 홀수 인덱스: #383838
               const bgColor = dayIndex % 2 === 0
-                ? 'bg-[#767676]'
-                : 'bg-[#505050]';
+                ? 'bg-[#3f3f3f]'
+                : 'bg-[#383838]';
 
               return (
                 <div
@@ -178,11 +178,12 @@ export const TimeTable: React.FC<TimeTableProps> = ({ courses, activeCourseId })
             const startRow = getTimeRow(courseTime.startTime);         // 시작 시간 → 시작 행
             const endRow = getTimeRow(courseTime.endTime);             // 종료 시간 → 종료 행
 
+            // active 바뀔때 0.3초 투명도 트랜지션 효과 꼭 추가!!!!
             return (
               <div
                 key={`${course.courseId}-${courseTime.dayOfWeek}-${index}`}
                 className={cn(
-                  `p-2 flex flex-col justify-evenly items-center overflow-hidden`,
+                  `p-2 flex flex-col justify-evenly items-center overflow-hidden transition-opacity duration-300`,
                   fontStyles.caption,
                   !isActive && "opacity-30"
                 )}
