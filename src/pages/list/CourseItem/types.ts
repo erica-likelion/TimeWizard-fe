@@ -1,4 +1,4 @@
-import type { Course as CourseType } from '@/components/TimeTable/types';
+import type { Course as CourseType } from '@/apis/TimeTableAPI/types';
 
 export interface CourseItemProps {
   course: CourseType;

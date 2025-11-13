@@ -17,6 +17,11 @@ const ScheduleLabelIcon: React.FC<{ color: string }> = ({ color }) => (
 
 export const CourseItem: React.FC<CourseItemProps> = ({ course, color, isActive, onMouseEnter }) => {
     const activeColor = isActive ? 'bg-[#303030] border-[#C1446C]' : 'bg-[#303030] border-[#D7D9DF]';
+
+    // 한 강의가 시간대가 여러개라 강의실도 여러개인 경우, 쉼표로 구분
+    // 동일한 강의실은 한번만 뜨게 집합 썼음
+    const classrooms = [...new Set(course.courseTimes.map(ct => ct.classroom))].join(', ');
+
     return (
     <div className={cn("flex items-center p-[14px] gap-4 border-2 cursor-pointer", activeColor)}
         onMouseEnter={onMouseEnter}>
@@ -25,11 +30,11 @@ export const CourseItem: React.FC<CourseItemProps> = ({ course, color, isActive,
         </div>
         <div className="flex-1">
             <p className={cn(fontStyles.body)}>
-                {course.course_name}
+                {course.courseName}
             </p>
-            
+
             <p className={cn(fontStyles.caption, "text-[#BBB]")}>
-                {course.location}
+                {classrooms}
             </p>
         </div>
         <div className="mr-5">
