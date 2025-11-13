@@ -72,12 +72,28 @@ export function TimeTableListPage() {
       if(activeTimeTable){
         await deleteTimetable(activeTimeTable);
         alert('시간표가 삭제되었습니다!');
-        navigate({to: '/list'});
+
+        const remainTimeTables = timeTables.filter((table) =>
+          table.timetableId !== activeTimeTable);
+
+        if (remainTimeTables.length > 0) {
+          const firstId = remainTimeTables[0].timetableId;
+          handleTimeTableClick(firstId); 
+        } else {
+          setActiveTimeTable("");
+          setSelectedCourses([]);
+        }
+        setTimeTables(remainTimeTables);
       }
     } catch (error) {
       console.error('시간표 삭제 실패:', error);
       alert('시간표 삭제에 실패했습니다. 다시 시도해주세요.');
-    } 
+    } finally {
+      window.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+      });
+    }
   };
 
   return (
