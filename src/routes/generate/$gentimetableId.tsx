@@ -2,7 +2,7 @@
 
 import { createFileRoute, useLocation } from '@tanstack/react-router';
 import { GenerateResultPage } from '@/pages/generate/GenerateResultPage';
-import type { GeneratedCourse } from '@/apis/AIGenerateAPI/types';
+import type { GeneratedCourse, GenerateTimetableRequest } from '@/apis/AIGenerateAPI/types';
 
 export const Route = createFileRoute('/generate/$gentimetableId')({
   component: RouteComponent,
@@ -11,15 +11,14 @@ export const Route = createFileRoute('/generate/$gentimetableId')({
 function RouteComponent() {
   const { gentimetableId } = Route.useParams();
   const location = useLocation();
-
-  // state로부터 courses와 ai_comment 읽기
-  const stateData = location.state as { courses?: GeneratedCourse[]; ai_comment?: string } | undefined;
+  const stateData = location.state as { courses?: GeneratedCourse[]; ai_comment?: string; requestData?: GenerateTimetableRequest } | undefined;
 
   return (
     <GenerateResultPage
       gentimetableId={gentimetableId}
       courses={stateData?.courses || []}
       ai_comment={stateData?.ai_comment || ''}
+      requestData={stateData?.requestData}
     />
   );
 }

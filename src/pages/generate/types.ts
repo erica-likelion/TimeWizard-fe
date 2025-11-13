@@ -1,4 +1,4 @@
-import type { GeneratedCourse } from '@/apis/AIGenerateAPI/types'
+import type { GeneratedCourse, GenerateTimetableRequest } from '@/apis/AIGenerateAPI/types'
 
 // 옵션 타입
 export interface Option {
@@ -19,4 +19,5 @@ export interface GenerateResultPageProps {
   gentimetableId: string;
   courses: GeneratedCourse[];
   ai_comment: string;
+  requestData?: GenerateTimetableRequest;
 }

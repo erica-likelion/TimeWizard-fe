@@ -1,11 +1,13 @@
 import { useNavigate } from '@tanstack/react-router';
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 
 import { BasicButton } from '@/components/buttons/BasicButton';
 import { PinkButton } from '@/components/buttons/PinkButton';
 import { TimeTable } from '@/components/TimeTable';
 import { TextInput } from '@/components/boxes/InputBox';
 import { Card } from '@/components/Card';
+import { useGenerateTimetable } from '@/hooks/useGenerateTimetable';
+import { GenerateLoading } from './Loading';
 
 import type { GenerateResultPageProps } from './types';
 import type { Course } from '@/apis/TimeTableAPI/types';
@@ -15,16 +17,25 @@ import { fontStyles } from '@/utils/styles';
 import { cn } from '@/utils/util';
 
 
-export function GenerateResultPage({ gentimetableId, courses: generatedCourses, ai_comment }: GenerateResultPageProps) {
+export function GenerateResultPage({ gentimetableId, courses: generatedCourses, ai_comment, requestData }: GenerateResultPageProps) {
     const navigate = useNavigate();
+    // AI 시간표 생성 훅
+    const { isGenerating, loadingIndex, loadingMessages, handleGenerate } = useGenerateTimetable();
     // AI 마법사 메시지
-    const [aiMessage] = useState<string>(ai_comment || '');
+    const [aiMessage, setAiMessage] = useState<string>(ai_comment || '');
     // 시간표 이름
     const [timetableName, setTimetableName] = useState<string>('');
     // 수정 요청 사항
     const [feedback, setFeedback] = useState<string>('');
     // 저장 중 상태
     const [isSaving, setIsSaving] = useState<boolean>(false);
+
+    // ai_comment props가 변경될 때마다 aiMessage 업데이트
+    useEffect(() => {
+      setAiMessage(ai_comment || '');
+      setFeedback('');
+      setTimetableName('');
+    }, [ai_comment, gentimetableId]);
 
     // API에서 주는 GeneratedCourse[]와 Course[]가 타입 규격이 안맞아서 하나로 통일하는 과정
     const courses: Course[] = useMemo(() => {
@@ -99,6 +110,32 @@ export function GenerateResultPage({ gentimetableId, courses: generatedCourses, 
       }
     };
 
+    // 다시 생성하기 버튼 핸들 함수
+    const handleRegenerate = async () => {
+      // 기존 requestData에서 값들 가져오기
+      const { requestText: originalRequestText, maxCredit, targetCredit } = requestData || {
+        requestText: '',
+        maxCredit: 20,
+        targetCredit: 20
+      };
+      
+      // 생성화면에서 쓴 요청 사항하고 결과 화면에서 쓴 요청 사항 합쳐서 넘겨줌
+      let newRequestText = originalRequestText || '';
+      if (feedback.trim()) {
+        newRequestText = newRequestText
+          ? `${newRequestText}\n\n[수정 사항]\n${feedback.trim()}`
+          : feedback.trim();
+      }
+
+      const newRequestData = {
+        requestText: newRequestText,
+        maxCredit: maxCredit,
+        targetCredit: targetCredit
+      };
+
+      await handleGenerate(newRequestData);
+    };
+
 
     // 강의가 없으면 에러 표시
     if (courses.length === 0) {
@@ -109,6 +146,22 @@ export function GenerateResultPage({ gentimetableId, courses: generatedCourses, 
         </div>
       );
     }
+
+  // 로딩 중일 때 표시
+  if (isGenerating) {
+    return (
+      <div className="flex flex-col px-18 gap-5 py-10 flex-1">
+        <p className={fontStyles.title}>생성 결과</p>
+        <Card className="gap-10 h-full">
+          <GenerateLoading
+            loadingMessages={loadingMessages}
+            loadingIndex={loadingIndex}
+            title="시간표 재생성 중입니다..."
+          />
+        </Card>
+      </div>
+    );
+  }
 
   return (
       <div className="flex flex-col px-18 gap-5 py-10 flex-1">
@@ -162,10 +215,11 @@ export function GenerateResultPage({ gentimetableId, courses: generatedCourses, 
 
                 {/* 다시 생성하기 버튼 */}
                 <BasicButton
-                  onClick={() => navigate({to: '/generate'})}
+                  onClick={handleRegenerate}
+                  disabled={isGenerating}
                   className={cn("py-3", fontStyles.button, "border-[#888] w-full")}
                 >
-                  다시 생성하기
+                  {isGenerating ? '생성 중...' : '다시 생성하기'}
                 </BasicButton>
                </Card>
              </div>
