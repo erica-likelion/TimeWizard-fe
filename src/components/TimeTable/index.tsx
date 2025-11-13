@@ -38,7 +38,7 @@ export const TimeTable: React.FC<TimeTableProps> = ({ courses, activeCourseId })
     courses.forEach((course) => {
       // 시간이 지정 강의 확인
       const hasScheduledTime = course.courseTimes.some((courseTime) => {
-        const dayUpper = courseTime.dayOfWeek.toUpperCase();
+        const dayUpper = courseTime.dayOfWeek?.toUpperCase();
 
         if (dayUpper === 'SAT' && courseTime.startTime > 0) hasSaturday = true;
         if (dayUpper === 'SUN' && courseTime.startTime > 0) hasSunday = true;
