@@ -5,7 +5,7 @@ import { PinkButton } from '@/components/buttons/PinkButton';
 import { TimeTable } from '@/components/TimeTable';
 import { Card } from '@/components/Card';
 
-import type { GeneratedCourse } from '@/apis/AIGenerateAPI/types';
+import type { DebugGeneratedCourse } from '@/apis/AIGenerateAPI/types';
 import type { Course } from '@/apis/TimeTableAPI/types';
 
 import { fontStyles } from '@/utils/styles';
@@ -19,7 +19,7 @@ export function DebugingPage() {
     // JSON 입력 텍스트
     const [jsonInput, setJsonInput] = useState<string>('');
     // 파싱된 강의 데이터
-    const [generatedCourses, setGeneratedCourses] = useState<GeneratedCourse[]>([]);
+    const [generatedCourses, setGeneratedCourses] = useState<DebugGeneratedCourse[]>([]);
 
     // GeneratedCourse[]를 Course[]로 변환
     const courses: Course[] = useMemo(() => {
