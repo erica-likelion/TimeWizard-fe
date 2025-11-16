@@ -1,5 +1,6 @@
 // 시간표 관련 유틸 함수랑 상수
 
+import type { Course, CourseTime } from "@/apis/TimeTableAPI/types";
 
 // =============================
 // 색상 관련 함수랑 상수
@@ -83,9 +84,9 @@ export const getDayColumn = (day: string, visibleDays: string[] = DAYS_EN): numb
 // 시간 관련 함수랑 상수
 
 // 시간표 시작 / 끝 시간 / 간격
-export const START_HOUR = 9;
-export const END_HOUR = 21;
-export const SLOT_DURATION = 10;  // 10분 단위로 변경
+let START_TIME = 540;
+let END_TIME = 0;
+let SLOT_DURATION = 10;  // 10분 단위로 변경
 
 /*
   시간(분 단위)을 HH:MM 형식으로 변환
@@ -112,9 +113,20 @@ export const formatTime = (minutes: number): string => {
   - 570분(9:30) -> (570 - 540) / 10 = 3 -> row 5
  */
 export const getTimeRow = (minutes: number): number => {
-  const startMinutes = START_HOUR * 60;
+  const startMinutes = START_TIME;
   const slotIndex = Math.floor((minutes - startMinutes) / SLOT_DURATION);
   return slotIndex + 2;
+};
+
+
+// 시간 슬롯 배열 생성에 사용하는 헬퍼 함수
+// 시간표를 돌면서 가장 늦은 시간을 찾아 END_TIME을 설정
+const setTimeTableSlotConfig = (courses : Course[]) => {
+  courses.forEach(course => {
+    course.courseTimes.forEach(timeSlot => {
+      END_TIME = Math.max(END_TIME, timeSlot.endTime);
+    });
+  })
 };
 
 /*
@@ -122,12 +134,15 @@ export const getTimeRow = (minutes: number): number => {
   반환 - 시간 슬롯 배열 ['9', '9:10', '9:20', '9:30', '9:40', '9:50', '10', ...]
   10분 단위이나 UI에는 정시만 표시
 */
-export const generateTimeSlots = (): string[] => {
+export const generateTimeSlots = (courses: Course[]): string[] => {
+  setTimeTableSlotConfig(courses);
   const timeSlots: string[] = [];
-  for (let hour = START_HOUR; hour <= END_HOUR; hour++) {
+  for (let hour = Math.floor(START_TIME / 60); hour <= Math.floor(END_TIME / 60); hour++) {
     for (let min = 0; min < 60; min += SLOT_DURATION) {
-      if (hour === END_HOUR && min > 0) break; // 마지막 시간은 정시만
+      const currentTime = hour * 60 + min;
 
+      // SLOT_DURATION을 빼야 마지막 슬롯이 END_TIME을 넘지 않음
+      if (currentTime > END_TIME - SLOT_DURATION) break;
       if (min === 0) {
         timeSlots.push(`${hour}`);
       } else {
@@ -136,5 +151,53 @@ export const generateTimeSlots = (): string[] => {
     }
   }
   return timeSlots;
+};
+
+/*
+  같은 강의가 연속되어 있을 때, 병합해주는 함수
+
+  인자 - courses: 강의 배열
+  반환 - 연속된 시간대가 병합된 새로운 강의 배열
+*/
+export const mergeConsecutiveCourseTimes = (courses: Course[]): Course[] => {
+  return courses.map(course => {
+    // 요일별로 courseTimes 그룹화
+    const timesByDay = new Map<string, CourseTime[]>();
+
+    course.courseTimes.forEach(time => {
+      const day = time.dayOfWeek;
+      if (!timesByDay.has(day)) {
+        timesByDay.set(day, []);
+      }
+      timesByDay.get(day)!.push(time);
+    });
+
+    const mergedTimes: CourseTime[] = [];
+    timesByDay.forEach((times) => {
+      // startTime 기준 오름차순으로 정렬됨
+      const sortedTimes = [...times].sort((a, b) => a.startTime - b.startTime);
+      let current = sortedTimes[0];
+      // end랑 다음 start가 같으면 병합
+      for (let i = 1; i < sortedTimes.length; i++) {
+        const next = sortedTimes[i];
+        if (current.endTime === next.startTime) {
+          current = {
+            ...current,
+            endTime: next.endTime
+          };
+        } else {
+          mergedTimes.push(current);
+          current = next;
+        }
+      }
+
+      mergedTimes.push(current);
+    });
+
+    return {
+      ...course,
+      courseTimes: mergedTimes
+    };
+  });
 };
 
