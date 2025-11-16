@@ -120,7 +120,7 @@ export const getTimeRow = (minutes: number): number => {
 
 
 // 시간 슬롯 배열 생성에 사용하는 헬퍼 함수
-// 시간표를 돌면서 가장 늦은 시간을 찾아 END_HOUR을 설정
+// 시간표를 돌면서 가장 늦은 시간을 찾아 END_TIME을 설정
 const setTimeTableSlotConfig = (courses : Course[]) => {
   courses.forEach(course => {
     course.courseTimes.forEach(timeSlot => {
