@@ -1,5 +1,6 @@
 // 시간표 관련 유틸 함수랑 상수
 
+import type { Course } from "@/apis/TimeTableAPI/types";
 
 // =============================
 // 색상 관련 함수랑 상수
@@ -83,9 +84,9 @@ export const getDayColumn = (day: string, visibleDays: string[] = DAYS_EN): numb
 // 시간 관련 함수랑 상수
 
 // 시간표 시작 / 끝 시간 / 간격
-export const START_HOUR = 9;
-export const END_HOUR = 21;
-export const SLOT_DURATION = 10;  // 10분 단위로 변경
+let START_TIME = 540;
+let END_TIME = 0;
+let SLOT_DURATION = 10;  // 10분 단위로 변경
 
 /*
   시간(분 단위)을 HH:MM 형식으로 변환
@@ -112,9 +113,20 @@ export const formatTime = (minutes: number): string => {
   - 570분(9:30) -> (570 - 540) / 10 = 3 -> row 5
  */
 export const getTimeRow = (minutes: number): number => {
-  const startMinutes = START_HOUR * 60;
+  const startMinutes = START_TIME;
   const slotIndex = Math.floor((minutes - startMinutes) / SLOT_DURATION);
   return slotIndex + 2;
+};
+
+
+// 시간 슬롯 배열 생성에 사용하는 헬퍼 함수
+// 시간표를 돌면서 가장 늦은 시간을 찾아 END_HOUR을 설정
+const setTimeTableSlotConfig = (courses : Course[]) => {
+  courses.forEach(course => {
+    course.courseTimes.forEach(timeSlot => {
+      END_TIME = Math.max(END_TIME, timeSlot.endTime);
+    });
+  })
 };
 
 /*
@@ -122,12 +134,17 @@ export const getTimeRow = (minutes: number): number => {
   반환 - 시간 슬롯 배열 ['9', '9:10', '9:20', '9:30', '9:40', '9:50', '10', ...]
   10분 단위이나 UI에는 정시만 표시
 */
-export const generateTimeSlots = (): string[] => {
+export const generateTimeSlots = (courses: Course[]): string[] => {
+  setTimeTableSlotConfig(courses);
+  console.log('END_TIME in generateTimeSlots:', END_TIME);
   const timeSlots: string[] = [];
-  for (let hour = START_HOUR; hour <= END_HOUR; hour++) {
+  for (let hour = Math.floor(START_TIME / 60); hour <= Math.floor(END_TIME / 60); hour++) {
     for (let min = 0; min < 60; min += SLOT_DURATION) {
-      if (hour === END_HOUR && min > 0) break; // 마지막 시간은 정시만
+      const currentTime = hour * 60 + min;
 
+      // SLOT_DURATION을 빼야 마지막 슬롯이 END_TIME을 넘지 않음
+      if (currentTime > END_TIME - SLOT_DURATION) break;
+      console.log(currentTime);
       if (min === 0) {
         timeSlots.push(`${hour}`);
       } else {

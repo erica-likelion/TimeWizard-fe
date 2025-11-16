@@ -22,8 +22,8 @@ import type { Course } from '@/apis/TimeTableAPI/types';
 export const TimeTable: React.FC<TimeTableProps> = ({ courses, activeCourseId }) => {
 
   // 시간 슬롯 생성
-  const timeSlots = generateTimeSlots();
-
+  const timeSlots = generateTimeSlots(courses);
+  console.log(timeSlots)
   // 수업별 색상 할당 (같은 course_id는 같은 색, 다른 course_id는 최대한 다른 색)
   const courseColors = assignCourseColors(courses);
 
