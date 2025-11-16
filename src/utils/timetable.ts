@@ -136,7 +136,6 @@ const setTimeTableSlotConfig = (courses : Course[]) => {
 */
 export const generateTimeSlots = (courses: Course[]): string[] => {
   setTimeTableSlotConfig(courses);
-  console.log('END_TIME in generateTimeSlots:', END_TIME);
   const timeSlots: string[] = [];
   for (let hour = Math.floor(START_TIME / 60); hour <= Math.floor(END_TIME / 60); hour++) {
     for (let min = 0; min < 60; min += SLOT_DURATION) {
@@ -144,7 +143,6 @@ export const generateTimeSlots = (courses: Course[]): string[] => {
 
       // SLOT_DURATION을 빼야 마지막 슬롯이 END_TIME을 넘지 않음
       if (currentTime > END_TIME - SLOT_DURATION) break;
-      console.log(currentTime);
       if (min === 0) {
         timeSlots.push(`${hour}`);
       } else {

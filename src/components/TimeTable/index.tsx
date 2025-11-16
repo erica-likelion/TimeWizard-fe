@@ -23,10 +23,8 @@ import type { Course } from '@/apis/TimeTableAPI/types';
 export const TimeTable: React.FC<TimeTableProps> = ({ courses, activeCourseId }) => {
   // 연속 된 시간 강의의 경우 합치기
   const modifyCourses = mergeConsecutiveCourseTimes(courses);
-
   // 시간 슬롯 생성
   const timeSlots = generateTimeSlots(modifyCourses);
-  console.log(timeSlots)
   // 수업별 색상 할당 (같은 course_id는 같은 색, 다른 course_id는 최대한 다른 색)
   const courseColors = assignCourseColors(modifyCourses);
 
@@ -58,6 +56,8 @@ export const TimeTable: React.FC<TimeTableProps> = ({ courses, activeCourseId })
         noTime.push(course);
       } else if (hasScheduledTime) {
         grid.push(course);
+      } else {
+        noTime.push(course);
       }
     });
 
