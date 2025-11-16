@@ -9,6 +9,7 @@ import {
   getDayColumn,
   getTimeRow,
   generateTimeSlots,
+  mergeConsecutiveCourseTimes
 } from '@/utils/timetable';
 import type { TimeTableProps } from './types'
 import type { Course } from '@/apis/TimeTableAPI/types';
@@ -20,12 +21,14 @@ import type { Course } from '@/apis/TimeTableAPI/types';
   - 각 수업은 Grid의 특정 영역에 배치됨
  */
 export const TimeTable: React.FC<TimeTableProps> = ({ courses, activeCourseId }) => {
+  // 연속 된 시간 강의의 경우 합치기
+  const modifyCourses = mergeConsecutiveCourseTimes(courses);
 
   // 시간 슬롯 생성
-  const timeSlots = generateTimeSlots(courses);
+  const timeSlots = generateTimeSlots(modifyCourses);
   console.log(timeSlots)
   // 수업별 색상 할당 (같은 course_id는 같은 색, 다른 course_id는 최대한 다른 색)
-  const courseColors = assignCourseColors(courses);
+  const courseColors = assignCourseColors(modifyCourses);
 
   // 표시할 요일 결정 및 강의 필터링
   const { visibleDays, gridCourses, noTimeCourses } = useMemo(() => {
@@ -35,7 +38,7 @@ export const TimeTable: React.FC<TimeTableProps> = ({ courses, activeCourseId })
     const grid: Course[] = [];
     const noTime: Course[] = [];
 
-    courses.forEach((course) => {
+    modifyCourses.forEach((course) => {
       // 시간이 지정 강의 확인
       const hasScheduledTime = course.courseTimes.some((courseTime) => {
         const dayUpper = courseTime.dayOfWeek?.toUpperCase();
@@ -75,7 +78,7 @@ export const TimeTable: React.FC<TimeTableProps> = ({ courses, activeCourseId })
       gridCourses: grid,
       noTimeCourses: noTime
     };
-  }, [courses]);
+  }, [modifyCourses]);
 
   const visibleDaysKr = convertDaysToKorean(visibleDays);
 

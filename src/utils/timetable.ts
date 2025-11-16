@@ -1,6 +1,6 @@
 // 시간표 관련 유틸 함수랑 상수
 
-import type { Course } from "@/apis/TimeTableAPI/types";
+import type { Course, CourseTime } from "@/apis/TimeTableAPI/types";
 
 // =============================
 // 색상 관련 함수랑 상수
@@ -153,5 +153,53 @@ export const generateTimeSlots = (courses: Course[]): string[] => {
     }
   }
   return timeSlots;
+};
+
+/*
+  같은 강의가 연속되어 있을 때, 병합해주는 함수
+
+  인자 - courses: 강의 배열
+  반환 - 연속된 시간대가 병합된 새로운 강의 배열
+*/
+export const mergeConsecutiveCourseTimes = (courses: Course[]): Course[] => {
+  return courses.map(course => {
+    // 요일별로 courseTimes 그룹화
+    const timesByDay = new Map<string, CourseTime[]>();
+
+    course.courseTimes.forEach(time => {
+      const day = time.dayOfWeek;
+      if (!timesByDay.has(day)) {
+        timesByDay.set(day, []);
+      }
+      timesByDay.get(day)!.push(time);
+    });
+
+    const mergedTimes: CourseTime[] = [];
+    timesByDay.forEach((times) => {
+      // startTime 기준 오름차순으로 정렬됨
+      const sortedTimes = [...times].sort((a, b) => a.startTime - b.startTime);
+      let current = sortedTimes[0];
+      // end랑 다음 start가 같으면 병합
+      for (let i = 1; i < sortedTimes.length; i++) {
+        const next = sortedTimes[i];
+        if (current.endTime === next.startTime) {
+          current = {
+            ...current,
+            endTime: next.endTime
+          };
+        } else {
+          mergedTimes.push(current);
+          current = next;
+        }
+      }
+
+      mergedTimes.push(current);
+    });
+
+    return {
+      ...course,
+      courseTimes: mergedTimes
+    };
+  });
 };
 
