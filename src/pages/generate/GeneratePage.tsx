@@ -19,7 +19,7 @@ import type { Option, ExcludedTime } from './types'
 export function GeneratePage() {
   const navigate = useNavigate();
   const { user, loading } = useUser();
-  const searchParams = useSearch({ from: '/generate/' }) as { debug?: string };
+  const searchParams = useSearch({ strict: false }) as { debug?: string };
 
   // AI 시간표 생성 훅
   const { isGenerating, loadingIndex, loadingMessages, handleGenerate } = useGenerateTimetable();
