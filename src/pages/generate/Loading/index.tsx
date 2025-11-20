@@ -6,13 +6,13 @@ import type { GenerateLoadingProps } from './types';
 
 export function GenerateLoading({ loadingMessages, loadingIndex, title = "시간표 생성 중입니다..." }: GenerateLoadingProps) {
   return (
-    <div className="flex flex-col items-center justify-center h-full gap-8">
+    <div className="flex flex-col items-center justify-center h-full gap-4">
       {/* TimeTable 아이콘 애니메이션 */}
       <div className="relative">
         <img
           src={LoadingIcon}
           alt="Loading"
-          className="w-100 mix-blend-screen"
+          className="w-100 mix-blend-screen max-h-[calc(100dvh-400px)] object-contain"
         />
       </div>
 
@@ -23,7 +23,7 @@ export function GenerateLoading({ loadingMessages, loadingIndex, title = "시간
       </div>
 
       {/* 프로그레스 바 */}
-      <div className="w-full max-w-250 h-8 bg-[#272727] overflow-hidden">
+      <div className="w-full max-w-250 h-8 mt-4 bg-[#272727] overflow-hidden">
         <div className="h-full w-1/3 bg-linear-to-r from-pink-500 to-pink-400 animate-[slide_1.5s_linear_infinite]"></div>
       </div>
     </div>
