@@ -1,6 +1,6 @@
 import { fontStyles } from '@/utils/styles';
 import { cn } from '@/utils/util';
-import TimeTableIcon from '@/assets/icons/time_table.png';
+import LoadingIcon from '@/assets/images/loading_animation.gif';
 
 import type { GenerateLoadingProps } from './types';
 
@@ -10,9 +10,9 @@ export function GenerateLoading({ loadingMessages, loadingIndex, title = "시간
       {/* TimeTable 아이콘 애니메이션 */}
       <div className="relative">
         <img
-          src={TimeTableIcon}
+          src={LoadingIcon}
           alt="Loading"
-          className="w-100"
+          className="w-100 mix-blend-screen"
         />
       </div>
 
@@ -23,7 +23,7 @@ export function GenerateLoading({ loadingMessages, loadingIndex, title = "시간
       </div>
 
       {/* 프로그레스 바 */}
-      <div className="w-full max-w-250 h-8 bg-[#767676] overflow-hidden">
+      <div className="w-full max-w-250 h-8 bg-[#272727] overflow-hidden">
         <div className="h-full w-1/3 bg-linear-to-r from-pink-500 to-pink-400 animate-[slide_1.5s_linear_infinite]"></div>
       </div>
     </div>
