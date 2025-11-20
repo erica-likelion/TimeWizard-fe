@@ -11,7 +11,7 @@ export const Card: React.FC<CardProps> = ({ title, buttonText, onClick, children
   return (
     <div className={cn("flex flex-col bg-[#303030] no-scrollbar overflow-y-auto", title ? "px-6 pb-6": "p-6",className)}>
         {title && (
-          <div className="flex justify-between items-center py-6 sticky top-0 bg-[#303030] z-10">
+          <div className="flex justify-between items-center py-6 sticky top-0 bg-[#303030]">
             <p className={cn("text-[#767676]", fontStyles.subtitle)}>{title}</p>
             {buttonText && onClick && (
               <BasicButton onClick={onClick} 
