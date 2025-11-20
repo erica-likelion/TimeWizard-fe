@@ -1,4 +1,4 @@
-import { Link, useNavigate } from '@tanstack/react-router'
+import { Link, useNavigate, useSearch } from '@tanstack/react-router'
 import { useState, useEffect } from 'react'
 import { fontStyles } from '@/utils/styles'
 import { cn } from '@/utils/util'
@@ -19,6 +19,7 @@ import type { Option, ExcludedTime } from './types'
 export function GeneratePage() {
   const navigate = useNavigate();
   const { user, loading } = useUser();
+  const searchParams = useSearch({ from: '/generate/' }) as { debug?: string };
 
   // AI 시간표 생성 훅
   const { isGenerating, loadingIndex, loadingMessages, handleGenerate } = useGenerateTimetable();
@@ -135,6 +136,9 @@ export function GeneratePage() {
     await handleGenerate(requestData);
   }
 
+  // 디버깅용: ?debug=loading 쿼리 파라미터로 로딩 화면 테스트
+  const isDebugLoading = searchParams?.debug === 'loading';
+
   // 로딩 중일 때 표시 => AI 생성 로딩이 아니라 처음에 유저 정보 불러올 때 로딩
   if (loading) {
     return (
@@ -145,21 +149,22 @@ export function GeneratePage() {
   }
 
   return (
-      <div className="flex flex-col px-18 gap-5 py-10 flex-1">
+      <div className={cn("flex flex-col", (isGenerating || isDebugLoading) ? "h-[calc(100dvh-80px)]" : "h-full")}>
         {/* [위] 페이지 제목 + 메인으로 돌아가기 버튼 */}
-        <div className="flex items-end">
+        <div className="flex items-end px-18 pt-10 pb-5 flex-shrink-0">
           <p className={fontStyles.title}>시간표 생성</p>
-          {isGenerating ?  <></> : <BasicButton onClick={() => navigate({to: '/main'})} className={cn("ml-auto px-5 py-1 bg-[#000]", fontStyles.caption)}>← 메인으로</BasicButton>}
+          {isGenerating || isDebugLoading ?  <></> : <BasicButton onClick={() => navigate({to: '/main'})} className={cn("ml-auto px-5 py-1 bg-[#000]", fontStyles.caption)}>← 메인으로</BasicButton>}
         </div>
-        <Card className="gap-10 h-full">
-          {/* AI 생성 중 로딩 화면 */}
-          {isGenerating ? (
-            <GenerateLoading
-              loadingMessages={loadingMessages}
-              loadingIndex={loadingIndex}
-              title="시간표 생성 중입니다..."
-            />
-          ) : (
+        <div className="flex-1 px-18 pb-10 min-h-0">
+          <Card className="gap-10 h-full">
+            {/* AI 생성 중 로딩 화면 */}
+            {isGenerating || isDebugLoading ? (
+              <GenerateLoading
+                loadingMessages={loadingMessages}
+                loadingIndex={loadingIndex}
+                title="시간표 생성 중입니다..."
+              />
+            ) : (
             <>
             {/* 재학 정보: 사용자 정보에서 자동으로 가져오고 수정 가능 */}
               <div className="w-full flex flex-col lg:flex-row gap-4 lg:gap-14">
@@ -369,7 +374,8 @@ export function GeneratePage() {
               </div>
             </>
           )}
-        </Card>
+          </Card>
+        </div>
       </div>
   )
 }
