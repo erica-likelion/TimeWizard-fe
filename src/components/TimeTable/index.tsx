@@ -186,7 +186,7 @@ export const TimeTable: React.FC<TimeTableProps> = ({ courses, activeCourseId })
               <div
                 key={`${course.courseId}-${courseTime.dayOfWeek}-${index}`}
                 className={cn(
-                  `p-2 flex flex-col overflow-hidden transition-opacity duration-300`,
+                  `p-2 flex flex-col overflow-scroll transition-opacity duration-300 no-scollbar`,
                   fontStyles.caption,
                   !isActive && "opacity-30"
                 )}
@@ -197,12 +197,12 @@ export const TimeTable: React.FC<TimeTableProps> = ({ courses, activeCourseId })
                 }}
               >
                 {/* 수업 이름 */}
-                <p className="text-lg leading-none overflow-hidden text-ellipsis w-full mb-1">{course.courseName}</p>
+                <p className="text-lg leading-none w-full mb-1">{course.courseName}</p>
                 {/* 교수명 */}
-                <p className="font-bold overflow-hidden text-ellipsis w-full mb-1">{course.professor}</p>
+                <p className="font-bold w-full mb-1">{course.professor}</p>
                 {/* 강의실 위치 */}
                 {courseTime.classroom && (
-                  <p className="overflow-hidden w-full">{courseTime.classroom}</p>
+                  <p className="w-full">{courseTime.classroom}</p>
                 )}
               </div>
             );
