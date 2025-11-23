@@ -171,7 +171,7 @@ export function GenerateResultPage({ gentimetableId, courses: generatedCourses, 
            <div className="flex flex-col gap-10 lg:flex-row justify-between flex-1">
 
              {/* [왼쪽] AI 설명 및 입력 영역 */}
-             <div className="w-full lg:flex-4 lg:w-auto">
+             <div className="w-full lg:flex-4 lg:w-auto lg:h-[calc(100dvh-200px)]">
                <Card className="w-full lg:w-auto gap-7 lg:h-full">
                 {/* AI 마법사의 설명 */}
                 <div className="flex flex-col gap-3">
@@ -226,7 +226,7 @@ export function GenerateResultPage({ gentimetableId, courses: generatedCourses, 
 
              {/* [오른쪽] 시간표 */}
               <div className="w-full lg:flex-6 lg:w-auto">
-                <Card title="시간표" className="w-full lg:w-auto lg:h-full">
+                <Card title="시간표" className="w-full lg:w-auto lg:h-[calc(100dvh-200px)]">
                   <div className="flex flex-col overflow-y-auto no-scrollbar lg:h-full">
                     {courses && <TimeTable courses={courses} />}
                   </div>
