@@ -9,6 +9,7 @@ import {
   getDayColumn,
   getTimeRow,
   generateTimeSlots,
+  mergeConsecutiveCourseTimes
 } from '@/utils/timetable';
 import type { TimeTableProps } from './types'
 import type { Course } from '@/apis/TimeTableAPI/types';
@@ -20,12 +21,12 @@ import type { Course } from '@/apis/TimeTableAPI/types';
   - 각 수업은 Grid의 특정 영역에 배치됨
  */
 export const TimeTable: React.FC<TimeTableProps> = ({ courses, activeCourseId }) => {
-
+  // 연속 된 시간 강의의 경우 합치기
+  const modifyCourses = mergeConsecutiveCourseTimes(courses);
   // 시간 슬롯 생성
-  const timeSlots = generateTimeSlots();
-
+  const timeSlots = generateTimeSlots(modifyCourses);
   // 수업별 색상 할당 (같은 course_id는 같은 색, 다른 course_id는 최대한 다른 색)
-  const courseColors = assignCourseColors(courses);
+  const courseColors = assignCourseColors(modifyCourses);
 
   // 표시할 요일 결정 및 강의 필터링
   const { visibleDays, gridCourses, noTimeCourses } = useMemo(() => {
@@ -35,10 +36,10 @@ export const TimeTable: React.FC<TimeTableProps> = ({ courses, activeCourseId })
     const grid: Course[] = [];
     const noTime: Course[] = [];
 
-    courses.forEach((course) => {
+    modifyCourses.forEach((course) => {
       // 시간이 지정 강의 확인
       const hasScheduledTime = course.courseTimes.some((courseTime) => {
-        const dayUpper = courseTime.dayOfWeek.toUpperCase();
+        const dayUpper = courseTime.dayOfWeek?.toUpperCase();
 
         if (dayUpper === 'SAT' && courseTime.startTime > 0) hasSaturday = true;
         if (dayUpper === 'SUN' && courseTime.startTime > 0) hasSunday = true;
@@ -55,6 +56,8 @@ export const TimeTable: React.FC<TimeTableProps> = ({ courses, activeCourseId })
         noTime.push(course);
       } else if (hasScheduledTime) {
         grid.push(course);
+      } else {
+        noTime.push(course);
       }
     });
 
@@ -75,7 +78,7 @@ export const TimeTable: React.FC<TimeTableProps> = ({ courses, activeCourseId })
       gridCourses: grid,
       noTimeCourses: noTime
     };
-  }, [courses]);
+  }, [modifyCourses]);
 
   const visibleDaysKr = convertDaysToKorean(visibleDays);
 
@@ -92,10 +95,10 @@ export const TimeTable: React.FC<TimeTableProps> = ({ courses, activeCourseId })
           - 나머지 행들(각 1fr): 시간 슬롯 수만큼 반복 (총 25개)
       */}
       <div
-        className="grid gap-0 h-full"
+        className="grid gap-0"
         style={{
           gridTemplateColumns: `30px repeat(${visibleDays.length}, 1fr)`,
-          gridTemplateRows: `40px repeat(${timeSlots.length}, 1fr)`,
+          gridTemplateRows: `40px repeat(${timeSlots.length}, 1dvh)`,
         }}
       >
         {/* 좌측 상단 빈 칸 (1행 1열) - 명시적 배치 */}
@@ -113,7 +116,7 @@ export const TimeTable: React.FC<TimeTableProps> = ({ courses, activeCourseId })
             key={day}
             className={cn("flex items-center justify-center font-bold border-b-2 border-[#BBB]",
               fontStyles.caption,
-              index % 2 === 0 ? "bg-[#767676]" : "bg-[#505050]")
+              index % 2 === 0 ? "bg-[#3f3f3f]" : "bg-[#383838]")
             }
             style={{
                 gridColumn: index + 2,  // 2, 3, 4, 5, 6, 7, 8열 (동적)
@@ -147,10 +150,10 @@ export const TimeTable: React.FC<TimeTableProps> = ({ courses, activeCourseId })
 
             {/* 각 요일별 빈 셀 (동적으로 생성)*/}
             {visibleDaysKr.map((day, dayIndex) => {
-              // 짝수 인덱스: #767676, 홀수 인덱스: #505050
+              // 짝수 인덱스: #3f3f3f, 홀수 인덱스: #383838
               const bgColor = dayIndex % 2 === 0
-                ? 'bg-[#767676]'
-                : 'bg-[#505050]';
+                ? 'bg-[#3f3f3f]'
+                : 'bg-[#383838]';
 
               return (
                 <div
@@ -178,11 +181,12 @@ export const TimeTable: React.FC<TimeTableProps> = ({ courses, activeCourseId })
             const startRow = getTimeRow(courseTime.startTime);         // 시작 시간 → 시작 행
             const endRow = getTimeRow(courseTime.endTime);             // 종료 시간 → 종료 행
 
+            // active 바뀔때 0.3초 투명도 트랜지션 효과 꼭 추가!!!!
             return (
               <div
                 key={`${course.courseId}-${courseTime.dayOfWeek}-${index}`}
                 className={cn(
-                  `p-2 flex flex-col justify-evenly items-center overflow-hidden`,
+                  `p-2 flex flex-col overflow-scroll transition-opacity duration-300 no-scollbar`,
                   fontStyles.caption,
                   !isActive && "opacity-30"
                 )}
@@ -193,12 +197,12 @@ export const TimeTable: React.FC<TimeTableProps> = ({ courses, activeCourseId })
                 }}
               >
                 {/* 수업 이름 */}
-                <p className="font-bold text-center overflow-hidden text-ellipsis whitespace-nowrap w-full">{course.courseName}</p>
+                <p className="text-lg leading-none w-full mb-1">{course.courseName}</p>
                 {/* 교수명 */}
-                <p className="font-bold text-center overflow-hidden text-ellipsis whitespace-nowrap w-full">{course.professor}</p>
+                <p className="font-bold w-full mb-1">{course.professor}</p>
                 {/* 강의실 위치 */}
                 {courseTime.classroom && (
-                  <p className="text-center overflow-hidden text-ellipsis whitespace-nowrap w-full">{courseTime.classroom}</p>
+                  <p className="w-full">{courseTime.classroom}</p>
                 )}
               </div>
             );

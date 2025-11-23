@@ -31,20 +31,19 @@ export function TimeTableListPage() {
     const fetchTimeTables = async () => {
       try {
         const timeTables = await getTimeTables()
-        setTimeTables(timeTables)
-
+        setTimeTables(timeTables);
         // 첫 번째 시간표가 있으면 자동 선택
         if (timeTables.length > 0) {
-          const firstId = timeTables[0].timetableId
-          setActiveTimeTable(firstId)
-          handleTimeTableClick(firstId)
+          const firstId = timeTables[0].timetableId;
+          setActiveTimeTable(firstId);
+          handleTimeTableClick(firstId);
         }
       } catch (error) {
-        console.error('시간표 목록 조회 실패:', error)
+        console.error('시간표 목록 조회 실패:', error);
       }
     }
 
-    fetchTimeTables()
+    fetchTimeTables();
   }, [])
 
   /*
@@ -53,11 +52,12 @@ export function TimeTableListPage() {
   */
   const handleTimeTableClick = async (timetableId: string) => {
     try {
-      const courses = await getTimeTableDetail(timetableId)
-      setSelectedCourses(courses)
-      setActiveTimeTable(timetableId)
+      const courses = await getTimeTableDetail(timetableId);
+      setSelectedCourses(courses);
+      setActiveTimeTable(timetableId);
+      console.log(courses);
     } catch (error) {
-      console.error('시간표 강의 목록 조회 실패:', error)
+      console.error('시간표 강의 목록 조회 실패:', error);
     }
   }
 
