@@ -129,7 +129,7 @@ export function GeneratePage() {
   const onGenerateClick = async (): Promise<void> => {
     let finalRequestText = requests.trim();
 
-    let studentStateText = "[재학 정보 변경]:";
+    let studentStateText = "\n[재학 정보 변경]:";
     let studentStateChangeFlag = false;
     if (university.trim() !== user?.university) {
       studentStateText += `\n -학교명: ${university}`;
@@ -296,7 +296,7 @@ export function GeneratePage() {
                         size='md'
                         onChange={(e) => setGeneralCredits(e.target.value)}
                         className="border-2 border-[#888]"
-                        placeholder="15"
+                        placeholder="25"
                       />
                     </div>
                   </div>
