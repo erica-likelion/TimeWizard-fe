@@ -28,7 +28,7 @@ export function GeneratePage() {
   const [university, setUniversity] = useState<string>('한양대학교 ERICA 캠퍼스')
   const [major, setMajor] = useState<string>('')
   const [grade, setGrade] = useState<string>('')
-  const [semester, setSemester] = useState<string>('')
+  const [semester, setSemester] = useState<string>('2')
   const [completedCredits, setCompletedCredits] = useState<string>('')
   const [majorCreditsCompleted, setMajorCreditsCompleted] = useState<string>('')
   const [generalCredits, setGeneralCredits] = useState<string>('')
@@ -127,12 +127,62 @@ export function GeneratePage() {
 
   // 생성 시작 - 훅의 handleGenerate 호출
   const onGenerateClick = async (): Promise<void> => {
+    let finalRequestText = requests.trim();
+
+    let studentStateText = "[재학 정보 변경]:";
+    let studentStateChangeFlag = false;
+    if (university.trim() !== user?.university) {
+      studentStateText += `\n -학교명: ${university}`;
+      studentStateChangeFlag = true;
+    }
+
+    if (major.trim() !== user?.major) {
+      studentStateText += `\n -학부/전공: ${major}`;
+      studentStateChangeFlag = true;
+    }
+
+    if (grade.trim() !== user?.grade.toString()) {
+      studentStateText += `\n -학년: ${grade}`;
+      studentStateChangeFlag = true;
+    }
+
+    if (completedCredits.trim() !== user?.completed_credits?.toString()) {
+      studentStateText += `\n -이수 학점: ${completedCredits}`;
+      studentStateChangeFlag = true;
+    }
+
+    if (majorCreditsCompleted.trim() !== user?.major_credits?.toString()) {
+      studentStateText += `\n -이수 전공 학점: ${majorCreditsCompleted}`;
+      studentStateChangeFlag = true;
+    }
+
+    if (generalCredits.trim() !== user?.general_credits?.toString()) {
+      studentStateText += `\n -이수 교양 학점: ${generalCredits}`;
+      studentStateChangeFlag = true;
+    }
+    
+    if (studentStateChangeFlag)
+      finalRequestText += studentStateText;
+
+    if (majorCredits.trim() !== '') {
+      const majorCreditsText = `\n[목표 전공 학점]: ${majorCredits}학점`;
+      finalRequestText += majorCreditsText;
+    }
+
+    if (excludedTimes.length > 0) {
+      const excludedTimesText = excludedTimes
+        .map(time => `${time.day} ${time.startTime} ~ ${time.endTime}`)
+        .join(', ');
+      finalRequestText += `\n[제외 시간대]: ${excludedTimesText}`;
+    }
+
     const requestData: GenerateTimetableRequest = {
-      requestText: requests,
+      requestText: finalRequestText,
       maxCredit: 20,
       targetCredit: Number(totalCredits) || 0
     };
-
+    console.log(finalRequestText);
+    
     await handleGenerate(requestData);
   }
 
@@ -156,7 +206,7 @@ export function GeneratePage() {
           {isGenerating || isDebugLoading ?  <></> : <BasicButton onClick={() => navigate({to: '/main'})} className={cn("ml-auto px-5 py-1 bg-[#000]", fontStyles.caption)}>← 메인으로</BasicButton>}
         </div>
         <div className="flex-1 px-18 pb-10 min-h-0">
-          <Card className="gap-10 h-full">
+          <Card className="gap-10 lg:h-[calc(100dvh-200px)]">
             {/* AI 생성 중 로딩 화면 */}
             {isGenerating || isDebugLoading ? (
               <GenerateLoading
@@ -212,6 +262,7 @@ export function GeneratePage() {
                         onChange={(e) => setSemester(e.target.value)}
                         className="border-2 border-[#888]"
                         placeholder="1"
+                        disabled={true}
                       />
                     </div>
                   </div>
