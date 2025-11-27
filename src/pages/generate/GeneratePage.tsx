@@ -14,6 +14,7 @@ import { GenerateLoading } from './Loading'
 import type { GenerateTimetableRequest } from '@/apis/AIGenerateAPI/types'
 import type { Option, ExcludedTime } from './types'
 
+import AlertLogo from '@/assets/icons/alert_primary_color.svg'
 
 // 시간표 생성 페이지
 export function GeneratePage() {
@@ -97,9 +98,9 @@ export function GeneratePage() {
     major.trim() !== '' &&
     grade.trim() !== '' &&
     semester.trim() !== '' &&
-    completedCredits.trim() !== '' &&
-    majorCreditsCompleted.trim() !== '' &&
-    generalCredits.trim() !== '' &&
+    //completedCredits.trim() !== '' &&
+    //majorCreditsCompleted.trim() !== '' &&
+    //generalCredits.trim() !== '' &&
     totalCredits.trim() !== '' &&
     majorCredits.trim() !== ''
 
@@ -110,7 +111,7 @@ export function GeneratePage() {
       setUniversity(user.university || '')
       setMajor(user.major || '')
       setGrade(user.grade?.toString() || '')
-      setSemester('') // 학기는 디폴트 없음
+      setSemester('2') 
       setCompletedCredits(user.completed_credits?.toString() || '')
       setMajorCreditsCompleted(user.major_credits?.toString() || '')
       setGeneralCredits(user.general_credits?.toString() || '')
@@ -146,20 +147,20 @@ export function GeneratePage() {
       studentStateChangeFlag = true;
     }
 
-    if (completedCredits.trim() !== user?.completed_credits?.toString()) {
-      studentStateText += `\n -이수 학점: ${completedCredits}`;
-      studentStateChangeFlag = true;
-    }
+    // if (completedCredits.trim() !== user?.completed_credits?.toString()) {
+    //   studentStateText += `\n -이수 학점: ${completedCredits}`;
+    //   studentStateChangeFlag = true;
+    // }
 
-    if (majorCreditsCompleted.trim() !== user?.major_credits?.toString()) {
-      studentStateText += `\n -이수 전공 학점: ${majorCreditsCompleted}`;
-      studentStateChangeFlag = true;
-    }
+    // if (majorCreditsCompleted.trim() !== user?.major_credits?.toString()) {
+    //   studentStateText += `\n -이수 전공 학점: ${majorCreditsCompleted}`;
+    //   studentStateChangeFlag = true;
+    // }
 
-    if (generalCredits.trim() !== user?.general_credits?.toString()) {
-      studentStateText += `\n -이수 교양 학점: ${generalCredits}`;
-      studentStateChangeFlag = true;
-    }
+    // if (generalCredits.trim() !== user?.general_credits?.toString()) {
+    //   studentStateText += `\n -이수 교양 학점: ${generalCredits}`;
+    //   studentStateChangeFlag = true;
+    // }
     
     if (studentStateChangeFlag)
       finalRequestText += studentStateText;
@@ -206,7 +207,7 @@ export function GeneratePage() {
           {isGenerating || isDebugLoading ?  <></> : <BasicButton onClick={() => navigate({to: '/main'})} className={cn("ml-auto px-5 py-1 bg-[#000]", fontStyles.caption)}>← 메인으로</BasicButton>}
         </div>
         <div className="flex-1 px-18 pb-10 min-h-0">
-          <Card className="gap-10 lg:h-[calc(100dvh-200px)]">
+          <Card className="gap-10">
             {/* AI 생성 중 로딩 화면 */}
             {isGenerating || isDebugLoading ? (
               <GenerateLoading
@@ -267,8 +268,8 @@ export function GeneratePage() {
                     </div>
                   </div>
 
-                  {/* 이수 학점 + 전공 학점 + 교양 학점 */}
-                  <div className="flex flex-col lg:flex-row gap-4">
+                  {/* 이수 학점 + 전공 학점 + 교양 학점 -> 학점 입력 임시 히든 처리 (11/27)*/}
+                  <div className="flex flex-col lg:flex-row gap-4 hidden">
                     <div className="flex-1 flex flex-col gap-2">
                       <span className={cn(fontStyles.body)}>이수 학점</span>
                       <TextInput
@@ -406,22 +407,35 @@ export function GeneratePage() {
                 </div>
               </div>
 
-              {/* 하단 버튼: 초기화, 생성 시작 */}
-              <div className="flex flex-col lg:flex-row justify-end gap-4 mt-auto">
-                <BasicButton
-                  onClick={handleReset}
-                  className={cn("w-full lg:w-auto px-8 py-2 min-h-14", fontStyles.button)}
-                >
-                  초기화
-                </BasicButton>
-                <PinkButton
-                  onClick={onGenerateClick}
-                  size="sm"
-                  className={cn("w-full lg:w-auto px-8 py-2 min-h-14", fontStyles.button)}
-                  disabled={isGenerating || !isFormValid}
-                >
-                  생성 시작
-                </PinkButton>
+              {/* 경고 문구 + 하단 버튼: 초기화, 생성 시작 */}
+              <div className="flex flex-col lg:flex-row gap-4 lg:justify-between mt-auto">
+                <div className={cn(fontStyles.caption, "w-full max-w-[900px] bg-[#3D3D3D] border-l-4 border-[#E65787] text-[#fff] p-4 whitespace-pre-line")}>
+                  <div className="opacity-50">
+                    <div className="flex items-center gap-1 mb-1">
+                      <img src={AlertLogo} className="w-4 h-4"/>
+                      <span>주의</span>
+                    </div>
+                    <div>본 요청을 통해 제공되는 시간표는 AI가 실시간으로 분석하여 생성한 결과입니다.{'\n'}AI가 열심히 조사하여 내놓은 결과이지만, 실제 수강 신청 시에는 
+                      <span className="text-[#E65787]"> 꼭 수강 가능 여부를 확인하여 신청하시기 바랍니다!</span>
+                    </div>
+                  </div>
+                </div>
+                <div className="flex flex-col lg:flex-row w-full lg:w-auto gap-4 self-end">
+                  <BasicButton
+                    onClick={handleReset}
+                    className={cn("w-full lg:w-auto px-8 py-2 min-h-14", fontStyles.button)}
+                  >
+                    초기화
+                  </BasicButton>
+                  <PinkButton
+                    onClick={onGenerateClick}
+                    size="sm"
+                    className={cn("w-full lg:w-auto px-8 py-2 min-h-14", fontStyles.button)}
+                    disabled={isGenerating || !isFormValid}
+                  >
+                    생성 시작
+                  </PinkButton>
+                </div>
               </div>
             </>
           )}
