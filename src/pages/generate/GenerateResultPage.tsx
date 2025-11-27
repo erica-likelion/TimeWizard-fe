@@ -150,7 +150,7 @@ export function GenerateResultPage({ gentimetableId, courses: generatedCourses, 
   // 로딩 중일 때 표시
   if (isGenerating) {
     return (
-      <div className="flex flex-col px-18 gap-5 py-10 flex-1">
+      <div className="flex flex-col gap-5 flex-1">
         <p className={fontStyles.title}>생성 결과</p>
         <Card className="gap-10 h-full">
           <GenerateLoading
@@ -164,7 +164,7 @@ export function GenerateResultPage({ gentimetableId, courses: generatedCourses, 
   }
 
   return (
-      <div className="flex flex-col px-18 gap-5 py-10 flex-1">
+      <div className="flex flex-col gap-5 flex-1">
            {/* [위] 페이지 제목 */}
             <p className={fontStyles.title}>생성 결과</p>
 

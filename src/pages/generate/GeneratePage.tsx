@@ -202,11 +202,11 @@ export function GeneratePage() {
   return (
       <div className={cn("flex flex-col", (isGenerating || isDebugLoading) ? "h-[calc(100dvh-80px)]" : "h-full")}>
         {/* [위] 페이지 제목 + 메인으로 돌아가기 버튼 */}
-        <div className="flex items-end px-18 pt-10 pb-5 flex-shrink-0">
+        <div className="flex items-end pb-5 flex-shrink-0">
           <p className={fontStyles.title}>시간표 생성</p>
           {isGenerating || isDebugLoading ?  <></> : <BasicButton onClick={() => navigate({to: '/main'})} className={cn("ml-auto px-5 py-1 bg-[#000]", fontStyles.caption)}>← 메인으로</BasicButton>}
         </div>
-        <div className="flex-1 px-18 pb-10 min-h-0">
+        <div className="flex-1 min-h-0">
           <Card className="gap-10">
             {/* AI 생성 중 로딩 화면 */}
             {isGenerating || isDebugLoading ? (

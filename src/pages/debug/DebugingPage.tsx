@@ -66,7 +66,7 @@ export function DebugingPage() {
     };
 
   return (
-      <div className="flex flex-col px-18 gap-5 py-10 flex-1">
+      <div className="flex flex-col gap-5 flex-1">
            {/* [위] 페이지 제목 */}
             <div className="flex items-center justify-between">
               <p className={fontStyles.title}>Timetable Component Test</p>
