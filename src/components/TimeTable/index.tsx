@@ -186,7 +186,7 @@ export const TimeTable: React.FC<TimeTableProps> = ({ courses, activeCourseId })
               <div
                 key={`${course.courseId}-${courseTime.dayOfWeek}-${index}`}
                 className={cn(
-                  `p-2 flex flex-col overflow-scroll transition-opacity duration-300 no-scollbar`,
+                  `p-2 flex flex-col overflow-scroll transition-opacity duration-300 no-scrollbar`,
                   fontStyles.caption,
                   !isActive && "opacity-30"
                 )}

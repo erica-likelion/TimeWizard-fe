@@ -84,9 +84,8 @@ export const getDayColumn = (day: string, visibleDays: string[] = DAYS_EN): numb
 // 시간 관련 함수랑 상수
 
 // 시간표 시작 / 끝 시간 / 간격
-let START_TIME = 540;
-let END_TIME = 0;
-let SLOT_DURATION = 10;  // 10분 단위로 변경
+const START_TIME = 540;
+const SLOT_DURATION = 10;  // 10분 단위로 변경
 
 /*
   시간(분 단위)을 HH:MM 형식으로 변환
@@ -119,30 +118,26 @@ export const getTimeRow = (minutes: number): number => {
 };
 
 
-// 시간 슬롯 배열 생성에 사용하는 헬퍼 함수
-// 시간표를 돌면서 가장 늦은 시간을 찾아 END_TIME을 설정
-const setTimeTableSlotConfig = (courses : Course[]) => {
-  courses.forEach(course => {
-    course.courseTimes.forEach(timeSlot => {
-      END_TIME = Math.max(END_TIME, timeSlot.endTime);
-    });
-  })
-};
-
 /*
   시간 슬롯 배열 생성
   반환 - 시간 슬롯 배열 ['9', '9:10', '9:20', '9:30', '9:40', '9:50', '10', ...]
   10분 단위이나 UI에는 정시만 표시
 */
 export const generateTimeSlots = (courses: Course[]): string[] => {
-  setTimeTableSlotConfig(courses);
+  let endTime = 0;
+  courses.forEach(course => {
+    course.courseTimes.forEach(timeSlot => {
+      endTime = Math.max(endTime, timeSlot.endTime);
+    });
+  });
+
   const timeSlots: string[] = [];
-  for (let hour = Math.floor(START_TIME / 60); hour <= Math.floor(END_TIME / 60); hour++) {
+  for (let hour = Math.floor(START_TIME / 60); hour <= Math.floor(endTime / 60); hour++) {
     for (let min = 0; min < 60; min += SLOT_DURATION) {
       const currentTime = hour * 60 + min;
 
       // SLOT_DURATION을 빼야 마지막 슬롯이 END_TIME을 넘지 않음
-      if (currentTime > END_TIME - SLOT_DURATION) break;
+      if (currentTime > endTime - SLOT_DURATION) break;
       if (min === 0) {
         timeSlots.push(`${hour}`);
       } else {
