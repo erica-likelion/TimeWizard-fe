@@ -207,7 +207,7 @@ export function GeneratePage() {
           {isGenerating || isDebugLoading ?  <></> : <BasicButton onClick={() => navigate({to: '/main'})} className={cn("ml-auto px-5 py-1 bg-[#000]", fontStyles.caption)}>← 메인으로</BasicButton>}
         </div>
         <div className="flex-1 min-h-0">
-          <Card className="gap-10">
+          <Card className="gap-10 lg:min-h-[calc(100dvh-200px)]">
             {/* AI 생성 중 로딩 화면 */}
             {isGenerating || isDebugLoading ? (
               <GenerateLoading
