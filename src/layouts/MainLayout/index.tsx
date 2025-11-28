@@ -34,9 +34,9 @@ const MainLayout = ({ children }: LayoutProps) => {
     return (
         <div className="flex h-screen relative overflow-hidden w-full">
             <SideBar isOpen={isSidebarOpen} isMobile={isMobile} />
-            <div className="flex flex-col flex-1 min-w-0 overflow-y-auto">
+            <div className="flex flex-col flex-1 min-w-0 overflow-hidden">
                 <TopBar onToggleSidebar={toggleSidebar} showToggle={isMobile} />
-                <div className="pt-[108px] pb-10 px-4 lg:px-18">
+                <div className="flex-1 overflow-y-auto pt-11 pb-10 px-4 lg:px-18">
                     {children}
                 </div>
             </div>

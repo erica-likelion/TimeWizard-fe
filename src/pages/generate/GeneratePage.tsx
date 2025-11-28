@@ -200,14 +200,14 @@ export function GeneratePage() {
   }
 
   return (
-      <div className={cn("flex flex-col", (isGenerating || isDebugLoading) ? "h-[calc(100dvh-80px)]" : "h-full")}>
+      <div className={cn("flex flex-col", (isGenerating || isDebugLoading) ? "h-[calc(100dvh-205px)]" : "h-full")}>
         {/* [위] 페이지 제목 + 메인으로 돌아가기 버튼 */}
         <div className="flex items-end pb-5 flex-shrink-0">
           <p className={fontStyles.title}>시간표 생성</p>
           {isGenerating || isDebugLoading ?  <></> : <BasicButton onClick={() => navigate({to: '/main'})} className={cn("ml-auto px-5 py-1 bg-[#000]", fontStyles.caption)}>← 메인으로</BasicButton>}
         </div>
-        <div className="flex-1 min-h-0">
-          <Card className="gap-10 lg:min-h-[calc(100dvh-200px)]">
+        <div className="flex-1 pb-11">
+          <Card className="gap-5 lg:min-h-[calc(100dvh-205px)]">
             {/* AI 생성 중 로딩 화면 */}
             {isGenerating || isDebugLoading ? (
               <GenerateLoading
@@ -401,15 +401,15 @@ export function GeneratePage() {
                   <textarea
                     value={requests}
                     onChange={(e) => setRequests(e.target.value)}
-                    className="w-full h-full max-h-[133.2px] max-w-[900px] border-2 border-[#888] placeholder:text-[#888] p-4 resize-none no-scrollbar"
+                    className="w-full h-[calc(100dvh-800px)] min-h-[150px] border-2 border-[#888] placeholder:text-[#888] p-4"
                     placeholder="금요일 공강 선호, 되도록이면 9시 수업 제외. "
                   />
                 </div>
               </div>
 
               {/* 경고 문구 + 하단 버튼: 초기화, 생성 시작 */}
-              <div className="flex flex-col lg:flex-row gap-4 lg:justify-between mt-auto">
-                <div className={cn(fontStyles.caption, "w-full max-w-[900px] bg-[#3D3D3D] border-l-4 border-[#E65787] text-[#fff] p-4 whitespace-pre-line")}>
+              <div className="flex flex-col lg:flex-row gap-4 justify-end mt-auto flex-wrap">
+                <div className={cn(fontStyles.caption, "lg:w-full bg-[#3D3D3D] border-l-4 border-[#E65787] text-[#fff] p-4 whitespace-pre-line")}>
                   <div className="opacity-50">
                     <div className="flex items-center gap-1 mb-1">
                       <img src={AlertLogo} className="w-4 h-4"/>
