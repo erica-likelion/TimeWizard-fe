@@ -36,7 +36,7 @@ const MainLayout = ({ children }: LayoutProps) => {
             <SideBar isOpen={isSidebarOpen} isMobile={isMobile} />
             <div className="flex flex-col flex-1 min-w-0 overflow-y-auto">
                 <TopBar onToggleSidebar={toggleSidebar} showToggle={isMobile} />
-                <div className="pt-[68px]">
+                <div className="pt-[108px] pb-10 px-4 lg:px-18">
                     {children}
                 </div>
             </div>

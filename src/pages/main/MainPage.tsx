@@ -29,7 +29,7 @@ export function MainPage() {
   }
 
   return (
-    <div className="flex flex-col px-18 gap-8 py-10">
+    <div className="flex flex-col gap-8">
       <div className="flex flex-col lg:flex-row justify-between gap-6 items-start lg:items-center">
         <div>
           <p className={cn(fontStyles.title, "text-[#FBFBFB]")}>안녕하세요 <span className="font-bold">{user?.nickname || 'User'}</span>님!</p>

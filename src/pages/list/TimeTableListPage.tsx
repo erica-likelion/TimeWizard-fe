@@ -97,7 +97,7 @@ export function TimeTableListPage() {
   };
 
   return (
-    <div className="flex flex-col px-18 gap-5 py-10 flex-1">
+    <div className="flex flex-col gap-5 flex-1">
       {/* 페이지 제목 */}
       <p className={cn("min-w-full", fontStyles.title)}> 시간표 목록 </p>
 

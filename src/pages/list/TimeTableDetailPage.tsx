@@ -67,7 +67,7 @@ export function TimeTableDetailPage({ timetableId }: TimeTableDetailPageProps) {
   }
 
   return (
-    <div className="flex flex-col px-18 gap-5 py-10 flex-1">
+    <div className="flex flex-col gap-5 flex-1">
       {/* [위] 시간표 이름 + 목록으로 돌아가기 버튼 */}
       <div className="flex items-end">
         <p className={fontStyles.title}>{timetableName ? `#${timetableName}` : `시간표 #${timetableId}`}</p>
