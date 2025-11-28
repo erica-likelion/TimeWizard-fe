@@ -21,6 +21,7 @@ body {
   background-color: #1c1c1c;
   color: white;
   -ms-overflow-style: none;
+  color-scheme: dark;
 }
 
 body::-webkit-scrollbar {

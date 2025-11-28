@@ -13,7 +13,7 @@ const TopBar = ({ onToggleSidebar, showToggle = false }: TopBarProps) => {
     const { user, loading } = useUser();
 
     return (
-        <div className="fixed top-0 right-0 left-0 lg:left-60
+        <div className="w-full
                         flex items-center px-5 py-3 gap-5
                         bg-[#272727] z-10">
             {/* 햄버거 메뉴 버튼 */}
