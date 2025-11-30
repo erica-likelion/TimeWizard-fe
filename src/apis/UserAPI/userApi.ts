@@ -1,43 +1,51 @@
-import api from "@utils/apiClient";
-import type { GetUserResponse } from './types';
+// src/UserAPI/userApi.ts
+import type { ApiResponse, UserProfile, UserPreferences } from '@apis/UserAPI/types';
 
-/*
-  회원 정보 조회 API
-*/
-export const getUserInfo = async (): Promise<GetUserResponse> => {
-  try {
-    const response = await api.get('/users/me');
-    return response.data;
-  } catch (error) {
-    console.error('회원 정보 조회 에러:', error);
-    throw error;
-  }
+// 헤더 설정 (토큰 처리)
+const getHeaders = () => {
+  const token = localStorage.getItem('accessToken'); // 토큰 키 이름 확인 필요
+  return {
+    'Content-Type': 'application/json',
+    'Authorization': token ? `Bearer ${token}` : '',
+  };
 };
 
-/*
-  개발/테스트용 회원 정보 모의 API
-*/
+// --- [1] 회원 정보 (Profile) ---
 
-// major_credits, general_credits는 API에는 없지만 페이지에 필요해서 추가함
-export const mockGetUserInfo = async (): Promise<GetUserResponse> => {
-  // 실제 API 응답 시뮬레이션을 위한 딜레이
-  await new Promise(resolve => setTimeout(resolve, 300));
+export const getUserProfile = async (): Promise<UserProfile> => {
+  const res = await fetch('/users/me', { headers: getHeaders() });
+  
+  if (!res.ok) {
+    throw new Error('회원 정보를 불러오는데 실패했습니다.');
+  }
+  
+  const json: ApiResponse<UserProfile> = await res.json();
+  return json.data;
+};
 
-  return {
-    success: true,
-    data: {
-      user_id: 1,
-      email: "student@example.com",
-      nickname: "TimeWizard",
-      phone_number: "010-1234-5678",
-      university: "한양대학교 ERICA 캠퍼스",
-      major: "컴퓨터학부",
-      grade: 3,
-      graduation_credits: 140,
-      completed_credits: 90,
-      major_credits: 60,
-      general_credits: 30,
-      created_at: "2023-03-01"
-    }
-  };
+export const updateUserProfile = async (data: Partial<UserProfile>) => {
+  const res = await fetch('/users/me', {
+    method: 'PUT',
+    headers: getHeaders(),
+    body: JSON.stringify(data),
+  });
+  return res.json();
+};
+
+// --- [2] 선호도 (Preferences) - 연동만 해둠 ---
+
+export const getUserPreferences = async (): Promise<UserPreferences> => {
+  const res = await fetch('/users/me/preferences', { headers: getHeaders() });
+  if (!res.ok) throw new Error('선호도를 불러오는데 실패했습니다.');
+  const json: ApiResponse<UserPreferences> = await res.json();
+  return json.data;
+};
+
+export const updateUserPreferences = async (data: Partial<UserPreferences>) => {
+  const res = await fetch('/users/me/preferences', {
+    method: 'PUT',
+    headers: getHeaders(),
+    body: JSON.stringify(data),
+  });
+  return res.json();
 };
