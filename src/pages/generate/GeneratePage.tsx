@@ -73,8 +73,8 @@ export function GeneratePage() {
       setMajor(user.major || '')
       setGrade(user.grade?.toString() || '')
       setCompletedCredits(user.completed_credits?.toString() || '')
-      setMajorCreditsCompleted(user.major_credits?.toString() || '')
-      setGeneralCredits(user.general_credits?.toString() || '')
+      //setMajorCreditsCompleted(user.major_credits?.toString() || '')
+      //setGeneralCredits(user.general_credits?.toString() || '')
     }
   }, [user]);
 
@@ -113,8 +113,8 @@ export function GeneratePage() {
       setGrade(user.grade?.toString() || '')
       setSemester('2') 
       setCompletedCredits(user.completed_credits?.toString() || '')
-      setMajorCreditsCompleted(user.major_credits?.toString() || '')
-      setGeneralCredits(user.general_credits?.toString() || '')
+      //setMajorCreditsCompleted(user.major_credits?.toString() || '')
+      //setGeneralCredits(user.general_credits?.toString() || '')
     }
     // 목표 학점 초기화
     setTotalCredits('')
