@@ -1,4 +1,4 @@
-import { Link, useNavigate, useSearch } from '@tanstack/react-router'
+import { useNavigate, useSearch } from '@tanstack/react-router'
 import { useState, useEffect } from 'react'
 import { fontStyles } from '@/utils/styles'
 import { cn } from '@/utils/util'
@@ -331,12 +331,12 @@ export function GeneratePage() {
                       placeholder="0"
                     />
                   </div>
-                  <Link
-                      to={'/main'} // 나중에 포털 연결
+                  <a
+                      href='https://portal.hanyang.ac.kr/sso/lgin.do' // 나중에 포털 연결
                       className={cn(fontStyles.caption, "text-[#C1446C] underline self-end")}
                     >
                       포털에서 요건 확인
-                    </Link>
+                    </a>
                 </div>
               </div>
 
