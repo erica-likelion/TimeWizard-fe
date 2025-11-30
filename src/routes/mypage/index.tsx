@@ -1,4 +1,4 @@
-import { createFileRoute, useNavigate, useRouter } from '@tanstack/react-router';
+import { createFileRoute, useRouter } from '@tanstack/react-router';
 import React, { useState } from 'react';
 import { TextInput } from '@/components/boxes/InputBox';
 import { PinkButton } from '@/components/buttons/PinkButton';
@@ -11,6 +11,7 @@ import { fontStyles } from '@/utils/styles';
 
 import { getUserProfile, updateUserProfile, updatePassword } from '@/apis/UserAPI/userApi';
 import type { UserProfile } from '@/apis/UserAPI/types';
+import { majorOptions, gradeOptions } from '@/constants/options';
 
 export const Route = createFileRoute('/mypage/')({
   loader: async () => {
@@ -18,26 +19,11 @@ export const Route = createFileRoute('/mypage/')({
       return await getUserProfile();
     } catch (error) {
       console.error("프로필 로딩 실패:", error);
-      throw error; 
+      throw error;
     }
   },
   component: MyPage,
 });
-
-const majorOptions = [
-  { id: 1, label: '디자인테크놀로지 전공' },
-  { id: 2, label: '컬처테크놀로지 전공' },
-  { id: 3, label: '미디어테크놀로지 전공' },
-  { id: 4, label: '컴퓨터 전공' },
-];
-
-const gradeOptions = [
-  { id: 1, label: '1학년' },
-  { id: 2, label: '2학년' },
-  { id: 3, label: '3학년' },
-  { id: 4, label: '4학년' },
-  { id: 5, label: '5학년 이상' }
-];
 
 type SelectOption = { id: string | number; label: string };
 
@@ -275,7 +261,6 @@ function SubmitSection({ formData }: Pick<MyPageFormProps, 'formData'>) {
 
 
 function MyPage() {
-  const navigate = useNavigate();
   const router = useRouter(); // 데이터 리로드용
   
   // ✅ 1. Loader 데이터 가져오기 (API 호출 결과)
