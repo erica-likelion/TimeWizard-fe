@@ -309,8 +309,8 @@ export function GeneratePage() {
                 <p className={cn(fontStyles.subtitle, "lg:min-w-[120px]")}>목표 학점 *</p>
                 <div className="flex-1 flex flex-col lg:flex-row gap-5 lg:max-w-[687.6px]">
 
-                  <div className="flex-1 flex-col gap-2">
-                    <span className={cn(fontStyles.body, "text-white")}>
+                  <div className="flex flex-1 flex-col gap-2">
+                    <span className={cn(fontStyles.body)}>
                       전체
                     </span>
                     <TextInput
@@ -321,8 +321,8 @@ export function GeneratePage() {
                       placeholder="20"
                     />
                   </div>
-                  <div className="flex-1 flex-col gap-2">
-                    <span className={cn(fontStyles.body, "text-white")}>전공</span>
+                  <div className="flex flex-1 flex-col gap-2">
+                    <span className={cn(fontStyles.body)}>전공</span>
                     <TextInput
                       value={majorCredits}
                       size='md'
