@@ -2,12 +2,13 @@ import { useState } from 'react';
 import { createFileRoute, useNavigate, Link } from '@tanstack/react-router';
 import { TextInput } from '@/components/boxes/InputBox';
 import { PinkButton } from '@/components/buttons/PinkButton';
-import LoginBgImage from '@assets/images/login.png'; 
-import LogoSvg from '@assets/icons/time_table.png'; 
-import TitleSvg from '@assets/icons/billnut_col.svg'; 
+import LoginBgImage from '@assets/images/login.png';
+import LogoSvg from '@assets/icons/time_table.png';
+import TitleSvg from '@assets/icons/billnut_col.svg';
 import { cn } from '@/utils/util';
 import { fontStyles } from '@/utils/styles';
-import { loginUser } from '@/apis/Auth/authService'; 
+import { loginUser } from '@/apis/Auth/authService';
+import { useUser } from '@/contexts/UserContext';
 import axios from 'axios'; 
 
 export const Route = createFileRoute('/login/')({
@@ -22,8 +23,9 @@ function LoginPage() {
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
 
-  // 4. 라우터 네비게이션
+  // 4. 라우터 네비게이션 및 UserContext
   const navigate = useNavigate();
+  const { login } = useUser();
 
   // [✨ 수정됨] 5. 폼 제출 핸들러 (API 연동)
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -35,9 +37,9 @@ function LoginPage() {
       // 1. authService.ts의 loginUser 함수 호출
       const accessToken = await loginUser(email, password);
 
-      // 2. 토큰을 localStorage에 저장 (interceptor가 사용)
-      localStorage.setItem('authToken', accessToken);
-      
+      // 2. UserContext의 login 함수 호출 (토큰 저장 + 유저 정보 로드)
+      await login(accessToken);
+
       //alert('로그인되었습니다. 메인 페이지로 이동합니다.');
       navigate({ to: '/main' }); // 메인 페이지로 이동
 
