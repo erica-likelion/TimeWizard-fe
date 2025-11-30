@@ -70,7 +70,9 @@ export function MainPage() {
             </div>
             <div className="flex hidden">
               <span className={cn(fontStyles.body, "flex-1")}>전공 학점</span>
-              <span className={cn(fontStyles.body, "flex-2")}>{user?.major_credits || 0}학점</span>
+              {
+                //<span className={cn(fontStyles.body, "flex-2")}>{user?.major_credits || 0}학점</span>
+              }
             </div>
           </div>
         </Card>
