@@ -1,4 +1,4 @@
-import { Link } from '@tanstack/react-router';
+import { Link, useNavigate } from '@tanstack/react-router';
 import UserIcon from '@assets/icons/user_icon.svg';
 import { cn } from '@/utils/util';
 import { fontStyles } from '@/utils/styles';
@@ -10,7 +10,13 @@ interface TopBarProps {
 }
 
 const TopBar = ({ onToggleSidebar, showToggle = false }: TopBarProps) => {
-    const { user, loading } = useUser();
+    const { user, loading, logout } = useUser();
+    const navigate = useNavigate();
+
+    const handleLogout = async () => {
+        await logout();
+        navigate({ to: '/' });
+    };
 
     return (
         <div className="w-full
@@ -57,12 +63,12 @@ const TopBar = ({ onToggleSidebar, showToggle = false }: TopBarProps) => {
                 >
                     <p>마이페이지</p>
                 </Link>
-                <Link
-                    to='/'
+                <button
+                    onClick={handleLogout}
                     className={cn(fontStyles.body, "text-[#FBFBFB]")}
                 >
                     <p>로그아웃</p>
-                </Link>
+                </button>
             </div>
         </div>
     )
