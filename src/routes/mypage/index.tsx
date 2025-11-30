@@ -1,5 +1,5 @@
-import { createFileRoute, useNavigate } from '@tanstack/react-router';
-import React, { useState, useEffect } from 'react';
+import { createFileRoute, useNavigate, useRouter } from '@tanstack/react-router';
+import React, { useState } from 'react';
 import { TextInput } from '@/components/boxes/InputBox';
 import { PinkButton } from '@/components/buttons/PinkButton';
 import { CustomSelect } from '@/components/boxes/SelectBox';
@@ -8,12 +8,24 @@ import SignupBgImage from '@assets/images/signup.png';
 import Cologo from '@assets/icons/billnut_col.svg';
 import PixelLogo from '@assets/icons/time_table.png';
 
+// ✅ API 및 타입 임포트 (경로가 다르다면 수정해주세요)
+import { getUserProfile, updateUserProfile, updatePassword } from '@/apis/UserAPI/userApi';
+import type { UserProfile } from '@/apis/UserAPI/types';
 
+// ✅ Loader 설정: 페이지 진입 전 데이터 로딩
 export const Route = createFileRoute('/mypage/')({
+  loader: async () => {
+    try {
+      return await getUserProfile();
+    } catch (error) {
+      console.error("프로필 로딩 실패:", error);
+      throw error; 
+    }
+  },
   component: MyPage,
 });
 
-// ... (majorOptions, gradeOptions, SelectOption 타입은 signup과 동일) ...
+// ... 옵션 데이터들 ...
 const majorOptions = [
   { id: 1, label: '디자인테크놀로지 전공' },
   { id: 2, label: '컬처테크놀로지 전공' },
@@ -26,12 +38,12 @@ const gradeOptions = [
   { id: 1, label: '1학년' },
   { id: 2, label: '2학년' },
   { id: 3, label: '3학년' },
-  // ... (기타 학년)
+  { id: 4, label: '4학년' },
+  { id: 5, label: '5학년 이상' }, // 학년 옵션 보강
 ];
 
 type SelectOption = { id: string | number; label: string };
 
-// Props 타입 (SignupFormProps와 동일)
 type MyPageFormProps = {
   formData: any;
   handleChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
@@ -41,7 +53,7 @@ type MyPageFormProps = {
   removeMajor: (index: number) => void;
 };
 
-// ... (MyPageSection, BasicInfoInputs, SchoolInfoInputs, CreditInfoInputs 컴포넌트는 변경 없음) ...
+// ... 컴포넌트들 ...
 function MyPageSection({ title, children }: { title: string; children: React.ReactNode }) {
   return (
     <div className="flex flex-col md:flex-row md:gap-6">
@@ -67,6 +79,20 @@ function BasicInfoInputs({ formData, handleChange }: Pick<MyPageFormProps, 'form
           disabled 
         />
       </div>
+
+      {/* ✅ 비밀번호 변경 시 필요한 [현재 비밀번호] 필드 추가 */}
+      <div className="w-full">
+         <TextInput
+          size="md"
+          type="password"
+          placeholder="현재 비밀번호 (정보 수정 시 필수)" 
+          name="currentPassword"
+          value={formData.currentPassword}
+          onChange={handleChange}
+        />
+        <p className="text-xs text-gray-400 mt-1 pl-1">* 비밀번호 변경 시에만 입력하세요.</p>
+      </div>
+
       <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
         <TextInput
           size="md"
@@ -141,6 +167,8 @@ function SchoolInfoInputs({
                     defaultValue={majorOptions.find(
                       (opt) => opt.id === majorId,
                     )}
+                    // 키를 줘서 데이터 변경시 리렌더링 유도
+                    key={`major-${index}-${majorId}`}
                     onChange={(value) => handleMajorChange(index, value)}
                   />
                 </div>
@@ -167,6 +195,7 @@ function SchoolInfoInputs({
             defaultValue={gradeOptions.find( 
               (opt) => opt.id === formData.grade,
             )}
+            key={`grade-${formData.grade}`}
             onChange={(value) => handleSelectChange('grade', value)}
           />
         </div>
@@ -185,14 +214,17 @@ function CreditInfoInputs({ formData, handleChange }: Pick<MyPageFormProps, 'for
       <TextInput
         size="md" type="number" name="creditsTotal"
         value={formData.creditsTotal} onChange={handleChange}
+        
       />
       <TextInput
         size="md" type="number" name="creditsMajor"
         value={formData.creditsMajor} onChange={handleChange}
+        
       />
       <TextInput
         size="md" type="number" name="creditsLiberal"
         value={formData.creditsLiberal} onChange={handleChange}
+        
       />
 
       <label className="text-sm text-gray-400 col-span-1 mt-2">현재 이수(전체)</label>
@@ -202,22 +234,26 @@ function CreditInfoInputs({ formData, handleChange }: Pick<MyPageFormProps, 'for
       <TextInput
         size="md" type="number" name="creditsCurrentTotal"
         value={formData.creditsCurrentTotal} onChange={handleChange}
+       
       />
       <TextInput
         size="md" type="number" name="creditsCurrentMajor"
         value={formData.creditsCurrentMajor} onChange={handleChange}
+        
       />
       <TextInput
         size="md" type="number" name="creditsCurrentLiberal"
         value={formData.creditsCurrentLiberal} onChange={handleChange}
+        
       />
     </div>
   );
 }
 
-//  SubmitSection 
 function SubmitSection({ formData }: Pick<MyPageFormProps, 'formData'>) {
-  const passwordMismatch = (formData.password || formData.passwordCheck) && (formData.password !== formData.passwordCheck);
+  // 새 비밀번호가 입력되었을 때만 비밀번호 일치 여부 확인
+  const isPasswordChanging = formData.password.length > 0;
+  const passwordMismatch = isPasswordChanging && (formData.password !== formData.passwordCheck);
 
   return (
     <div className="flex"> 
@@ -240,33 +276,33 @@ function SubmitSection({ formData }: Pick<MyPageFormProps, 'formData'>) {
 
 function MyPage() {
   const navigate = useNavigate();
-  const [isLoading, setIsLoading] = useState(true); 
-  const [formData, setFormData] = useState<any>(null); 
+  const router = useRouter(); // 데이터 리로드용
+  
+  // ✅ 1. Loader 데이터 가져오기 (API 호출 결과)
+  const userProfile: UserProfile = Route.useLoaderData();
 
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setFormData({
-        id: 'user@example.com', 
-        password: '',
-        passwordCheck: '',
-        nickname: '기존닉네임',
-        majors: [majorOptions[0].id, majorOptions[1].id], 
-        grade: gradeOptions[0].id, 
-        creditsTotal: '140',
-        creditsMajor: '75',
-        creditsLiberal: '10',
-        creditsCurrentTotal: '80',
-        creditsCurrentMajor: '40',
-        creditsCurrentLiberal: '20',
-        isAgreed: false,
-      });
-      setIsLoading(false);
-    }, 1000); 
+  // ✅ 2. API 데이터 -> Form 데이터 매핑
+  // 전공 string을 ID로 변환 (예: "컴퓨터 전공" -> 4)
+  // 매칭되는 게 없으면 기본값 1
+  const initialMajorId = majorOptions.find(opt => opt.label === userProfile.major)?.id || 1;
 
-    return () => {
-      clearTimeout(timer);
-    };
-  }, []); 
+  const [formData, setFormData] = useState({
+    id: userProfile.email,        // 이메일
+    currentPassword: '',          // 현재 비번 (API 필수)
+    password: '',                 // 새 비번
+    passwordCheck: '',
+    nickname: userProfile.nickname,
+    majors: [initialMajorId],     // 다전공 배열
+    grade: userProfile.grade, 
+    
+    // 학점 정보 (숫자 -> 문자열 변환)
+    creditsTotal: userProfile.graduation_credits?.toString() || '0',
+    creditsMajor: '0',            // API에 없으면 0 처리
+    creditsLiberal: '0',
+    creditsCurrentTotal: userProfile.completed_credits?.toString() || '0',
+    creditsCurrentMajor: '0',
+    creditsCurrentLiberal: '0',
+  });
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value, type, checked } = e.target;
@@ -317,26 +353,58 @@ function MyPage() {
     }));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  // ✅ 3. API 수정 요청 핸들러
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
+    // 유효성 검사
     if (formData.password && formData.password !== formData.passwordCheck) {
       alert('새 비밀번호가 일치하지 않습니다.');
       return;
     }
-    
-    console.log('수정된 폼 제출:', formData); 
-    alert('정보가 수정되었습니다.');
-    navigate({ to: '/' }); 
+
+    try {
+      // 3-1. 기본 정보 수정 (닉네임, 전공 등)
+      // 선택된 전공 ID를 다시 String Label로 변환해서 보냄
+      const selectedMajorLabel = majorOptions.find(opt => opt.id === formData.majors[0])?.label || "";
+
+      await updateUserProfile({
+        nickname: formData.nickname,
+        major: selectedMajorLabel, 
+        grade: Number(formData.grade),
+        // 필요한 경우 전화번호 등 다른 필드 추가
+      });
+
+      // 3-2. 비밀번호 변경 (입력된 경우에만 수행)
+      if (formData.password) {
+        if (!formData.currentPassword) {
+            alert("비밀번호를 변경하려면 현재 비밀번호를 입력해주세요.");
+            return;
+        }
+        await updatePassword({
+            current_password: formData.currentPassword,
+            new_password: formData.password
+        });
+      }
+      
+      alert('정보가 수정되었습니다.');
+      
+      // ✅ 4. 데이터 갱신 및 초기화
+      router.invalidate(); // Loader 재실행 -> 최신 데이터 반영
+      setFormData(prev => ({ 
+        ...prev, 
+        currentPassword: '', 
+        password: '', 
+        passwordCheck: '' 
+      }));
+
+    } catch (error: any) {
+      console.error('Update failed:', error);
+      alert(error.message || '정보 수정에 실패했습니다.');
+    }
   };
 
-  if (isLoading || !formData) {
-    return (
-      <div className="flex min-h-screen w-full bg-[#1A1A1A] items-center justify-center">
-        <p className="text-white text-2xl font-galmuri">데이터를 불러오는 중...</p>
-      </div>
-    );
-  }
+  // isLoading 체크 제거 (Loader가 보장함)
 
   return (
     <div className="flex min-h-screen w-full">

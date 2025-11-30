@@ -3,9 +3,11 @@ import { Card } from "@/components/Card";
 import { fontStyles } from "@/utils/styles";
 import { cn } from "@/utils/util";
 import { useUser } from "@/contexts/UserContext";
+import { useNavigate } from "@tanstack/react-router";
 
 export function MainPage() {
   const { user, loading } = useUser();
+  const navigate = useNavigate();
 
   // 수강신청 날짜까지 남은 일수 계산
   const calculateDaysLeft = () => {
@@ -46,7 +48,7 @@ export function MainPage() {
         <Card
           title="나의 정보"
           buttonText="수정 →"
-          onClick={() => {}} // 나중에 연결 추가
+          onClick={() => navigate ({ to: '/mypage'})} // 나중에 연결 추가
           className="w-full xl:flex-1"
         >
           <div className="flex flex-col gap-4">
