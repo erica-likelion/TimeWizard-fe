@@ -1,43 +1,38 @@
-import api from "@utils/apiClient";
-import type { GetUserResponse } from './types';
+// src/UserAPI/userApi.ts
+import api from '@/utils/apiClient'; 
+import type { ApiResponse, UserProfile, UserPreferences, PasswordChangePayload } from '@/apis/UserAPI/types';
 
-/*
-  회원 정보 조회 API
-*/
-export const getUserInfo = async (): Promise<GetUserResponse> => {
-  try {
-    const response = await api.get('/users/me');
-    return response.data;
-  } catch (error) {
-    console.error('회원 정보 조회 에러:', error);
-    throw error;
-  }
+
+
+export const getUserProfile = async (): Promise<UserProfile> => {
+  const response = await api.get<ApiResponse<UserProfile>>('/users/me');
+  
+  return response.data.data;
 };
 
-/*
-  개발/테스트용 회원 정보 모의 API
-*/
+export const updateUserProfile = async (data: Partial<UserProfile>) => {
 
-// major_credits, general_credits는 API에는 없지만 페이지에 필요해서 추가함
-export const mockGetUserInfo = async (): Promise<GetUserResponse> => {
-  // 실제 API 응답 시뮬레이션을 위한 딜레이
-  await new Promise(resolve => setTimeout(resolve, 300));
+  const response = await api.put<ApiResponse<any>>('/users/me', data);
+  return response.data;
+};
 
-  return {
-    success: true,
-    data: {
-      user_id: 1,
-      email: "student@example.com",
-      nickname: "TimeWizard",
-      phone_number: "010-1234-5678",
-      university: "한양대학교 ERICA 캠퍼스",
-      major: "컴퓨터학부",
-      grade: 3,
-      graduation_credits: 140,
-      completed_credits: 90,
-      major_credits: 60,
-      general_credits: 30,
-      created_at: "2023-03-01"
-    }
-  };
+export const updatePassword = async (data: PasswordChangePayload) => {
+ 
+  const response = await api.put<ApiResponse<any>>('/users/me/password', data);
+  return response.data;
+};
+
+
+// ==========================================
+// 2. 선호도 (Preferences) 관련
+// ==========================================
+
+export const getUserPreferences = async (): Promise<UserPreferences> => {
+  const response = await api.get<ApiResponse<UserPreferences>>('/users/me/preferences');
+  return response.data.data;
+};
+
+export const updateUserPreferences = async (data: Partial<UserPreferences>) => {
+  const response = await api.put<ApiResponse<any>>('/users/me/preferences', data);
+  return response.data;
 };
