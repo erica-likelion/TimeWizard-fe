@@ -9,7 +9,7 @@
 }
 
 @font-face {
-  font-family: 'Galmuri11-bold';
+  font-family: 'Galmuri11';
   src: url('./assets/fonts/Galmuri11-Bold.ttf') format('truetype');
   font-weight: 700; 
   font-style: normal;
@@ -18,8 +18,32 @@
 body {
   font-family: 'Galmuri11';
   font-style: normal;
-  font-size: 24px;
-  height: 100vh;
-  background-color: #111;
+  background-color: #1c1c1c;
+  color: white;
+  -ms-overflow-style: none;
+  color-scheme: dark;
+}
+
+body::-webkit-scrollbar {
+  display: none;
+}
+
+@layer utilities {
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  @keyframes slide {
+    0% {
+      transform: translateX(-100%);
+    }
+    100% {
+      transform: translateX(400%);
+    }
+  }
 }
 

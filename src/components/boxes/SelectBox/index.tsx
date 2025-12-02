@@ -43,8 +43,8 @@ export const CustomSelect: React.FC<CustomSelectProps> = ({
     px-4 py-3
     border
     transition-colors duration-150
-    font-[Galmuri11] font-normal text-[24px]
-    h-[54px]
+    font-[Galmuri11] font-normal text-[16px]
+    h-[40px]
   `;
   
   const defaultButtonStyles = 'bg-[#303030] text-white border-[#D7D9DF]';
@@ -54,6 +54,8 @@ export const CustomSelect: React.FC<CustomSelectProps> = ({
   const widthStyles = {
     large: 'w-[400px]',
     small: 'w-[192px]',
+    fit: 'w-fit',
+    full: 'w-full',
   };
 
 
@@ -80,6 +82,8 @@ export const CustomSelect: React.FC<CustomSelectProps> = ({
             bg-[#303030]
             border border-[#D7D9DF] 
             focus:outline-none
+            max-h-80
+            no-scrollbar
           "
         >
           {options.map((option) => (
@@ -90,10 +94,10 @@ export const CustomSelect: React.FC<CustomSelectProps> = ({
               className={`
                 relative cursor-default select-none
                 flex items-center      
-                h-[54px]            
+                h-[40px]            
                 px-4                
                 border-b border-[#D7D9DF] 
-                font-[Galmuri11] font-normal text-[24px]
+                font-[Galmuri11] font-normal text-[16px]
                 
                 hover:bg-pink-600 hover:text-white
                 

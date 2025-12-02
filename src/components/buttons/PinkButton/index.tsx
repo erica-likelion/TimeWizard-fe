@@ -1,5 +1,6 @@
 import React from 'react';
 import { cn } from '@utils/util';
+import { fontStyles } from '@/utils/styles';
 
 interface PinkButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   children: React.ReactNode;
@@ -21,6 +22,7 @@ export const PinkButton: React.FC<PinkButtonProps> = ({
     font-galmuri font-normal text-white
     transition-colors duration-150
     border-4
+    p-5
     bg-[#E65787]
     border-[#E65787]
     hover:bg-[#FF6096]
@@ -28,7 +30,10 @@ export const PinkButton: React.FC<PinkButtonProps> = ({
     group-hover:bg-[#FF6096]
     group-hover:border-[#E65787]
     active:bg-[#C1446C]
-    active:border-[#C1446C]
+    active:border-[#C1446C] 
+
+    disabled:bg-[#E657874D]
+    disabled:border-[#E657874D] 
   `;
 
   const widthStyles = {
@@ -37,9 +42,9 @@ export const PinkButton: React.FC<PinkButtonProps> = ({
   };
 
   const sizeStyles = {
-    sm: 'h-[44px] px-8 text-xl',
-    md: 'h-[54px] px-10 text-[28px]',
-    lg: 'h-[64px] px-12 text-3xl',
+    sm: cn(fontStyles.button, "p-1"),
+    md: cn(fontStyles.body, "p-2"),
+    lg: cn(fontStyles.subtitle, "p-3"),
     custom: '', 
   };
 

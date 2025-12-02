@@ -1,9 +1,6 @@
-import { createFileRoute } from '@tanstack/react-router'
+import { createFileRoute } from '@tanstack/react-router';
+import { TimeTableListPage } from '@/pages/list/TimeTableListPage';
 
 export const Route = createFileRoute('/list/')({
-  component: RouteComponent,
+  component: TimeTableListPage,
 })
-
-function RouteComponent() {
-  return <div>Hello "/list/"!</div>
-}

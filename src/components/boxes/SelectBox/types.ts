@@ -7,5 +7,5 @@ export interface CustomSelectProps {
   options: Option[];
   onChange: (value: Option) => void;
   defaultValue?: Option;
-  size?: 'large' | 'small';
+  size?: 'large' | 'small' | 'fit' | 'full';
 }

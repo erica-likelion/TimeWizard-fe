@@ -2,10 +2,14 @@ import { useState } from 'react';
 import { createFileRoute, useNavigate, Link } from '@tanstack/react-router';
 import { TextInput } from '@/components/boxes/InputBox';
 import { PinkButton } from '@/components/buttons/PinkButton';
-import LoginBgImage from '@assets/images/login.png'; 
-import LogoSvg from '@assets/icons/time_table.svg'; 
-import TitleSvg from '@assets/icons/billnut_col.svg'; 
-
+import LoginBgImage from '@assets/images/login.png';
+import LogoSvg from '@assets/icons/time_table.png';
+import TitleSvg from '@assets/icons/billnut_col.svg';
+import { cn } from '@/utils/util';
+import { fontStyles } from '@/utils/styles';
+import { loginUser } from '@/apis/Auth/authService';
+import { useUser } from '@/contexts/UserContext';
+import axios from 'axios'; 
 
 export const Route = createFileRoute('/login/')({
   component: LoginPage,
@@ -19,45 +23,49 @@ function LoginPage() {
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
 
-  // 4. 라우터 네비게이션
+  // 4. 라우터 네비게이션 및 UserContext
   const navigate = useNavigate();
+  const { login } = useUser();
 
-  // 5. 폼 제출 핸들러 (내용 동일)
+  // [✨ 수정됨] 5. 폼 제출 핸들러 (API 연동)
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setIsLoading(true);
     setError(null);
 
-    // --- 가짜 API 호출 시뮬레이션 ---
     try {
-      await new Promise((resolve, reject) =>
-        setTimeout(() => {
-          if (email === 'test@example.com' && password === 'password') {
-            resolve(true);
-          } else {
-            reject(new Error('이메일 또는 비밀번호가 올바르지 않습니다.'));
-          }
-        }, 1000),
-      );
-      navigate({ to: '/' }); 
-    } catch (err) {
-      if (err instanceof Error) {
-        setError(err.message);
+      // 1. authService.ts의 loginUser 함수 호출
+      const accessToken = await loginUser(email, password);
+
+      // 2. UserContext의 login 함수 호출 (토큰 저장 + 유저 정보 로드)
+      await login(accessToken);
+
+      //alert('로그인되었습니다. 메인 페이지로 이동합니다.');
+      navigate({ to: '/main' }); // 메인 페이지로 이동
+
+    } catch (error: any) {
+      // 3. 에러 핸들링
+      console.error('로그인 실패:', error);
+      if (axios.isAxiosError(error) && error.response) {
+        // API 명세에 따른 401 오류 등
+        setError(error.response.data.message || '로그인에 실패했습니다.');
       } else {
-        setError('알 수 없는 오류가 발생했습니다.');
+        // service에서 throw한 에러
+        setError(error.message || '로그인 중 알 수 없는 오류가 발생했습니다.');
       }
     } finally {
       setIsLoading(false);
     }
   };
 
-  // [✨ 수정됨] 6. 렌더링 (회원가입 페이지와 동일한 2단 레이아웃)
+  // 6. 렌더링 (디자인 수정 없음)
   return (
-    <div className="flex min-h-screen w-full">
+    <div className="relative min-h-screen w-full">
       
-      {/* 6-1. 왼쪽 섹션: 로고 (회색 벽) */}
+      {/* 6-1. 왼쪽 섹션: 로고 (회색 벽) - fixed로 고정 */}
       <div className="
         hidden md:flex md:w-1/3 lg:w-1/4 
+        fixed left-0 top-0 h-screen
         items-center justify-center 
         bg-[#2C2C2C] p-8
       ">
@@ -68,16 +76,18 @@ function LoginPage() {
         />
       </div>
 
-      {/* 6-2. 오른쪽 섹션: 폼 + 배경 이미지 */}
+      {/* 6-2. 오른쪽 섹션: 폼 + 배경 이미지 - 왼쪽 여백 추가 */}
       <div 
         style={{
           backgroundImage: `url(${LoginBgImage})`, 
         }}
         className="
           flex w-full md:w-2/3 lg:w-3/4 
-          items-center justify-center md:justify-start /* 폼을 왼쪽 정렬 (디자인 시안 기준) */
-          p-8 md:p-16 lg:p-24 /* 폼의 왼쪽 여백 */
-          bg-[#1A1A1A] /* 이미지 로드 실패 시 배경색 */
+          md:ml-[33.333333%] lg:ml-[25%]
+          min-h-screen
+          items-center justify-center md:justify-start 
+          p-8 md:p-16 lg:p-24 
+          bg-[#1A1A1A] 
           bg-cover bg-center bg-no-repeat
         "
       >
@@ -87,11 +97,11 @@ function LoginPage() {
             <img 
               src={TitleSvg} 
               alt="빌넣 로고" 
-              className="w-20 h-auto" 
+              className="w-20 h-auto ms-[-6px]" 
             />
             <span className="font-galmuri text-3xl text-white">로그인</span>
           </div>
-          <p>
+          <p className={cn(fontStyles.bodySmall, "mb-2 text-gray-400")}>
             시간마법사는 당신의 올클을 기원합니다.
           </p>
 

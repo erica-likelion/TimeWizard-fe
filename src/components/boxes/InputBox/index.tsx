@@ -1,6 +1,7 @@
 import React from 'react';
 import type { TextInputProps } from './types';
 import { cn } from '../../../utils/util'; 
+import { fontStyles } from '@/utils/styles';
 
 export const TextInput: React.FC<TextInputProps> = ({
   className,
@@ -21,9 +22,12 @@ export const TextInput: React.FC<TextInputProps> = ({
     border-2
     border-transparent
 
-    hover:border-[#E65787]
-    group-hover:border-[#E65787]
+    enabled:hover:border-[#E65787]
+    enabled:group-hover:border-[#E65787]
     focus:border-white
+
+    disabled:bg-[#505050]
+    disabled:cursor-not-allowed
   `;
 
   const widthStyles = {
@@ -32,9 +36,10 @@ export const TextInput: React.FC<TextInputProps> = ({
   };
 
   const sizeStyles = {
-    sm: 'h-[44px] px-4 text-xl', 
-    md: 'h-[54px] px-4 text-[28px]',
-    lg: 'h-[64px] px-5 text-3xl',
+    sm: cn(fontStyles.button, "p-1"),
+    md: cn(fontStyles.body, "p-2"),
+    lg: cn(fontStyles.subtitle, "p-3"),
+    custom: '', 
   };
 
   return (

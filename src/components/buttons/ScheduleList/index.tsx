@@ -1,84 +1,51 @@
 import React from 'react';
 import type { PlanButtonProps } from './types';
-
+import { fontStyles } from '@/utils/styles';
+import { cn } from '@/utils/util';
 export const PlanButton: React.FC<PlanButtonProps> = ({
     title,
-    date,
-    onClick, 
+    onClick,
+    isActive = false,
 }) => {
     return (
-    <button
-        type="button"
-        onClick={onClick}
-        className="
-        group
-        font-[Galmuri11]
-        flex items-center justify-between
+        <button
+            type="button"
+            onClick={onClick}
+            className={`
+            group
+            font-[Galmuri11]
+            flex items-center justify-between
 
-        w-[620px]
-        h-[72px]
-        px-[28px]
-        py-[18px]
-        border-2
+            w-full
+            p-4
+            border-2
 
-        transition-colors duration-150 ease-in-out
+            transition-colors duration-150 ease-in-out
 
-        /* --- 1. Default 상태 --- */
-        bg-[#303030]
-        border-[#D7D9DF]
+            ${isActive
+                ? 'bg-[#E65787] border-[#C1446C]'
+                : 'bg-[#303030] border-[#D7D9DF] hover:bg-[#767676] hover:border-[#D7D9DF]'
+            }
 
-         /* --- 3. Float (hover) 상태 --- */
-         hover:bg-[#767676]
-         hover:border-[#D7D9DF]
+            /* --- 2. OnClick (active) 상태 --- */
+            active:bg-[#E65787]
+            active:border-[#C1446C]
+            `}
+        >
 
-        /* --- 2. OnClick (active) 상태 --- */
-        active:bg-[#E65787]
-         active:border-[#C1446C]
-        "
-     >
+        <span
+            className={cn(`
+            ${isActive
+                ? 'text-[#1EC6AA]'
+                : 'text-[#FFFFFF] group-hover:text-[#D7D9DF]'
+            }
 
-    <span
-        className="
-        /* 기본 폰트 명세 */
-        font-normal
-         text-[28px]
-         leading-[130%]
-         tracking-[-0.02em]
-
-         /* 1. Default 색상 (White_BN) */
-         text-[#FFFFFF]
-        
-         /* 3. Float (hover) 색상 (명세 누락 -> 임시 지정) */
-         group-hover:text-[#D7D9DF]
-        
-         /* 2. OnClick (active) 색상 (Brand_Color_FT_Mint_BN) */
-         group-active:text-[#1EC6AA] 
-        "
-    >
-        {title}
-    </span>
- 
-
-    <span
-        className="
-    
-         font-normal
-         text-[28px]
-         leading-[130%]
-         tracking-[-0.02em]
-
-         /* 1. Default 색상 (Gray-400_BN) */
-         text-[#888888]
-        
-         /* 3. Float (hover) 색상 (Gray-300_BN) */
-         group-hover:text-[#999999]
-        
-         /* 2. OnClick (active) 색상 (White_BN) */
-         group-active:text-[#FFFFFF]
-         "
-    >
-        {date}
-     </span>
+            /* 2. OnClick (active) 색상 (Brand_Color_FT_Mint_BN) */
+            group-active:text-[#1EC6AA]
+            `, fontStyles.button)}
+        >
+            {title}
+        </span>
     </button>
 );
 };

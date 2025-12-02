@@ -1,39 +1,19 @@
-import { createFileRoute } from '@tanstack/react-router';
+import { createFileRoute, useNavigate } from '@tanstack/react-router';
 import React, { useState } from 'react';
 import { TextInput } from '@/components/boxes/InputBox';
 import { PinkButton } from '@/components/buttons/PinkButton';
 import { CustomSelect } from '@/components/boxes/SelectBox';
 import { DarkOutlineButton } from '@/pages/SignUp/buttons/DarkButton';
 import SignupBgImage from '@assets/images/signup.png';
-import Cologo from '@assets/icons/billnut_col.svg';
-import PixelLogo from '@assets/icons/time_table.svg';
+import TitleSvg from '@assets/icons/billnut_col.svg';
+import PixelLogo from '@assets/icons/time_table.png';
+import { signupUser } from '@/apis/Auth/authService';
+import { majorOptions, gradeOptions } from '@/constants/options';
+import axios from 'axios';
 
 export const Route = createFileRoute('/signup/')({
   component: SignupPage,
 });
-
-// ... (majorOptions, gradeOptions, SelectOption 타입은 동일) ...
-const majorOptions = [
-  { id: 1, label: '디자인테크놀로지 전공' },
-  { id: 2, label: '컬처테크놀로지 전공' },
-  { id: 3, label: '미디어테크놀로지 전공' },
-  { id: 4, label: '컴퓨터 전공' },
-  { id: 5, label: '소프트웨어 전공' },
-  { id: 6, label: '인공지능학과' },
-  { id: 7, label: '수리데이터사이언스학과' },
-  { id: 8, label: '미디어학과' },
-  { id: 9, label: '경영학부' },
-  { id: 10, label: '광고홍보학과' },
-  { id: 11, label: '문화콘텐츠학과' },
-];
-
-const gradeOptions = [
-  { id: 1, label: '1학년' },
-  { id: 2, label: '2학년' },
-  { id: 3, label: '3학년' },
-  { id: 4, label: '4학년' },
-  { id: 5, label: '5학년 이상' },
-];
 
 type SelectOption = { id: string | number; label: string };
 
@@ -108,7 +88,7 @@ function BasicInfoInputs({ formData, handleChange }: Pick<SignupFormProps, 'form
 }
 
 
-// [✨ 수정됨] 3. 학교정보 입력 컴포넌트
+
 function SchoolInfoInputs({
   formData,
   handleSelectChange,
@@ -130,30 +110,30 @@ function SchoolInfoInputs({
         disabled
         className="bg-gray-700 text-gray-400"
       />
-      {/* [✨ 수정됨] md:items-start -> md:items-baseline */}
-      <div className="flex flex-col md:flex-row md:items-baseline md:gap-4">
-        {/* 전공 블록 */}
-        <div className="w-full md:w-[400px]">
-          {/* 전공 레이블 + 버튼 */}
-          <div className="inline-flex items-baseline gap-x-2 mb-1"> 
-            <label className="font-galmuri text-sm text-white">전공</label> 
-            <DarkOutlineButton
-              size="default"
-              type="button" 
-              onClick={addMajor}
-              disabled={!canAddMajor}
-              className={!canAddMajor ? 'opacity-50 cursor-not-allowed' : ''}
-            >
-              + 다전공 추가
-            </DarkOutlineButton>
-          </div>
+      <div className="flex flex-col md:items-baseline md:gap-4">
 
+        {/* 전공 레이블 + 버튼 */}
+        <div className="inline-flex items-baseline gap-x-2 mb-1"> 
+          <label className="font-galmuri text-md text-white">전공</label> 
+          <DarkOutlineButton
+            size="default"
+            type="button" 
+            onClick={addMajor}
+            disabled={!canAddMajor}
+            className={!canAddMajor ? 'opacity-50 cursor-not-allowed' : ''}
+          >
+            + 부전공
+          </DarkOutlineButton>
+        </div>
+
+        {/* 전공 블록 */}
+        <div className="w-full">
           <div className="space-y-2">
             {majorsList.map((majorId, index) => (
               <div key={index} className="flex items-center gap-x-2">
                 <div className="flex-grow">
                   <CustomSelect
-                    size="large"
+                    size="full"
                     options={majorOptions}
                     defaultValue={majorOptions.find(
                       (opt) => opt.id === majorId,
@@ -177,7 +157,6 @@ function SchoolInfoInputs({
         
         {/* 학년 블록 */}
         <div className="w-full mt-4 md:mt-0 md:w-[192px]">
-          {/* [✨ 수정됨] h-[32px], pt-1, flex 등 불필요한 스타일 제거 */}
           <div className="mb-1">
             <label className="font-galmuri text-sm text-white block">학년</label> 
           </div>
@@ -238,20 +217,7 @@ function CreditInfoInputs({ formData, handleChange }: Pick<SignupFormProps, 'for
 
 function SubmitSection({ formData, handleChange }: Pick<SignupFormProps, 'formData' | 'handleChange'>) {
   return (
-    <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 pt-4">
-      <PinkButton
-        type="submit"
-        size="custom"
-        disabled={!formData.isAgreed || !formData.id || !formData.password || formData.password !== formData.passwordCheck}
-        className={
-          (!formData.isAgreed || !formData.id || !formData.password || formData.password !== formData.passwordCheck)
-            ? 'opacity-50 cursor-not-allowed w-full md:w-auto whitespace-nowrap h-[30px] px-35 text-xl'
-            : 'w-full md:w-auto whitespace-nowrap h-[30px] px-35 text-xl'
-        }
-      >
-        회원가입!
-      </PinkButton>
-      
+    <div className="flex flex-wrap md:items-center md:justify-between gap-4 pt-4">
       <div className="flex items-center flex-shrink-0"> 
         <input
           id="agree"
@@ -265,6 +231,18 @@ function SubmitSection({ formData, handleChange }: Pick<SignupFormProps, 'formDa
           빌넣 이용약관, 개인정보 수집·이용약관에 동의합니다.
         </label>
       </div>
+      <PinkButton
+        type="submit"
+        size="custom"
+        disabled={!formData.isAgreed || !formData.id || !formData.password || formData.password !== formData.passwordCheck}
+        className={
+          (!formData.isAgreed || !formData.id || !formData.password || formData.password !== formData.passwordCheck)
+            ? 'opacity-50 cursor-not-allowed w-full md:w-auto whitespace-nowrap h-[30px] px-35 text-xl'
+            : 'w-full md:w-auto whitespace-nowrap h-[30px] px-35 text-xl'
+        }
+      >
+        회원가입!
+      </PinkButton>
     </div>
   );
 }
@@ -272,6 +250,7 @@ function SubmitSection({ formData, handleChange }: Pick<SignupFormProps, 'formDa
 
 // ... (SignupPage 컴포넌트) ...
 function SignupPage() {
+  const navigate = useNavigate(); 
   const [formData, setFormData] = useState({
     id: '',
     password: '',
@@ -336,9 +315,10 @@ function SignupPage() {
   };
 
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
+    // 1. 폼 유효성 검사
     if (formData.password !== formData.passwordCheck) {
       alert('비밀번호가 일치하지 않습니다.');
       return;
@@ -348,33 +328,72 @@ function SignupPage() {
       return;
     }
     
-    console.log('폼 제출:', formData); 
-    alert('회원가입 시도! (콘솔 로그 확인)');
+    // 2. API 명세에 맞게 데이터 가공
+    const mainMajorId = formData.majors[0];
+    const majorLabel = majorOptions.find(opt => opt.id === mainMajorId)?.label;
+
+    if (!majorLabel) {
+      alert('주전공을 선택해주세요.');
+      return;
+    }
+    
+    const signupData = {
+      email: formData.id,
+      password: formData.password,
+      nickname: formData.nickname,
+      university: "한양대학교 ERICA 캠퍼스", // 폼에서 하드코딩된 값
+      major: majorLabel, // API 스펙: string
+      grade: Number(formData.grade), // API 스펙: number
+    };
+
+    // 3. API 호출
+    try {
+      await signupUser(signupData); 
+      
+      alert('회원가입이 완료되었습니다. 로그인 페이지로 이동합니다.');
+      navigate({ to: '/login' });
+
+    } catch (error: any) {
+      // 4. 에러 핸들링
+      console.error('회원가입 실패:', error);
+      // service에서 throw한 에러 메시지를 표시
+      if (axios.isAxiosError(error)) {
+        alert(error.response?.data?.message || '회원가입 중 오류가 발생했습니다.');
+      } else {
+        alert(error.message || '알 수 없는 오류가 발생했습니다.');
+      }
+    }
   };
 
   return (
-    <div className="flex min-h-screen w-full">
-      {/* 1. 왼쪽 로고 영역 */}
-      <div className="w-[433px] bg-[#303030] relative flex items-center justify-center p-8">
-        <img
+    <div className="relative min-h-screen w-full">
+      {/* 1. 왼쪽 로고 영역 - fixed로 고정 */}
+      <div className="
+        hidden md:flex md:w-1/3 lg:w-1/4 
+        fixed left-0 top-0 h-screen
+        items-center justify-center 
+        bg-[#2C2C2C] p-8
+      ">
+        <img 
           src={PixelLogo}
-          alt="픽셀 로고"
-          className="w-auto h-auto object-contain"
+          alt="로고" 
+          className="w-full max-w-[150px]"
         />
       </div>
 
-      {/* 2. 오른쪽 폼 영역 */}
+      {/* 2. 오른쪽 폼 영역 - 왼쪽 여백 추가 */}
       <div
         style={{
           backgroundImage: `url(${SignupBgImage})`,
         }}
         className="
-          flex-grow
-          relative flex 
-          py-10 px-4 md:px-16 lg:px-24
-          bg-[#332A33] 
-          bg-cover bg-no-repeat bg-center
-          justify-center md:justify-start
+          flex w-full md:w-2/3 lg:w-3/4 
+          md:ml-[33.333333%] lg:ml-[25%]
+          min-h-screen
+          items-center justify-center md:justify-start /* 폼을 왼쪽 정렬 (디자인 시안 기준) */
+          p-8 md:p-16 lg:p-24 /* 폼의 왼쪽 여백 */
+          bg-[#1A1A1A] /* 이미지 로드 실패 시 배경색 */
+          bg-cover bg-center bg-no-repeat
         "
       >
         <form
@@ -382,14 +401,16 @@ function SignupPage() {
           className="relative z-10 w-full max-w-3xl space-y-12 text-white p-6"
         >
           {/* 회원가입 헤더 */}
-          <div className="text-left">
-            <h1 className="text-3xl font-bold flex items-center">
-              <span className="h-8 w-8 mr-2">
-                <img src={Cologo} />
-              </span>
-              회원가입
-            </h1>
-            <p className="text-gray-400">빌넣을 선택해주셔서 감사합니다.</p>
+          <div>
+            <div className="flex items-center gap-x-2">
+            <img 
+              src={TitleSvg} 
+              alt="빌넣 로고" 
+              className="w-20 h-auto ms-[-6px]" 
+            />
+            <span className="font-galmuri text-3xl text-white">회원가입</span>
+            </div>
+            <p className="text-gray-400">빌넣에 오신 것을 환영합니다!</p> 
           </div>
 
           {/* 3-1. 기본정보 섹션 */}
