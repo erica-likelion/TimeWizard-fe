@@ -200,12 +200,18 @@ export function GeneratePage() {
   }
 
   return (
-      <div className={cn("flex flex-col", (isGenerating || isDebugLoading) ? "h-[calc(100dvh-205px)]" : "h-full")}>
+      <div className={cn("flex flex-col gap-5", (isGenerating || isDebugLoading) ? "h-[calc(100dvh-205px)]" : "h-full")}>
         {/* [위] 페이지 제목 + 메인으로 돌아가기 버튼 */}
-        <div className="flex items-end pb-5 flex-shrink-0">
-          <p className={fontStyles.title}>시간표 생성</p>
-          {isGenerating || isDebugLoading ?  <></> : <BasicButton onClick={() => navigate({to: '/main'})} className={cn("ml-auto px-5 py-1 bg-[#000]", fontStyles.caption)}>← 메인으로</BasicButton>}
+        <div className="flex justify-between items-center min-h-10">
+            <h1 className={cn("text-white", fontStyles.title)}>시간표 생성</h1>
+            {isGenerating || isDebugLoading ? <></> 
+            : 
+              <BasicButton onClick={() => navigate({ to: '/main' })} className="px-4 py-2 text-sm">
+                  ← 메인으로
+              </BasicButton>
+            }
         </div>
+
         <div className="flex-1 pb-11">
           <Card className="gap-5 lg:min-h-[calc(100dvh-205px)]">
             {/* AI 생성 중 로딩 화면 */}

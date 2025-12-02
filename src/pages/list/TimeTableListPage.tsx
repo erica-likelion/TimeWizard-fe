@@ -99,7 +99,10 @@ export function TimeTableListPage() {
   return (
     <div className="flex flex-col gap-5 flex-1">
       {/* 페이지 제목 */}
-      <p className={cn("min-w-full", fontStyles.title)}> 시간표 목록 </p>
+
+      <div className="flex justify-between items-center min-h-10">
+        <h1 className={cn("text-white", fontStyles.title)}>시간표 목록</h1>
+      </div>
 
       <div className="flex flex-col gap-10 lg:flex-row justify-between flex-1">
         <div className="w-full lg:flex-4 lg:w-auto flex flex-col gap-5">
