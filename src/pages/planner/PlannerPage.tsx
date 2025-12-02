@@ -92,9 +92,9 @@ export function PlannerPage() {
     const time = formatTime(currentTime);
 
     return (
-        <div className="w-full h-full p-8 flex flex-col gap-6">
+        <div className="w-full h-full flex flex-col gap-6"> 
             {/* Header */}
-            <div className="flex justify-between items-center">
+            <div className="flex justify-between items-center min-h-10">
                 <h1 className={cn("text-white", fontStyles.title)}>플래너</h1>
                 <BasicButton onClick={() => navigate({ to: '/list' })} className="px-4 py-2 text-sm">
                     ← 목록으로
@@ -227,7 +227,7 @@ export function PlannerPage() {
 
                     {/* AI Commentary */}
                     {isGenerated && (
-                        <Card title="AI 코멘터리" className="h-fit">
+                        <Card title="AI 코멘터리" className="h-fit mb-5"> 
                             <div className={cn("text-[#BBB] mt-2 p-4 bg-[#252525]", fontStyles.body)}>
                                 {DUMMY_COMMENTARY}
                             </div>
