@@ -9,7 +9,7 @@ const RootLayout = () => {
 
   return (
     <div>
-      {locatation.pathname == '/' || locatation.pathname == '/signup' || locatation.pathname == '/login' || locatation.pathname == '/mypage' ? 
+      {locatation.pathname == '/' || locatation.pathname == '/signup' || locatation.pathname == '/login' ? 
       <Outlet/>
       : 
       <Layout>

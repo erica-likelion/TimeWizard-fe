@@ -1,4 +1,4 @@
-import { Link, useNavigate, useSearch } from '@tanstack/react-router'
+import { useNavigate, useSearch } from '@tanstack/react-router'
 import { useState, useEffect } from 'react'
 import { fontStyles } from '@/utils/styles'
 import { cn } from '@/utils/util'
@@ -73,8 +73,8 @@ export function GeneratePage() {
       setMajor(user.major || '')
       setGrade(user.grade?.toString() || '')
       setCompletedCredits(user.completed_credits?.toString() || '')
-      setMajorCreditsCompleted(user.major_credits?.toString() || '')
-      setGeneralCredits(user.general_credits?.toString() || '')
+      //setMajorCreditsCompleted(user.major_credits?.toString() || '')
+      //setGeneralCredits(user.general_credits?.toString() || '')
     }
   }, [user]);
 
@@ -113,8 +113,8 @@ export function GeneratePage() {
       setGrade(user.grade?.toString() || '')
       setSemester('2') 
       setCompletedCredits(user.completed_credits?.toString() || '')
-      setMajorCreditsCompleted(user.major_credits?.toString() || '')
-      setGeneralCredits(user.general_credits?.toString() || '')
+      //setMajorCreditsCompleted(user.major_credits?.toString() || '')
+      //setGeneralCredits(user.general_credits?.toString() || '')
     }
     // 목표 학점 초기화
     setTotalCredits('')
@@ -309,8 +309,8 @@ export function GeneratePage() {
                 <p className={cn(fontStyles.subtitle, "lg:min-w-[120px]")}>목표 학점 *</p>
                 <div className="flex-1 flex flex-col lg:flex-row gap-5 lg:max-w-[687.6px]">
 
-                  <div className="flex-1 flex-col gap-2">
-                    <span className={cn(fontStyles.body, "text-white")}>
+                  <div className="flex flex-1 flex-col gap-2">
+                    <span className={cn(fontStyles.body)}>
                       전체
                     </span>
                     <TextInput
@@ -321,8 +321,8 @@ export function GeneratePage() {
                       placeholder="20"
                     />
                   </div>
-                  <div className="flex-1 flex-col gap-2">
-                    <span className={cn(fontStyles.body, "text-white")}>전공</span>
+                  <div className="flex flex-1 flex-col gap-2">
+                    <span className={cn(fontStyles.body)}>전공</span>
                     <TextInput
                       value={majorCredits}
                       size='md'
@@ -331,12 +331,12 @@ export function GeneratePage() {
                       placeholder="0"
                     />
                   </div>
-                  <Link
-                      to={'/main'} // 나중에 포털 연결
+                  <a
+                      href='https://portal.hanyang.ac.kr/sso/lgin.do' // 나중에 포털 연결
                       className={cn(fontStyles.caption, "text-[#C1446C] underline self-end")}
                     >
                       포털에서 요건 확인
-                    </Link>
+                    </a>
                 </div>
               </div>
 
