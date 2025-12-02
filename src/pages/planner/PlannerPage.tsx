@@ -92,7 +92,7 @@ export function PlannerPage() {
     const time = formatTime(currentTime);
 
     return (
-        <div className="w-full h-full p-8 flex flex-col gap-6 overflow-y-auto no-scrollbar">
+        <div className="w-full h-full p-8 flex flex-col gap-6">
             {/* Header */}
             <div className="flex justify-between items-center">
                 <h1 className={cn("text-white", fontStyles.title)}>플래너</h1>
