@@ -1,9 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from '@tanstack/react-router';
 import { fontStyles } from '@/utils/styles';
 import { cn } from '@/utils/util';
 import { Card } from '@/components/Card';
 import { CustomSelect } from '@/components/boxes/SelectBox';
+import type { Option } from '@/components/boxes/SelectBox/types';
 import { BasicButton } from '@/components/buttons/BasicButton';
 import { PinkButton } from '@/components/buttons/PinkButton';
 
@@ -26,7 +27,7 @@ const DUMMY_COMMENTARY = "성공적인 수강신청을 위해 1순위 과목인 
 
 export function PlannerPage() {
     const navigate = useNavigate();
-    const [selectedTimetable, setSelectedTimetable] = useState<typeof DUMMY_TIMETABLES[0]>(DUMMY_TIMETABLES[0]);
+    const [selectedTimetable, setSelectedTimetable] = useState<Option>(DUMMY_TIMETABLES[0]);
     const [serverUrl, setServerUrl] = useState('sugang.hanyang.ac.kr');
     const [currentTime, setCurrentTime] = useState(new Date());
     const [isGenerated, setIsGenerated] = useState(false);
@@ -111,7 +112,7 @@ export function PlannerPage() {
                             <div className="flex-grow">
                                 <CustomSelect 
                                     options={DUMMY_TIMETABLES} 
-                                    onChange={setSelectedTimetable}
+                                    onChange={(value) => setSelectedTimetable(value)}
                                     defaultValue={selectedTimetable}
                                     size="full"
                                 />
