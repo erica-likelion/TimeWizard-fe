@@ -129,8 +129,9 @@ export function PlannerPage() {
     };
 
     return (
-        <div className="w-full h-full p-8 flex flex-col gap-6">
-            <div className="flex justify-between items-center">
+        <div className="w-full h-full flex flex-col gap-6"> 
+            {/* Header */}
+            <div className="flex justify-between items-center min-h-10">
                 <h1 className={cn("text-white", fontStyles.title)}>플래너</h1>
                 <BasicButton onClick={() => navigate({to: '/list'})} className={cn("ml-auto px-5 py-1 bg-[#000]", fontStyles.caption)}>← 목록으로</BasicButton>
             </div>
@@ -278,6 +279,7 @@ export function PlannerPage() {
                         )}
                     </Card>
 
+                    {/* AI Commentary */}
                     {isGenerated && aiComment && (
                         <Card title="AI 코멘터리" className="h-fit">
                             <div className={cn("text-[#BBB] mt-2 p-4 bg-[#252525]", fontStyles.body)}>
