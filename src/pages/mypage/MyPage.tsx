@@ -136,13 +136,6 @@ export function MyPage() {
       // 선택된 전공 ID를 다시 String Label로 변환해서 보냄
       const selectedMajorLabel = majorOptions.find(opt => opt.id === formData.majors[0])?.label || "";
 
-      await updateUserProfile({
-        nickname: formData.nickname,
-        major: selectedMajorLabel,
-        grade: Number(formData.grade),
-        // 필요한 경우 전화번호 등 다른 필드 추가
-      });
-
       // Context 업데이트 (TopBar에 즉시 반영)
       if (user) {
         updateUser({
@@ -150,6 +143,8 @@ export function MyPage() {
           nickname: formData.nickname,
           major: selectedMajorLabel,
           grade: Number(formData.grade),
+          graduation_credits: Number(formData.creditsTotal),
+          completed_credits: Number(formData.creditsCurrentTotal)
         });
       }
 
@@ -190,9 +185,6 @@ export function MyPage() {
         excluded_courses: excludedCoursesArray,
       };
 
-      await updateUserPreferences(updatedPreferences);
-
-      // Context 업데이트
       updatePreferences(updatedPreferences);
 
       alert('정보가 수정되었습니다.');

@@ -5,15 +5,28 @@ import type { UserProfile, UserPreferences, PasswordChangePayload } from '@/apis
 import { getUserProfile, getUserPreferences, updateUserProfile, updateUserPreferences, updatePassword } from '@/apis/UserAPI/userApi';
 import { logoutUser } from '@/apis/Auth/authService';
 
-export const TokenManager = {
+const TokenManager = {
   setToken: (token: string) => {
-    localStorage.setItem('authToken', token);
+    try {
+      localStorage.setItem('authToken', token);
+    } catch (error) {
+      console.error('토큰 저장 실패 (localStorage 접근 불가):', error);
+    }
   },
   getToken: (): string | null => {
-    return localStorage.getItem('authToken');
+    try {
+      return localStorage.getItem('authToken');
+    } catch (error) {
+      console.error('토큰 조회 실패 (localStorage 접근 불가):', error);
+      return null;
+    }
   },
   removeToken: () => {
-    localStorage.removeItem('authToken');
+    try {
+      localStorage.removeItem('authToken');
+    } catch (error) {
+      console.error('토큰 삭제 실패 (localStorage 접근 불가):', error);
+    }
   },
   isTokenValid: (): boolean => {
     const token = TokenManager.getToken();
@@ -22,7 +35,7 @@ export const TokenManager = {
       const payload = JSON.parse(atob(token.split('.')[1]));
       const exp = payload.exp;
       if (!exp) return true;
-      return Date.now() < (exp * 1000 - 5 * 60 * 1000); 
+      return Date.now() < (exp * 1000 - 5 * 60 * 1000);
     } catch (error) {
       console.error('토큰 파싱 실패:', error);
       return false;

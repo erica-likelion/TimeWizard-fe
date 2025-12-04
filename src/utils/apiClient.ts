@@ -17,9 +17,13 @@ const api = axios.create({
 // Request 인터셉터 (변경 없음)
 api.interceptors.request.use(
   (config) => {
-    const token = localStorage.getItem('authToken');
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
+    try {
+      const token = localStorage.getItem('authToken');
+      if (token) {
+        config.headers.Authorization = `Bearer ${token}`;
+      }
+    } catch (error) {
+      console.error('토큰 조회 실패 (localStorage 접근 불가):', error);
     }
     return config;
   },
@@ -49,13 +53,17 @@ api.interceptors.response.use(
       try {
         // 4. 토큰 갱신 API 호출 (API 명세서 기준)
         const refreshResponse = await api.post('/auth/refresh');
-        
+
         // 5. 새로 발급받은 accessToken 추출
         const { accessToken } = refreshResponse.data;
 
         // 6. 새 토큰 저장
-        localStorage.setItem('authToken', accessToken);
-        
+        try {
+          localStorage.setItem('authToken', accessToken);
+        } catch (storageError) {
+          console.error('토큰 저장 실패 (localStorage 접근 불가):', storageError);
+        }
+
         // 7. 원래 요청의 헤더를 새 토큰으로 변경
         originalRequest.headers['Authorization'] = `Bearer ${accessToken}`;
 
@@ -66,7 +74,11 @@ api.interceptors.response.use(
         // 9. 토큰 갱신 자체를 실패한 경우 (예: Refresh Token 만료)
         console.error('토큰 갱신 실패:', refreshError);
         // localStorage를 비우고 로그인 페이지로 강제 이동
-        localStorage.removeItem('authToken');
+        try {
+          localStorage.removeItem('authToken');
+        } catch (storageError) {
+          console.error('토큰 삭제 실패 (localStorage 접근 불가):', storageError);
+        }
         window.location.href = '/login'; // (Tanstack Router 대신 window 사용)
         return Promise.reject(refreshError);
       }
