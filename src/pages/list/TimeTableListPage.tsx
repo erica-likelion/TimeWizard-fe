@@ -162,7 +162,14 @@ export function TimeTableListPage() {
               <PinkButton
                 width='full'
                 size='lg'
-                onClick={() => {}}
+                onClick={() => {
+                  if (activeTimeTable) {
+                    navigate({
+                      to: '/planner',
+                      search: { timetableId: activeTimeTable }
+                    });
+                  }
+                }}
                 className={cn(fontStyles.button)}
                 disabled={!activeTimeTable}>
                   플래너 짜기
