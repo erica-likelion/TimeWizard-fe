@@ -67,17 +67,26 @@ export function TimeTableDetailPage({ timetableId }: TimeTableDetailPageProps) {
   }
 
   return (
-    <div className="flex flex-col px-18 gap-5 py-10 flex-1">
+    <div className="flex flex-col gap-5 flex-1">
       {/* [위] 시간표 이름 + 목록으로 돌아가기 버튼 */}
+      
+      {/* 이하 이전 값 
       <div className="flex items-end">
         <p className={fontStyles.title}>{timetableName ? `#${timetableName}` : `시간표 #${timetableId}`}</p>
         <BasicButton onClick={() => navigate({to: '/list'})} className={cn("ml-auto px-5 py-1 bg-[#000]", fontStyles.caption)}>← 목록으로</BasicButton>
+      </div> */}
+
+      <div className="flex justify-between items-center min-h-10">
+        <h1 className={cn("text-white", fontStyles.title)}>{timetableName ? `#${timetableName}` : `시간표 #${timetableId}`}</h1>
+        <BasicButton onClick={() => navigate({ to: '/list' })} className="px-4 py-2 text-sm">
+            ← 목록으로
+        </BasicButton>
       </div>
 
       <div className="flex flex-col gap-10 lg:flex-row justify-between flex-1">
         {/* [왼쪽] 등록된 강의 목록 */}
         <div className="w-full lg:flex-4 lg:w-auto">
-          <Card title="등록된 강의" className="w-full lg:w-auto lg:h-[90%]">
+          <Card title="등록된 강의" className="w-full lg:w-auto lg:h-[calc(100dvh-200px)]">
             {/* 강의들 (호버하면 시간표에서 하이라이팅됨) */}
             <div className="flex flex-col gap-[14px]">
               {courses.map((course) => (
@@ -95,7 +104,7 @@ export function TimeTableDetailPage({ timetableId }: TimeTableDetailPageProps) {
 
         {/* [오른쪽] 시간표 */}
         <div className="w-full lg:flex-6 lg:w-auto">
-          <Card title="시간표" className="w-full lg:w-auto lg:h-[90%]">
+          <Card title="시간표" className="w-full lg:w-auto lg:h-[calc(100dvh-200px)]">
             <div className="w-full overflow-y-auto no-scrollbar lg:h-full">
               {courses.length > 0 && <TimeTable courses={courses} activeCourseId={activeCourseId}/>}
             </div>

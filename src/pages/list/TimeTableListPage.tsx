@@ -97,13 +97,16 @@ export function TimeTableListPage() {
   };
 
   return (
-    <div className="flex flex-col px-18 gap-5 py-10 flex-1">
+    <div className="flex flex-col gap-5 flex-1">
       {/* 페이지 제목 */}
-      <p className={cn("min-w-full", fontStyles.title)}> 시간표 목록 </p>
+
+      <div className="flex justify-between items-center min-h-10">
+        <h1 className={cn("text-white", fontStyles.title)}>시간표 목록</h1>
+      </div>
 
       <div className="flex flex-col gap-10 lg:flex-row justify-between flex-1">
         <div className="w-full lg:flex-4 lg:w-auto flex flex-col gap-5">
-          <Card title="생성된 시간표" className="w-full lg:w-auto lg:h-[70%]">
+          <Card title="생성된 시간표" className="w-full lg:w-auto lg:h-[calc(80dvh-200px)]">
             {/* 시간표들 */}
             <div className="flex flex-col gap-[22px] mb-5">
               {timeTables.map((timetable) => (
@@ -124,7 +127,7 @@ export function TimeTableListPage() {
 
         {/* [오른쪽 카드] 선택된 시간표 및 버튼 */}
         <div className="w-full lg:flex-6 lg:w-auto flex flex-col gap-5">
-          <Card title="선택된 시간표" className="w-full lg:w-auto lg:h-[70%]">
+          <Card title="선택된 시간표" className="w-full lg:w-auto lg:h-[calc(80dvh-200px)]">
             {/* 시간표 */}
             <div className="flex flex-col overflow-y-auto no-scrollbar lg:h-full">
               {selectedCourses.length > 0 && <TimeTable courses={selectedCourses} />}
@@ -132,7 +135,7 @@ export function TimeTableListPage() {
           </Card>
           
           {/* 시간표 관련 버튼들 */}
-          <Card className="w-full lg:w-auto gap-3">
+          <Card className="w-full lg:w-auto gap-3 lg:h-auto flex flex-col justify-center">
               {/* 삭제, 튜닝, 자세히보기 */}
               <div className="flex justify-evenly gap-5">
                 <BasicButton variant="danger" onClick={() => handleDeleteTimetable()} className="flex-1" disabled={!activeTimeTable}>삭제</BasicButton>

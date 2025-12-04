@@ -1,4 +1,4 @@
-import { createFileRoute, useNavigate } from '@tanstack/react-router'; 
+import { createFileRoute, useNavigate } from '@tanstack/react-router';
 import React, { useState } from 'react';
 import { TextInput } from '@/components/boxes/InputBox';
 import { PinkButton } from '@/components/buttons/PinkButton';
@@ -7,35 +7,13 @@ import { DarkOutlineButton } from '@/pages/SignUp/buttons/DarkButton';
 import SignupBgImage from '@assets/images/signup.png';
 import TitleSvg from '@assets/icons/billnut_col.svg';
 import PixelLogo from '@assets/icons/time_table.png';
-import { signupUser } from '@/apis/Auth/authService'; 
-import axios from 'axios'; // [✨ 신규]
+import { signupUser } from '@/apis/Auth/authService';
+import { majorOptions, gradeOptions } from '@/constants/options';
+import axios from 'axios';
 
 export const Route = createFileRoute('/signup/')({
   component: SignupPage,
 });
-
-// ... (majorOptions, gradeOptions, SelectOption 타입은 동일) ...
-const majorOptions = [
-  { id: 1, label: '디자인테크놀로지 전공' },
-  { id: 2, label: '컬처테크놀로지 전공' },
-  { id: 3, label: '미디어테크놀로지 전공' },
-  { id: 4, label: '컴퓨터 전공' },
-  { id: 5, label: '소프트웨어 전공' },
-  { id: 6, label: '인공지능학과' },
-  { id: 7, label: '수리데이터사이언스학과' },
-  { id: 8, label: '미디어학과' },
-  { id: 9, label: '경영학부' },
-  { id: 10, label: '광고홍보학과' },
-  { id: 11, label: '문화콘텐츠학과' },
-];
-
-const gradeOptions = [
-  { id: 1, label: '1학년' },
-  { id: 2, label: '2학년' },
-  { id: 3, label: '3학년' },
-  { id: 4, label: '4학년' },
-  { id: 5, label: '5학년 이상' },
-];
 
 type SelectOption = { id: string | number; label: string };
 

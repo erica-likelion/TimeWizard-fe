@@ -22,9 +22,12 @@ export const TextInput: React.FC<TextInputProps> = ({
     border-2
     border-transparent
 
-    hover:border-[#E65787]
-    group-hover:border-[#E65787]
+    enabled:hover:border-[#E65787]
+    enabled:group-hover:border-[#E65787]
     focus:border-white
+
+    disabled:bg-[#505050]
+    disabled:cursor-not-allowed
   `;
 
   const widthStyles = {

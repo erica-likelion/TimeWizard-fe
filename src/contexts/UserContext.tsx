@@ -9,13 +9,13 @@ import { logoutUser } from '@/apis/Auth/authService';
 // JWT 토큰 관리 유틸리티 (유지)
 export const TokenManager = {
   setToken: (token: string) => {
-    localStorage.setItem('accessToken', token); // 참고: userApi 헤더에서 accessToken 키를 썼으므로 통일
+    localStorage.setItem('authToken', token);
   },
   getToken: (): string | null => {
-    return localStorage.getItem('accessToken');
+    return localStorage.getItem('authToken');
   },
   removeToken: () => {
-    localStorage.removeItem('accessToken');
+    localStorage.removeItem('authToken');
   },
   isTokenValid: (): boolean => {
     const token = TokenManager.getToken();
