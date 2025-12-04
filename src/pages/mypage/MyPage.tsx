@@ -1,243 +1,24 @@
+// 추후 전공별, 교양별 이수학점 백엔드에서 추가시 수정 예정
+
 import React, { useState, useEffect } from 'react';
-import { TextInput } from '@/components/boxes/InputBox';
-import { PinkButton } from '@/components/buttons/PinkButton';
-import { CustomSelect } from '@/components/boxes/SelectBox';
-import { DarkOutlineButton } from '@/pages/SignUp/buttons/DarkButton';
 import { Card } from '@/components/Card';
-
-import { cn } from '@/utils/util';
 import { fontStyles } from '@/utils/styles';
+import { updateUserProfile, updateUserPreferences } from '@/apis/UserAPI/userApi';
+import { majorOptions } from '@/constants/options';
+import type { SelectOption, MyPageFormData } from './types';
+import { useUser } from '@/contexts/UserContext';
 
-import { getUserProfile, updateUserProfile, updatePassword } from '@/apis/UserAPI/userApi';
-import { majorOptions, gradeOptions } from '@/constants/options';
-import type { SelectOption, MyPageFormProps, MyPageFormData } from './types';
-
-// ... 컴포넌트들 ...
-function MyPageSection({ title, children }: { title: string; children: React.ReactNode }) {
-  return (
-    <div className="w-full flex flex-col lg:flex-row gap-4 lg:gap-14">
-      <p className={cn(fontStyles.subtitle, "lg:min-w-[120px]")}>{title}</p>
-      <div className="flex-1 flex flex-col gap-4">{children}</div>
-    </div>
-  );
-}
-
-function BasicInfoInputs({ formData, handleChange }: Pick<MyPageFormProps, 'formData' | 'handleChange'>) {
-  return (
-    <>
-      <div className="flex w-full items-center space-x-2 group">
-        <TextInput
-          size="md"
-          className="w-full border-2 border-[#888]"
-          placeholder="아이디 (이메일)"
-          name="id"
-          value={formData.id}
-          onChange={handleChange}
-          disabled
-        />
-      </div>
-
-      {/* 비밀번호 필드 */}
-      <div className="w-full">
-         <TextInput
-          size="md"
-          className="border-2 border-[#888]"
-          type="password"
-          placeholder="현재 비밀번호"
-          name="currentPassword"
-          value={formData.currentPassword}
-          onChange={handleChange}
-        />
-        <p className={cn(fontStyles.caption, "text-gray-400 mt-1")}>* 비밀번호 변경 시에만 입력하세요.</p>
-      </div>
-
-      <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-        <TextInput
-          size="md"
-          className="border-2 border-[#888]"
-          type="password"
-          placeholder="새 비밀번호"
-          name="password"
-          value={formData.password}
-          onChange={handleChange}
-        />
-        <TextInput
-          size="md"
-          className="border-2 border-[#888]"
-          type="password"
-          placeholder="새 비밀번호 확인"
-          name="passwordCheck"
-          value={formData.passwordCheck}
-          onChange={handleChange}
-        />
-      </div>
-      <TextInput
-        size="md"
-        className="border-2 border-[#888]"
-        placeholder="닉네임"
-        name="nickname"
-        value={formData.nickname}
-        onChange={handleChange}
-      />
-    </>
-  );
-}
-
-function SchoolInfoInputs({
-  formData,
-  handleSelectChange,
-  handleMajorChange,
-  addMajor,
-  removeMajor
-}: Pick<
-  MyPageFormProps,
-  'formData' | 'handleSelectChange' | 'handleMajorChange' | 'addMajor' | 'removeMajor'
->) {
-  const majorsList = formData.majors as (string | number)[];
-  const canAddMajor = majorsList.length < 2;
-
-  return (
-    <>
-      <TextInput
-        size="md"
-        value="한양대학교 ERICA 캠퍼스"
-        disabled
-        className="border-2 border-[#888]"
-      />
-      <div className="flex flex-col md:flex-row md:items-start md:gap-4">
-        <div className="w-full">
-          <div className="inline-flex items-baseline gap-x-2 mb-1">
-            <span className={cn(fontStyles.body)}> 전공 </span>
-            <DarkOutlineButton
-              size="default"
-              type="button"
-              onClick={addMajor}
-              disabled={!canAddMajor}
-              className={!canAddMajor ? 'opacity-50 cursor-not-allowed' : ''}
-            >
-              + 다전공 추가
-            </DarkOutlineButton>
-          </div>
-          <div className="space-y-2">
-            {majorsList.map((majorId, index) => (
-              <div key={index} className="flex items-center gap-x-2">
-                <div className="flex-grow">
-                  <CustomSelect
-                    size="full"
-                    options={majorOptions}
-                    defaultValue={majorOptions.find(
-                      (opt) => opt.id === majorId,
-                    )}
-                    // 키를 줘서 데이터 변경시 리렌더링 유도
-                    key={`major-${index}-${majorId}`}
-                    onChange={(value) => handleMajorChange(index, value)}
-                  />
-                </div>
-                {index > 0 && (
-                  <p
-                        onClick={() => removeMajor(index)}
-                        className={cn(fontStyles.caption, "ml-2 text-[#C1446C] underline self-end cursor-pointer")}>
-                        삭제
-                  </p>
-                )}
-              </div>
-            ))}
-          </div>
-        </div>
-        <div className="w-full mt-4 md:mt-0">
-          <div className="mb-1 flex items-baseline h-[32px]">
-            <span className={cn(fontStyles.body)}> 학년 </span>
-          </div>
-          <CustomSelect
-            size="small"
-            options={gradeOptions}
-            defaultValue={gradeOptions.find(
-              (opt) => opt.id === formData.grade,
-            )}
-            key={`grade-${formData.grade}`}
-            onChange={(value) => handleSelectChange('grade', value)}
-          />
-        </div>
-      </div>
-    </>
-  );
-}
-
-function CreditInfoInputs({ formData, handleChange }: Pick<MyPageFormProps, 'formData' | 'handleChange'>) {
-  return (
-    <div className="grid grid-cols-3 gap-x-4 gap-y-2">
-      <span className={cn(fontStyles.body)}> 졸업학점(전체) </span>
-      <span className={cn(fontStyles.body)}> 졸업학점(전공) </span>
-      <span className={cn(fontStyles.body)}> 졸업학점(교양) </span>
-
-      <TextInput
-        size="md" type="number" name="creditsTotal"
-        value={formData.creditsTotal} onChange={handleChange}
-        className="border-2 border-[#888]"
-      />
-      <TextInput
-        size="md" type="number" name="creditsMajor"
-        value={formData.creditsMajor} onChange={handleChange}
-        className="border-2 border-[#888]"
-        disabled={true}
-      />
-      <TextInput
-        size="md" type="number" name="creditsLiberal"
-        value={formData.creditsLiberal} onChange={handleChange}
-        className="border-2 border-[#888]"
-        disabled={true}
-      />
-      <span className={cn(fontStyles.body)}> 현재 이수(전체) </span>
-      <span className={cn(fontStyles.body)}> 현재 이수(전공) </span>
-      <span className={cn(fontStyles.body)}> 현재 이수(교양) </span>
-
-      <TextInput
-        size="md" type="number" name="creditsCurrentTotal"
-        value={formData.creditsCurrentTotal} onChange={handleChange}
-        className="border-2 border-[#888]"
-      />
-      <TextInput
-        size="md" type="number" name="creditsCurrentMajor"
-        value={formData.creditsCurrentMajor} onChange={handleChange}
-        className="border-2 border-[#888]"
-        disabled={true}
-      />
-      <TextInput
-        size="md" type="number" name="creditsCurrentLiberal"
-        value={formData.creditsCurrentLiberal} onChange={handleChange}
-        className="border-2 border-[#888]"
-        disabled={true}
-      />
-    </div>
-  );
-}
-
-function SubmitSection({ formData }: Pick<MyPageFormProps, 'formData'>) {
-  // 새 비밀번호가 입력되었을 때만 비밀번호 일치 여부 확인
-  const isPasswordChanging = formData.password.length > 0;
-  const passwordMismatch = isPasswordChanging && (formData.password !== formData.passwordCheck);
-
-  return (
-    <div className="flex flex-col lg:flex-row w-full lg:w-auto gap-4 self-end">
-      <PinkButton
-        type="submit"
-        size="sm"
-        disabled={passwordMismatch}
-        className={cn(
-          "w-full lg:w-auto px-8 py-2 min-h-14",
-          fontStyles.button,
-          passwordMismatch && 'opacity-50 cursor-not-allowed'
-        )}
-      >
-        정보 수정
-      </PinkButton>
-    </div>
-  );
-}
+// 컴포넌트 imports
+import { MyPageSection } from './components/MyPageSection';
+import { BasicInfoInputs } from './components/BasicInfoInputs';
+import { SchoolInfoInputs } from './components/SchoolInfoInputs';
+import { CreditInfoInputs } from './components/CreditInfoInputs';
+import { PreferenceInfoInputs } from './components/PreferenceInfoInputs';
+import { SubmitSection } from './components/SubmitSection';
 
 
 export function MyPage() {
-  const [loading, setLoading] = useState(true);
+  const { user, preferences, loading, updateUser, updatePreferences, changePassword } = useUser();
   const [formData, setFormData] = useState<MyPageFormData>({
     id: '',
     currentPassword: '',
@@ -247,46 +28,54 @@ export function MyPage() {
     majors: [1],
     grade: 1,
     creditsTotal: '0',
-    creditsMajor: '0',
-    creditsLiberal: '0',
+    //creditsMajor: '0',
+    //creditsLiberal: '0',
     creditsCurrentTotal: '0',
-    creditsCurrentMajor: '0',
-    creditsCurrentLiberal: '0',
+    //creditsCurrentMajor: '0',
+    //creditsCurrentLiberal: '0',
+
+    // 선호
+    preferredDays: [],
+    preferredStartTime: '09:00',
+    preferredEndTime: '18:00',
+    targetCredits: '20',
+    requiredCourses: '',
+    excludedCourses: '',
   });
 
   useEffect(() => {
-    const loadUserProfile = async () => {
-      try {
-        const userProfile = await getUserProfile();
-        const initialMajorId = majorOptions.find(opt => opt.label === userProfile.major)?.id || 1;
+    if (!user || !preferences) {
+      return;
+    }
 
-        setFormData({
-          id: userProfile.email,
-          currentPassword: '',
-          password: '',
-          passwordCheck: '',
-          nickname: userProfile.nickname,
-          majors: [initialMajorId],
-          grade: userProfile.grade,
-          creditsTotal: userProfile.graduation_credits?.toString() || '0',
-          creditsMajor: '0',
-          creditsLiberal: '0',
-          creditsCurrentTotal: userProfile.completed_credits?.toString() || '0',
-          creditsCurrentMajor: '0',
-          creditsCurrentLiberal: '0',
-        });
-      } catch (error) {
-        console.error('프로필 로딩 실패:', error);
-        alert('프로필을 불러오는데 실패했습니다.');
-      } finally {
-        setLoading(false);
-      }
-    };
+    const initialMajorId = majorOptions.find(opt => opt.label === user.major)?.id || 1;
 
-    loadUserProfile();
-  }, []);
+    setFormData({
+      id: user.email,
+      currentPassword: '',
+      password: '',
+      passwordCheck: '',
+      nickname: user.nickname,
+      majors: [initialMajorId],
+      grade: user.grade,
+      creditsTotal: user.graduation_credits?.toString() || '0',
+      //creditsMajor: '0',
+      //creditsLiberal: '0',
+      creditsCurrentTotal: user.completed_credits?.toString() || '0',
+      //creditsCurrentMajor: '0',
+      //creditsCurrentLiberal: '0',
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+      // 선호도 정보
+      preferredDays: preferences.preferred_days || [],
+      preferredStartTime: preferences.preferred_start_time || '09:00',
+      preferredEndTime: preferences.preferred_end_time || '18:00',
+      targetCredits: preferences.target_credits?.toString() || '20',
+      requiredCourses: preferences.required_courses?.join(', ') || '',
+      excludedCourses: preferences.excluded_courses?.join(', ') || '',
+    });
+  }, [user, preferences]);
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement> | any) => {
     const { name, value, type, checked } = e.target;
     setFormData((prev) => ({
       ...prev,
@@ -354,21 +143,60 @@ export function MyPage() {
         // 필요한 경우 전화번호 등 다른 필드 추가
       });
 
+      // Context 업데이트 (TopBar에 즉시 반영)
+      if (user) {
+        updateUser({
+          ...user,
+          nickname: formData.nickname,
+          major: selectedMajorLabel,
+          grade: Number(formData.grade),
+        });
+      }
+
       // 3-2. 비밀번호 변경 (입력된 경우에만 수행)
+      // 비밀번호 검증 API가 필요하지 않을까 싶음
       if (formData.password) {
         if (!formData.currentPassword) {
             alert("비밀번호를 변경하려면 현재 비밀번호를 입력해주세요.");
             return;
         }
-        await updatePassword({
+        await changePassword({
             current_password: formData.currentPassword,
             new_password: formData.password
         });
       }
 
+      // 3-3. 선호도 정보 수정
+      const requiredCoursesArray = formData.requiredCourses
+        .split(',')
+        .map(c => c.trim())
+        .filter(c => c !== '')
+        .map(c => Number(c))
+        .filter(c => !isNaN(c));
+
+      const excludedCoursesArray = formData.excludedCourses
+        .split(',')
+        .map(c => c.trim())
+        .filter(c => c !== '')
+        .map(c => Number(c))
+        .filter(c => !isNaN(c));
+
+      const updatedPreferences = {
+        preferred_days: formData.preferredDays,
+        preferred_start_time: formData.preferredStartTime,
+        preferred_end_time: formData.preferredEndTime,
+        target_credits: Number(formData.targetCredits),
+        required_courses: requiredCoursesArray,
+        excluded_courses: excludedCoursesArray,
+      };
+
+      await updateUserPreferences(updatedPreferences);
+
+      // Context 업데이트
+      updatePreferences(updatedPreferences);
+
       alert('정보가 수정되었습니다.');
 
-      // ✅ 4. 비밀번호 필드 초기화
       setFormData(prev => ({
         ...prev,
         currentPassword: '',
@@ -421,7 +249,16 @@ export function MyPage() {
             <CreditInfoInputs formData={formData} handleChange={handleChange} />
           </MyPageSection>
 
-          {/* 3-4. 제출 버튼  */}
+          {/* 3-4. 선호도 정보 섹션 */}
+          <MyPageSection title="선호도 정보">
+            <PreferenceInfoInputs
+              formData={formData}
+              handleChange={handleChange}
+              handleSelectChange={handleSelectChange}
+            />
+          </MyPageSection>
+
+          {/* 3-5. 제출 버튼  */}
           <div className="flex flex-col lg:flex-row gap-4 justify-end mt-auto flex-wrap">
             <SubmitSection formData={formData} />
           </div>

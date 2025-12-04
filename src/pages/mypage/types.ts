@@ -12,11 +12,19 @@ export type MyPageFormData = {
   majors: (string | number)[];
   grade: number;
   creditsTotal: string;
-  creditsMajor: string;
-  creditsLiberal: string;
+  //creditsMajor: string;
+  //creditsLiberal: string;
   creditsCurrentTotal: string;
-  creditsCurrentMajor: string;
-  creditsCurrentLiberal: string;
+  //creditsCurrentMajor: string;
+  //creditsCurrentLiberal: string;
+
+  // 선호도 정보
+  preferredDays: string[];
+  preferredStartTime: string;
+  preferredEndTime: string;
+  targetCredits: string;
+  requiredCourses: string;
+  excludedCourses: string;
 };
 
 export type MyPageFormProps = {
@@ -26,4 +34,16 @@ export type MyPageFormProps = {
   handleMajorChange: (index: number, value: SelectOption) => void;
   addMajor: () => void;
   removeMajor: (index: number) => void;
+};
+
+export type DayType = 'MON' | 'TUE' | 'WED' | 'THU' | 'FRI' | 'SAT' | 'SUN';
+
+export const DAY_MAP: { [key in DayType]: string } = {
+  MON: '월',
+  TUE: '화',
+  WED: '수',
+  THU: '목',
+  FRI: '금',
+  SAT: '토',
+  SUN: '일',
 };
