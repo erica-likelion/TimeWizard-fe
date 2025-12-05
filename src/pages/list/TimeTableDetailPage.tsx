@@ -69,18 +69,10 @@ export function TimeTableDetailPage({ timetableId }: TimeTableDetailPageProps) {
   return (
     <div className="flex flex-col gap-5 flex-1">
       {/* [위] 시간표 이름 + 목록으로 돌아가기 버튼 */}
-      
-      {/* 이하 이전 값 
-      <div className="flex items-end">
-        <p className={fontStyles.title}>{timetableName ? `#${timetableName}` : `시간표 #${timetableId}`}</p>
-        <BasicButton onClick={() => navigate({to: '/list'})} className={cn("ml-auto px-5 py-1 bg-[#000]", fontStyles.caption)}>← 목록으로</BasicButton>
-      </div> */}
 
       <div className="flex justify-between items-center min-h-10">
         <h1 className={cn("text-white", fontStyles.title)}>{timetableName ? `#${timetableName}` : `시간표 #${timetableId}`}</h1>
-        <BasicButton onClick={() => navigate({ to: '/list' })} className="px-4 py-2 text-sm">
-            ← 목록으로
-        </BasicButton>
+        <BasicButton onClick={() => navigate({to: '/list'})} className={cn("ml-auto px-5 py-1 bg-[#000]", fontStyles.caption)}>← 목록으로</BasicButton>
       </div>
 
       <div className="flex flex-col gap-10 lg:flex-row justify-between flex-1">

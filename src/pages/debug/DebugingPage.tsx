@@ -70,9 +70,7 @@ export function DebugingPage() {
            {/* [위] 페이지 제목 */}
             <div className="flex justify-between items-center min-h-10">
                 <h1 className={cn("text-white", fontStyles.title)}>Timetable Component Test</h1>
-                <BasicButton onClick={() => navigate({ to: '/main' })} className="px-4 py-2 text-sm">
-                    ← 메인으로
-                </BasicButton>
+                <BasicButton onClick={() => navigate({to: '/main'})} className={cn("ml-auto px-5 py-1 bg-[#000]", fontStyles.caption)}>← 메인으로</BasicButton>
             </div>
             
            <div className="flex flex-col gap-10 lg:flex-row justify-between flex-1">
