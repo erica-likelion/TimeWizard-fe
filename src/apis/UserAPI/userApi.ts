@@ -5,21 +5,31 @@ import type { ApiResponse, UserProfile, UserPreferences, PasswordChangePayload }
 
 
 export const getUserProfile = async (): Promise<UserProfile> => {
-  const response = await api.get<ApiResponse<UserProfile>>('/users/me');
-  
-  return response.data.data;
+  try {
+    const response = await api.get<ApiResponse<UserProfile>>('/users/me');
+    return response.data.data;
+  } catch (error) {
+    console.error('유저 프로필 조회 에러:', error);
+    throw error;
+  }
 };
 
 export const updateUserProfile = async (data: Partial<UserProfile>) => {
-
-  const response = await api.put<ApiResponse<any>>('/users/me', data);
-  return response.data;
+  try {
+    await api.put<ApiResponse<any>>('/users/me', data);
+  } catch (error) {
+    console.error('유저 정보 업데이트 에러:', error);
+    throw error;
+  }
 };
 
 export const updatePassword = async (data: PasswordChangePayload) => {
- 
-  const response = await api.put<ApiResponse<any>>('/users/me/password', data);
-  return response.data;
+  try {
+    await api.put<ApiResponse<any>>('/users/me/password', data);
+  } catch (error) {
+    console.error('비밀번호 업데이트 에러:', error);
+    throw error;
+  }
 };
 
 
@@ -28,11 +38,20 @@ export const updatePassword = async (data: PasswordChangePayload) => {
 // ==========================================
 
 export const getUserPreferences = async (): Promise<UserPreferences> => {
-  const response = await api.get<ApiResponse<UserPreferences>>('/users/me/preferences');
-  return response.data.data;
+  try {
+    const response = await api.get<ApiResponse<UserPreferences>>('/users/me/preferences');
+    return response.data.data;
+  } catch (error) {
+    console.error('유저 선호도 조회 에러:', error);
+    throw error;
+  }
 };
 
 export const updateUserPreferences = async (data: Partial<UserPreferences>) => {
-  const response = await api.put<ApiResponse<any>>('/users/me/preferences', data);
-  return response.data;
+  try {
+    await api.put<ApiResponse<any>>('/users/me/preferences', data);
+  } catch (error) {
+    console.error('유저 선호도 업데이트 에러:', error);
+    throw error;
+  }
 };

@@ -19,7 +19,7 @@ import AlertLogo from '@/assets/icons/alert_primary_color.svg'
 // 시간표 생성 페이지
 export function GeneratePage() {
   const navigate = useNavigate();
-  const { user, loading } = useUser();
+  const { user, preferences, loading } = useUser();
   const searchParams = useSearch({ strict: false }) as { debug?: string };
 
   // AI 시간표 생성 훅
@@ -68,11 +68,12 @@ export function GeneratePage() {
 
   // 사용자 정보가 로드되면 초기값 설정
   useEffect(() => {
-    if (user) {
+    if (user && preferences) {
       setUniversity(user.university || '')
       setMajor(user.major || '')
       setGrade(user.grade?.toString() || '')
       setCompletedCredits(user.completed_credits?.toString() || '')
+      setTotalCredits(preferences.target_credits?.toString() || '')
       //setMajorCreditsCompleted(user.major_credits?.toString() || '')
       //setGeneralCredits(user.general_credits?.toString() || '')
     }

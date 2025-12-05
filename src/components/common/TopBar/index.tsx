@@ -65,7 +65,7 @@ const TopBar = ({ onToggleSidebar, showToggle = false }: TopBarProps) => {
                 </Link>
                 <button
                     onClick={handleLogout}
-                    className={cn(fontStyles.body, "text-[#FBFBFB]")}
+                    className={cn(fontStyles.body, "text-[#FBFBFB] cursor-pointer")}
                 >
                     <p>로그아웃</p>
                 </button>
