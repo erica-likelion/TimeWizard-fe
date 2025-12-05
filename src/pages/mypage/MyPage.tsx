@@ -3,7 +3,6 @@
 import React, { useState, useEffect } from 'react';
 import { Card } from '@/components/Card';
 import { fontStyles } from '@/utils/styles';
-import { updateUserProfile, updateUserPreferences } from '@/apis/UserAPI/userApi';
 import { majorOptions } from '@/constants/options';
 import type { SelectOption, MyPageFormData } from './types';
 import { useUser } from '@/contexts/UserContext';
@@ -136,9 +135,9 @@ export function MyPage() {
       // 선택된 전공 ID를 다시 String Label로 변환해서 보냄
       const selectedMajorLabel = majorOptions.find(opt => opt.id === formData.majors[0])?.label || "";
 
-      // Context 업데이트 (TopBar에 즉시 반영)
+      // 1. 사용자 정보 업데이트
       if (user) {
-        updateUser({
+        await updateUser({
           ...user,
           nickname: formData.nickname,
           major: selectedMajorLabel,
@@ -148,20 +147,25 @@ export function MyPage() {
         });
       }
 
-      // 3-2. 비밀번호 변경 (입력된 경우에만 수행)
-      // 비밀번호 검증 API가 필요하지 않을까 싶음
+      // 2. 비밀번호 변경 (입력된 경우에만 수행)
       if (formData.password) {
         if (!formData.currentPassword) {
             alert("비밀번호를 변경하려면 현재 비밀번호를 입력해주세요.");
             return;
         }
-        await changePassword({
-            current_password: formData.currentPassword,
-            new_password: formData.password
-        });
+        try {
+          await changePassword({
+              current_password: formData.currentPassword,
+              new_password: formData.password
+          });
+        } catch (error: any) {
+          console.error('비밀번호 변경 실패:', error);
+          alert('현재 비밀번호가 틀렸습니다.');
+          return;
+        }
       }
 
-      // 3-3. 선호도 정보 수정
+      // 3. 선호도 정보 수정
       const requiredCoursesArray = formData.requiredCourses
         .split(',')
         .map(c => c.trim())
@@ -185,7 +189,7 @@ export function MyPage() {
         excluded_courses: excludedCoursesArray,
       };
 
-      updatePreferences(updatedPreferences);
+      await updatePreferences(updatedPreferences);
 
       alert('정보가 수정되었습니다.');
 
@@ -220,12 +224,12 @@ export function MyPage() {
       {/* 폼 영역 */}
       <form onSubmit={handleSubmit} className="flex-1 pb-11">
         <Card className="h-full gap-5 lg:min-h-[calc(100dvh-205px)]">
-          {/* 3-1. 기본정보 섹션 */}
+          {/* 기본정보 섹션 */}
           <MyPageSection title="기본정보">
             <BasicInfoInputs formData={formData} handleChange={handleChange} />
           </MyPageSection>
 
-          {/* 3-2. 학교정보 섹션 */}
+          {/* 학교정보 섹션 */}
           <MyPageSection title="학교정보">
             <SchoolInfoInputs
               formData={formData}
@@ -236,12 +240,12 @@ export function MyPage() {
             />
           </MyPageSection>
 
-          {/* 3-3. 학점정보 섹션 */}
+          {/* 학점정보 섹션 */}
           <MyPageSection title="학점정보">
             <CreditInfoInputs formData={formData} handleChange={handleChange} />
           </MyPageSection>
 
-          {/* 3-4. 선호도 정보 섹션 */}
+          {/* 선호도 정보 섹션 */}
           <MyPageSection title="선호도 정보">
             <PreferenceInfoInputs
               formData={formData}
@@ -250,7 +254,7 @@ export function MyPage() {
             />
           </MyPageSection>
 
-          {/* 3-5. 제출 버튼  */}
+          {/* 제출 버튼  */}
           <div className="flex flex-col lg:flex-row gap-4 justify-end mt-auto flex-wrap">
             <SubmitSection formData={formData} />
           </div>

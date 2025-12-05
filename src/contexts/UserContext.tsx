@@ -128,13 +128,23 @@ export function UserProvider({ children }: UserProviderProps) {
   };
 
   const updateUser = async (newUser: UserProfile) => {
-    await updateUserProfile(newUser);
-    setUser(newUser);
+    try {
+      await updateUserProfile(newUser);
+      setUser(newUser);
+    } catch (error) {
+      console.error('유저 정보 업데이트 실패:', error);
+      throw error;
+    }
   };
 
   const updatePreferences = async (newPreferences: UserPreferences) => {
-    await updateUserPreferences(newPreferences);
-    setPreferences(newPreferences);
+    try {
+      await updateUserPreferences(newPreferences);
+      setPreferences(newPreferences);
+    } catch (error) {
+      console.error('선호도 업데이트 실패:', error);
+      throw error;
+    }
   };  
 
   const changePassword = async (data: PasswordChangePayload) => {
