@@ -167,8 +167,6 @@ export function GenerateResultPage({ gentimetableId, courses: generatedCourses, 
       <div className="flex flex-col gap-5 flex-1">
            {/* [위] 페이지 제목 */}
 
-            {/* 이하 이전값
-            <p className={fontStyles.title}>생성 결과</p>*/}
             <div className="flex justify-between items-center min-h-10">
                 <h1 className={cn("text-white", fontStyles.title)}>생성 결과</h1>
             </div>

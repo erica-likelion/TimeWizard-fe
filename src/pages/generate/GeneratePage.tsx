@@ -207,9 +207,7 @@ export function GeneratePage() {
             <h1 className={cn("text-white", fontStyles.title)}>시간표 생성</h1>
             {isGenerating || isDebugLoading ? <></> 
             : 
-              <BasicButton onClick={() => navigate({ to: '/main' })} className="px-4 py-2 text-sm">
-                  ← 메인으로
-              </BasicButton>
+              <BasicButton onClick={() => navigate({to: '/main'})} className={cn("ml-auto px-5 py-1 bg-[#000]", fontStyles.caption)}>← 메인으로</BasicButton>
             }
         </div>
 
