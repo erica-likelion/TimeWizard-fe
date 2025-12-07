@@ -1,5 +1,5 @@
 import { Link } from '@tanstack/react-router';
-import logoIcon from '@assets/icons/billnut_col_noneoutline.svg';
+// import logoIcon from '@assets/icons/billnut_col_noneoutline.svg';
 import { cn } from '@/utils/util';
 import { fontStyles } from '@/utils/styles';
 
