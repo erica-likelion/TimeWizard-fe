@@ -212,7 +212,7 @@ export function GeneratePage() {
         </div>
 
         <div className="flex-1 pb-11">
-          <Card className="gap-5 lg:min-h-[calc(100dvh-205px)]">
+          <Card className="gap-5 lg:min-h-[calc(100dvh-220px)]">
             {/* AI 생성 중 로딩 화면 */}
             {isGenerating || isDebugLoading ? (
               <GenerateLoading
@@ -406,7 +406,7 @@ export function GeneratePage() {
                   <textarea
                     value={requests}
                     onChange={(e) => setRequests(e.target.value)}
-                    className="w-full h-[calc(100dvh-800px)] min-h-[150px] border-2 border-[#888] placeholder:text-[#888] p-4"
+                    className="w-full h-[calc(100dvh-820px)] min-h-[150px] border-2 border-[#888] placeholder:text-[#888] p-4"
                     placeholder="금요일 공강 선호, 되도록이면 9시 수업 제외. "
                   />
                 </div>

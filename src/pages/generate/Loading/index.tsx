@@ -6,7 +6,7 @@ import type { GenerateLoadingProps } from './types';
 
 export function GenerateLoading({ loadingMessages, loadingIndex, title = "시간표 생성 중입니다..." }: GenerateLoadingProps) {
   return (
-    <div className="flex flex-col items-center justify-center h-full gap-4">
+    <div className="flex flex-grow flex-col items-center justify-center">
       {/* TimeTable 아이콘 애니메이션 */}
       <div className="relative">
         <img
