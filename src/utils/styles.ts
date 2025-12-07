@@ -3,6 +3,9 @@ export const fontStyles = {
   /** 페이지의 메인 타이틀 (예: "로그인", "마이페이지") */
   title: 'text-[22px] font-bold leading-[130%] tracking-[-0.6px]',
 
+  /** 로고 텍스트 스타일 */
+  logo: 'text-[48px] font-bold leading-[120%] tracking-[-1.2px]',
+  
   /** 큰 부제목 또는 섹션 헤더 */
   subtitleLarge: 'text-[20px] font-semibold leading-[130%] tracking-[-0.5px]',
 

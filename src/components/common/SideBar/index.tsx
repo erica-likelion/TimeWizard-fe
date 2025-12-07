@@ -38,17 +38,23 @@ const SideBar = ({ isOpen, isMobile }: SideBarProps) => {
     return (
         <div 
             className={cn(
-                "flex flex-col w-60 h-screen transition-transform duration-300 ease-in-out",
+                "flex flex-col w-65 h-screen transition-transform duration-300 ease-in-out",
                 isMobile ? "fixed left-0 top-0 z-30 shadow-2xl shrink-0" : "relative z-10 shrink-0",
                 isMobile && !isOpen && "-translate-x-full"
             )}
         >
-            <div className="flex items-end ps-5 pb-4 w-full min-h-32 bg-[#E65787]">
-                <img
+            <div className="flex items-end ps-5 pb-4 w-full min-h-35 bg-[#E65787]">
+                {/* <img
                     src={logoIcon}
                     alt="빌넣 로고"
                     className="w-20"
-                />
+                    style={{
+                        filter: "drop-shadow(4px 4px 0px rgba(0, 0, 0, 0.3))"
+                    }}
+                /> */}
+                <p className={cn(fontStyles.logo, "text-white ms-3 mb-2")}
+                style={{textShadow: '4px 4px 0px rgba(0, 0, 0, 0.47)'}}>빌넣</p>
+                
             </div>
 
             <nav className="pt-10 bg-[#141414] h-full">
