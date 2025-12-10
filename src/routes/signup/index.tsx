@@ -1,6 +1,8 @@
 import { createFileRoute } from '@tanstack/react-router';
-import SignupPage from '@/pages/SignUp'; // 위에서 만든 페이지 import
+import { redirectIfLoggedIn } from '@/utils/authCheck';
+import SignupPage from '@/pages/SignUp'; 
 
 export const Route = createFileRoute('/signup/')({
+  beforeLoad: redirectIfLoggedIn,
   component: SignupPage,
 });
