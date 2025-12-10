@@ -21,6 +21,7 @@ import debugIconAccent from '@assets/icons/sidebar/debug_accent.webp';
 interface SideBarProps {
     isOpen: boolean;
     isMobile: boolean;
+    isCollapsed: boolean;
 }
 
 const navItems = [
@@ -33,17 +34,21 @@ const navItems = [
     { to: '/debug', label: '디버깅', icon: debugIcon, iconAccent: debugIconAccent }
 ];
 
-const SideBar = ({ isOpen, isMobile }: SideBarProps) => {
+const SideBar = ({ isOpen, isMobile, isCollapsed }: SideBarProps) => {
 
     return (
         <div 
             className={cn(
-                "flex flex-col w-65 h-screen transition-transform duration-300 ease-in-out",
+                "flex flex-col h-screen transition-all duration-300 ease-in-out",
                 isMobile ? "fixed left-0 top-0 z-30 shadow-2xl shrink-0" : "relative z-10 shrink-0",
-                isMobile && !isOpen && "-translate-x-full"
+                isMobile && !isOpen && "-translate-x-full",
+                !isMobile && isCollapsed ? "w-20" : "w-65"
             )}
         >
-            <div className="flex items-end ps-5 pb-4 w-full min-h-35 bg-[#E65787]">
+            <div className={cn(
+                "flex w-full min-h-35 bg-[#E65787] overflow-hidden",
+                isCollapsed ? "items-center justify-center" : "items-end ps-5 pb-4"
+            )}>
                 {/* <img
                     src={logoIcon}
                     alt="빌넣 로고"
@@ -52,9 +57,19 @@ const SideBar = ({ isOpen, isMobile }: SideBarProps) => {
                         filter: "drop-shadow(4px 4px 0px rgba(0, 0, 0, 0.3))"
                     }}
                 /> */}
-                <p className={cn(fontStyles.logo, "text-white ms-3 mb-2")}
-                style={{textShadow: '4px 4px 0px rgba(0, 0, 0, 0.47)'}}>빌넣</p>
-                
+                <p 
+                    className={cn(
+                        fontStyles.logo, 
+                        "text-white transition-all duration-300",
+                        isCollapsed ? "transform rotate-90" : "ms-3 mb-2"
+                    )}
+                    style={{
+                        textShadow: '4px 4px 0px rgba(0, 0, 0, 0.47)',
+                        whiteSpace: 'nowrap'
+                    }}
+                >
+                    빌넣
+                </p>
             </div>
 
             <nav className="pt-10 bg-[#141414] h-full">
@@ -66,13 +81,24 @@ const SideBar = ({ isOpen, isMobile }: SideBarProps) => {
                                 className="block"
                             >
                                 {({ isActive }) => (
-                                    <div className={cn("flex items-center gap-5 pl-6 py-2 transition-colors duration-300 ease-in-out border-l-4", fontStyles.bodyLarge, isActive ? "text-[#E65787] border-l-[#E65787]" : "text-white border-l-transparent")}>
+                                    <div className={cn(
+                                        "flex items-center py-2 transition-all duration-300 ease-in-out border-l-4 overflow-hidden gap-5 pl-6",
+                                        fontStyles.bodyLarge,
+                                        isActive ? "text-[#E65787] border-l-[#E65787]" : "text-white border-l-transparent",
+                                    )}>
                                         <img
                                             src={isActive ? item.iconAccent : item.icon}
                                             alt={item.label}
-                                            className="w-7 h-7"
+                                            className="w-7 h-7 flex-shrink-0"
                                         />
-                                        <p>{item.label}</p>
+                                        <p 
+                                            className={cn(
+                                                "transition-opacity duration-300 whitespace-nowrap",
+                                                isCollapsed ? "opacity-0 w-0" : "opacity-100"
+                                            )}
+                                        >
+                                            {item.label}
+                                        </p>
                                     </div>
                                 )}
                             </Link>
