@@ -9,3 +9,13 @@ export const redirectIfLoggedIn = () => {
     })
   }
 }
+
+export const requireLogin = () => {
+  const token = localStorage.getItem('authToken');
+
+  if (!token) {
+    throw redirect({
+      to: '/login',
+    })
+  }
+}
