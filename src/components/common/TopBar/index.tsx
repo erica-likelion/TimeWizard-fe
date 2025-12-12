@@ -28,7 +28,7 @@ const TopBar = ({ onToggleSidebar, showToggle = false }: TopBarProps) => {
                 {showToggle && (
                     <button
                         onClick={onToggleSidebar}
-                        className="flex flex-col justify-center items-center w-10 h-10 mr-2 hover:bg-[#404040] rounded transition-colors"
+                        className="flex flex-col justify-center items-center w-10 h-10 mr-2 hover:bg-[#404040] transition-colors"
                         aria-label="메뉴 토글"
                     >
                         <svg
@@ -54,18 +54,18 @@ const TopBar = ({ onToggleSidebar, showToggle = false }: TopBarProps) => {
                         alt="유저 프로필사진"
                     />
                 </div>
-                <p className={cn(fontStyles.body, "text-[#FBFBFB]")}>{loading ? 'Loading...' : `${user?.nickname || 'User'}님`}</p>
+                <p className={cn(fontStyles.body, "text-[#F0F0F0]")}>{loading ? 'Loading...' : `${user?.nickname || 'User'}님`}</p>
             </div>
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-6 pe-2">
                 <Link
                     to='/mypage'
-                    className={cn(fontStyles.body, "text-[#FBFBFB]")}
+                    className={cn(fontStyles.body, "text-[#9A9A9A] hover:text-[#F0F0F0] transition-colors cursor-pointer")}
                 >
                     <p>마이페이지</p>
                 </Link>
                 <button
                     onClick={handleLogout}
-                    className={cn(fontStyles.body, "text-[#FBFBFB] cursor-pointer")}
+                    className={cn(fontStyles.body, "text-[#9A9A9A] hover:text-[#F0F0F0] transition-colors cursor-pointer")}
                 >
                     <p>로그아웃</p>
                 </button>
