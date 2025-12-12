@@ -1,4 +1,4 @@
-import { createFileRoute, redirect } from '@tanstack/react-router';
+import { createFileRoute } from '@tanstack/react-router';
 import { redirectIfLoggedIn } from '@/utils/authCheck';
 import LoginPage from '@/pages/login'; 
 

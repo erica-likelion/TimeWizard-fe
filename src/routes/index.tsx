@@ -1,4 +1,4 @@
-import { createFileRoute, useNavigate, redirect } from '@tanstack/react-router'
+import { createFileRoute, useNavigate } from '@tanstack/react-router'
 import { redirectIfLoggedIn } from '@/utils/authCheck'
 import backgroundImage from '../assets/images/background.png'
 import logoIcon from '../assets/icons/billnut_col.svg'
