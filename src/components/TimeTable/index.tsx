@@ -229,7 +229,7 @@ export const TimeTable: React.FC<TimeTableProps> = ({ courses, activeCourseId })
                   style={{ backgroundColor: color }}
                 >
                   <div className="flex items-center justify-between">
-                    <p className={cn(fontStyles.body, "font-bold")}>{course.courseName}</p>
+                    <p className={cn(fontStyles.body)}>{course.courseName}</p>
                     <p className={cn(fontStyles.caption, "font-bold")}>{course.professor}</p>
                   </div>
                 </div>
