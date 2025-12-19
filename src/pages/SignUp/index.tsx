@@ -66,7 +66,7 @@ function BasicInfoInputs({ formData, handleChange }: Pick<SignupFormProps, 'form
       </div>
       <TextInput
         size="md"
-        placeholder="닉네임(미입력 시 랜덤)"
+        placeholder="닉네임"
         name="nickname"
         value={formData.nickname}
         onChange={handleChange}
@@ -162,40 +162,44 @@ function SchoolInfoInputs({
 
 function CreditInfoInputs({ formData, handleChange }: Pick<SignupFormProps, 'formData' | 'handleChange'>) {
   return (
-    <div className="grid grid-cols-3 gap-x-4 gap-y-2">
+    <div className="grid grid-cols-1 gap-x-4 gap-y-2">
       <label className="text-sm text-gray-400 col-span-1">졸업학점(전체)</label>
-      <label className="text-sm text-gray-400 col-span-1">졸업학점(전공)</label>
-      <label className="text-sm text-gray-400 col-span-1">졸업학점(교양)</label>
+      <label className="text-sm text-gray-400 col-span-1 hidden">졸업학점(전공)</label>
+      <label className="text-sm text-gray-400 col-span-1 hidden">졸업학점(교양)</label>
       
       <TextInput
         size="md" type="number" name="creditsTotal"
         value={formData.creditsTotal} onChange={handleChange}
       />
-      <TextInput
-        size="md" type="number" name="creditsMajor"
-        value={formData.creditsMajor} onChange={handleChange}
-      />
-      <TextInput
-        size="md" type="number" name="creditsLiberal"
-        value={formData.creditsLiberal} onChange={handleChange}
-      />
-
+      <div className="hidden">
+        <TextInput
+          size="md" type="number" name="creditsMajor"
+          value={formData.creditsMajor} onChange={handleChange}
+        />
+        <TextInput
+          size="md" type="number" name="creditsLiberal"
+          value={formData.creditsLiberal} onChange={handleChange}
+        />
+      </div>
       <label className="text-sm text-gray-400 col-span-1 mt-2">현재 이수(전체)</label>
-      <label className="text-sm text-gray-400 col-span-1 mt-2">현재 이수(전공)</label>
-      <label className="text-sm text-gray-400 col-span-1 mt-2">현재 이수(교양)</label>
+      <label className="text-sm text-gray-400 col-span-1 mt-2 hidden">현재 이수(전공)</label>
+      <label className="text-sm text-gray-400 col-span-1 mt-2 hidden">현재 이수(교양)</label>
       
       <TextInput
         size="md" type="number" name="creditsCurrentTotal"
         value={formData.creditsCurrentTotal} onChange={handleChange}
       />
-      <TextInput
-        size="md" type="number" name="creditsCurrentMajor"
-        value={formData.creditsCurrentMajor} onChange={handleChange}
-      />
-      <TextInput
-        size="md" type="number" name="creditsCurrentLiberal"
-        value={formData.creditsCurrentLiberal} onChange={handleChange}
-      />
+
+      <div className="hidden">
+        <TextInput
+          size="md" type="number" name="creditsCurrentMajor"
+          value={formData.creditsCurrentMajor} onChange={handleChange}
+        />
+        <TextInput
+          size="md" type="number" name="creditsCurrentLiberal"
+          value={formData.creditsCurrentLiberal} onChange={handleChange}
+        />
+      </div>
     </div>
   );
 }
