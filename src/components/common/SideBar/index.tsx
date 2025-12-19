@@ -9,14 +9,17 @@ import listIcon from '@assets/icons/sidebar/list.webp';
 import listIconAccent from '@assets/icons/sidebar/list_accent.webp';
 import generateIcon from '@assets/icons/sidebar/generate.webp';
 import generateIconAccent from '@assets/icons/sidebar/generate_accent.webp';
-import tuningIcon from '@assets/icons/sidebar/tuning.webp';
-import tuningIconAccent from '@assets/icons/sidebar/tuning_accent.webp';
+// import tuningIcon from '@assets/icons/sidebar/tuning.webp';
+// import tuningIconAccent from '@assets/icons/sidebar/tuning_accent.webp';
 import plannerIcon from '@assets/icons/sidebar/planner.webp';
 import plannerIconAccent from '@assets/icons/sidebar/planner_accent.webp';
-import planbIcon from '@assets/icons/sidebar/planb.webp';
-import planbIconAccent from '@assets/icons/sidebar/planb_accent.webp';
-import debugIcon from '@assets/icons/sidebar/debug.webp';
-import debugIconAccent from '@assets/icons/sidebar/debug_accent.webp';
+// import planbIcon from '@assets/icons/sidebar/planb.webp';
+// import planbIconAccent from '@assets/icons/sidebar/planb_accent.webp';
+// import debugIcon from '@assets/icons/sidebar/debug.webp';
+// import debugIconAccent from '@assets/icons/sidebar/debug_accent.webp';
+// 마이페이지 아이콘 추가!!
+import mypageIcon from '@assets/icons/sidebar/user.webp';
+import mypageIconAccent from '@assets/icons/sidebar/user_accent.webp';
 
 interface SideBarProps {
     isOpen: boolean;
@@ -28,10 +31,12 @@ const navItems = [
     { to: '/main', label: '메인', icon: mainIcon, iconAccent: mainIconAccent },
     { to: '/list', label: '목록', icon: listIcon, iconAccent: listIconAccent },
     { to: '/generate', label: '생성', icon: generateIcon, iconAccent: generateIconAccent },
-    { to: '/tuning', label: '튜닝', icon: tuningIcon, iconAccent: tuningIconAccent },
     { to: '/planner', label: '플래너', icon: plannerIcon, iconAccent: plannerIconAccent },
+    // 마이페이지 추가!@!!
+    { to: '/mypage', label: '마이페이지', icon: mypageIcon, iconAccent: mypageIconAccent },
+    /* { to: '/tuning', label: '튜닝', icon: tuningIcon, iconAccent: tuningIconAccent },    
     { to: '/planb', label: '플랜B', icon: planbIcon, iconAccent: planbIconAccent },
-    { to: '/debug', label: '디버깅', icon: debugIcon, iconAccent: debugIconAccent }
+    { to: '/debug', label: '디버깅', icon: debugIcon, iconAccent: debugIconAccent }*/
 ];
 
 const SideBar = ({ isOpen, isMobile, isCollapsed }: SideBarProps) => {

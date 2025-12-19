@@ -147,20 +147,23 @@ export function GenerateResultPage({ gentimetableId, courses: generatedCourses, 
       );
     }
 
-  // 로딩 중일 때 표시
-  if (isGenerating) {
-    return (
-      <div className="flex flex-col gap-5 flex-1">
-        <p className={fontStyles.title}>생성 결과</p>
-        <Card className="gap-10 h-full">
-          <GenerateLoading
-            loadingMessages={loadingMessages}
-            loadingIndex={loadingIndex}
-            title="시간표 재생성 중입니다..."
-          />
-        </Card>
-      </div>
-    );
+    if (isGenerating) {
+      return (
+        <div className="flex flex-col gap-5 h-[calc(100dvh-205px)]">
+          <div className="flex justify-between items-center min-h-10">
+            <h1 className={cn("text-white", fontStyles.title)}>시간표 생성</h1>
+          </div>
+          <div className="flex-1 pb-11">
+            <Card className="gap-5 lg:min-h-[calc(100dvh-220px)]">
+              <GenerateLoading
+                loadingMessages={loadingMessages}
+                loadingIndex={loadingIndex}
+                title="시간표 생성 중입니다..."
+              />
+            </Card>
+          </div>
+        </div>
+      );
   }
 
   return (
