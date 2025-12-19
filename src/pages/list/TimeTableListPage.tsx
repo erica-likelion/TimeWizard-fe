@@ -9,6 +9,9 @@ import { BasicButton } from '@/components/buttons/BasicButton';
 import { TimeTable } from '@/components/TimeTable';
 import { Card } from '@/components/Card';
 
+import generateIcon from '@assets/icons/sidebar/generate.webp';
+import plannerIcon from '@assets/icons/sidebar/planner.webp';
+
 import { getTimeTables, getTimeTableDetail, deleteTimetable } from '@/apis/TimeTableAPI/timeTableApi';
 
 import type { Course, TimeTable as TimeTableAPI } from '@/apis/TimeTableAPI/types';
@@ -107,17 +110,27 @@ export function TimeTableListPage() {
       <div className="flex flex-col gap-10 lg:flex-row justify-between flex-1">
         <div className="w-full lg:flex-4 lg:w-auto flex flex-col gap-5">
           <Card title="생성된 시간표" className="w-full lg:w-auto lg:h-[calc(80dvh-200px)]">
-            {/* 시간표들 */}
-            <div className="flex flex-col gap-[22px] mb-5">
-              {timeTables.map((timetable) => (
-                <PlanButton
-                  key={timetable.timetableId}
-                  title={"#" + timetable.name}
-                  onClick={() => handleTimeTableClick(timetable.timetableId)}
-                  isActive={activeTimeTable === timetable.timetableId}
-                />
-              ))}
-            </div>
+            { timeTables.length > 0 ? 
+              <div className="flex flex-col gap-[22px] mb-5">
+                {timeTables.map((timetable) => (
+                  <PlanButton
+                    key={timetable.timetableId}
+                    title={"#" + timetable.name}
+                    onClick={() => handleTimeTableClick(timetable.timetableId)}
+                    isActive={activeTimeTable === timetable.timetableId}
+                  />
+                ))}
+              </div>
+              : (
+              <div className="flex-1 flex flex-col items-center justify-center gap-4">
+                <img src={generateIcon} alt="" className="w-12 h-12 opacity-50" />
+                <div className="flex flex-col items-center gap-1">
+                  <p className={cn(fontStyles.body, "text-[#888]")}>아직 생성된 시간표가 없어요</p>
+                  <p className={cn(fontStyles.caption, "text-[#666]")}>새 시간표를 추가해보세요!</p>
+                </div>
+              </div>
+            )}
+            
             {/* 새 시간표 추가 버튼 */}
             <div className="self-end mt-auto">
               <BasicButton onClick={() => {navigate({to: '/generate'})}} className="min-w-60">+ 새 시간표 추가</BasicButton>
@@ -130,7 +143,17 @@ export function TimeTableListPage() {
           <Card title="선택된 시간표" className="w-full lg:w-auto lg:h-[calc(80dvh-200px)]">
             {/* 시간표 */}
             <div className="flex flex-col overflow-y-auto no-scrollbar lg:h-full">
-              {selectedCourses.length > 0 && <TimeTable courses={selectedCourses} />}
+              {selectedCourses.length > 0 ? (
+                <TimeTable courses={selectedCourses} />
+              ) : (
+                <div className="flex-1 flex flex-col items-center justify-center gap-4 pb-10">
+                  <img src={plannerIcon} alt="" className="w-12 h-12 opacity-50" />
+                  <div className="flex flex-col items-center gap-1">
+                    <p className={cn(fontStyles.body, "text-[#888]")}>선택된 시간표가 없어요</p>
+                    <p className={cn(fontStyles.caption, "text-[#666]")}>왼쪽에서 시간표를 선택해주세요</p>
+                  </div>
+                </div>
+              )}
             </div>
           </Card>
           
@@ -139,7 +162,7 @@ export function TimeTableListPage() {
               {/* 삭제, 튜닝, 자세히보기 */}
               <div className="flex justify-evenly gap-5">
                 <BasicButton variant="danger" onClick={() => handleDeleteTimetable()} className="flex-1" disabled={!activeTimeTable}>삭제</BasicButton>
-                <BasicButton onClick={() => {}} className="flex-1" disabled={!activeTimeTable}>튜닝</BasicButton>
+                <BasicButton onClick={() => {}} className="flex-1 hidden" disabled={!activeTimeTable}>튜닝</BasicButton>
                 <BasicButton
                   onClick={() => {
                     const selectedTimeTable = timeTables.find(t => t.timetableId === activeTimeTable);
@@ -154,7 +177,7 @@ export function TimeTableListPage() {
                   }}
                   disabled={!activeTimeTable}
                   className="flex-2">
-                    자세히보기
+                    이 시간표 자세히 보기
                 </BasicButton>
               </div>
 

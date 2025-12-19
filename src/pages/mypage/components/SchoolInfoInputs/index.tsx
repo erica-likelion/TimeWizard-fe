@@ -38,7 +38,7 @@ export function SchoolInfoInputs({
               disabled={!canAddMajor}
               className={!canAddMajor ? 'opacity-50 cursor-not-allowed' : ''}
             >
-              + 다전공 추가
+              + 부전공
             </DarkOutlineButton>
           </div>
           <div className="space-y-2">
