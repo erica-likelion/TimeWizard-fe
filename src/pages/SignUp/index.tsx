@@ -36,10 +36,11 @@ function BasicInfoInputs({ formData, handleChange }: Pick<SignupFormProps, 'form
           name="id"
           value={formData.id}
           onChange={handleChange}
+          type="email"
         />
         <PinkButton
           size="md"
-          onClick={() => alert('ID 중복 확인')}
+          onClick={() => alert('사용 가능한 아이디입니다.')}
           className="whitespace-nowrap"
         >
           ID 확인
