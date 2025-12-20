@@ -26,6 +26,7 @@ export function SchoolInfoInputs({
         value="한양대학교 ERICA 캠퍼스"
         disabled
         className="border-2 border-[#888]"
+        type="text"
       />
       <div className="flex flex-col md:flex-row md:items-start md:gap-4">
         <div className="w-full">

@@ -235,6 +235,7 @@ export function GeneratePage() {
                       onChange={(e) => setUniversity(e.target.value)}
                       className="border-2 border-[#888]"
                       placeholder="한양대학교 ERICA 캠퍼스"
+                      type="text"
                     />
                   </div>
 
@@ -248,6 +249,7 @@ export function GeneratePage() {
                         onChange={(e) => setMajor(e.target.value)}
                         className="border-2 border-[#888]"
                         placeholder="컴퓨터학부"
+                        type="text"
                       />
                     </div>
                     <div className="flex-1 flex flex-col gap-2">
@@ -258,6 +260,7 @@ export function GeneratePage() {
                         onChange={(e) => setGrade(e.target.value)}
                         className="border-2 border-[#888]"
                         placeholder="1"
+                        type="number"
                       />
                     </div>
                     <div className="flex-1 flex flex-col gap-2">
@@ -269,6 +272,7 @@ export function GeneratePage() {
                         className="border-2 border-[#888]"
                         placeholder="1"
                         disabled={true}
+                        type="number"
                       />
                     </div>
                   </div>
@@ -283,6 +287,7 @@ export function GeneratePage() {
                         onChange={(e) => setCompletedCredits(e.target.value)}
                         className="border-2 border-[#888]"
                         placeholder="90"
+                        type="number"
                       />
                     </div>
                     <div className="flex-1 flex flex-col gap-2">
@@ -293,6 +298,7 @@ export function GeneratePage() {
                         onChange={(e) => setMajorCreditsCompleted(e.target.value)}
                         className="border-2 border-[#888]"
                         placeholder="65"
+                        type="number"
                       />
                     </div>
                     <div className="flex-1 flex flex-col gap-2">
@@ -303,6 +309,7 @@ export function GeneratePage() {
                         onChange={(e) => setGeneralCredits(e.target.value)}
                         className="border-2 border-[#888]"
                         placeholder="25"
+                        type="number"
                       />
                     </div>
                   </div>
@@ -324,6 +331,7 @@ export function GeneratePage() {
                       onChange={(e) => setTotalCredits(e.target.value)}
                       className="border-2 border-[#888]"
                       placeholder="20"
+                      type="number"
                     />
                   </div>
                   <div className="flex flex-1 flex-col gap-2">
@@ -334,6 +342,7 @@ export function GeneratePage() {
                       onChange={(e) => setMajorCredits(e.target.value)}
                       className="border-2 border-[#888]"
                       placeholder="0"
+                      type="number"
                     />
                   </div>
                   <a
