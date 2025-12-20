@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from '@tanstack/react-router';
 import { generateTimetable, getGenerationStatus } from '@/apis/AIGenerateAPI/aiGenerateApi';
 import type { GenerateTimetableRequest } from '@/apis/AIGenerateAPI/types';
+import { useCredit } from '@/hooks/useCredit';
 
 /*
   AI 시간표 생성 지원해주는 훅
@@ -12,6 +13,7 @@ import type { GenerateTimetableRequest } from '@/apis/AIGenerateAPI/types';
 
 export function useGenerateTimetable() {
   const navigate = useNavigate();
+  const { useCredit: deductCredit } = useCredit();
 
   // AI 생성 중 상태
   const [isGenerating, setIsGenerating] = useState<boolean>(false);
@@ -72,6 +74,10 @@ export function useGenerateTimetable() {
           if (statusResponse.status === 'COMPLETE') {
             // 생성 성공 - JSON 파싱하여 데이터 추출
             setIsGenerating(false);
+
+            // 크레딧 차감 (100 크레딧)
+            deductCredit(100);
+
             const courseData = JSON.parse(statusResponse.data);
             navigate({
               to: `/generate/${taskId}`,

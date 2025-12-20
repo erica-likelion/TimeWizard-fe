@@ -4,6 +4,7 @@ import type { ReactNode } from 'react';
 import type { UserProfile, UserPreferences, PasswordChangePayload } from '@/apis/UserAPI/types';
 import { getUserProfile, getUserPreferences, updateUserProfile, updateUserPreferences, updatePassword } from '@/apis/UserAPI/userApi';
 import { logoutUser } from '@/apis/Auth/authService';
+import { CreditManager } from '@/utils/creditManager';
 
 const TokenManager = {
   setToken: (token: string) => {
@@ -88,6 +89,8 @@ export function UserProvider({ children }: UserProviderProps) {
 
       setUser(userData);
       setPreferences(userPrefs);
+
+      CreditManager.initializeCredits(userData.user_id);
 
     } catch (err) {
       setError(err instanceof Error ? err : new Error('알 수 없는 오류'));

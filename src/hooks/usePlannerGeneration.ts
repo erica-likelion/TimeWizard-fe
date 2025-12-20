@@ -1,6 +1,7 @@
 import { useState, useRef, useCallback, useEffect } from 'react';
 import api from '@/utils/apiClient';
 import type { Course } from '@/apis/TimeTableAPI/types';
+import { useCredit } from '@/hooks/useCredit';
 
 // 플래너 API 응답 데이터 타입
 interface PlannerData {
@@ -33,6 +34,7 @@ interface UsePlannerGenerationReturn {
  * - 데이터 파싱 및 상태 관리
  */
 export function usePlannerGeneration(): UsePlannerGenerationReturn {
+    const { useCredit: deductCredit } = useCredit();
     const [isGenerating, setIsGenerating] = useState(false);
     const [isGenerated, setIsGenerated] = useState(false);
     const [loadingDots, setLoadingDots] = useState(1);
@@ -65,6 +67,9 @@ export function usePlannerGeneration(): UsePlannerGenerationReturn {
                         pollingIntervalRef.current = null;
                     }
                     clearInterval(dotInterval);
+
+                    // 크레딧 차감 (100 크레딧)
+                    deductCredit(100);
 
                     // data 파싱 (JSON 문자열이 들어있음)
                     const plannerData: PlannerData = JSON.parse(statusData.data);
@@ -99,7 +104,7 @@ export function usePlannerGeneration(): UsePlannerGenerationReturn {
         // 즉시 한 번 실행 후 2초마다 폴링
         poll();
         pollingIntervalRef.current = setInterval(poll, 2000);
-    }, []);
+    }, [deductCredit]);
 
     const handleGenerate = useCallback(
         async (timetableId: string) => {

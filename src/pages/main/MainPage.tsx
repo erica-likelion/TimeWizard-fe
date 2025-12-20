@@ -4,10 +4,12 @@ import { fontStyles } from "@/utils/styles";
 import { cn } from "@/utils/util";
 import { useUser } from "@/contexts/UserContext";
 import { useNavigate } from "@tanstack/react-router";
+import { useCredit } from "@/hooks/useCredit";
 
 export function MainPage() {
   const { user, loading } = useUser();
   const navigate = useNavigate();
+  const { credits, todayUsage, weeklyUsage } = useCredit();
 
   // 수강신청 날짜까지 남은 일수 계산
   const calculateDaysLeft = () => {
@@ -80,22 +82,22 @@ export function MainPage() {
         <Card title="남은 크레딧" className="w-full xl:flex-1">
           <div className="flex flex-col gap-6">
             <div className="flex items-end">
-                <span className={cn(fontStyles.title, "text-[60px] leading-none")}>3,800</span>
+                <span className={cn(fontStyles.title, "text-[60px] leading-none")}>{credits?.remainingCredits.toLocaleString() || 0}</span>
                 <span className="text-[24px] pb-1">&nbsp;/&nbsp;</span>
-                <span className={cn(fontStyles.title, "text-[30px] leading-none")}>5,000</span>
+                <span className={cn(fontStyles.title, "text-[30px] leading-none")}>{credits?.totalCredits.toLocaleString() || 0}</span>
               </div>
             <div className="flex flex-col gap-4">
               <div className="flex">
                 <span className={cn(fontStyles.body, "flex-1")}>플랜</span>
-                <span className={cn(fontStyles.body, "flex-2")}>라이트</span>
+                <span className={cn(fontStyles.body, "flex-2")}>{credits?.plan || '-'}</span>
               </div>
               <div className="flex">
                 <span className={cn(fontStyles.body, "flex-1")}>오늘 사용량</span>
-                <span className={cn(fontStyles.body, "flex-2")}>100</span>
+                <span className={cn(fontStyles.body, "flex-2")}>{todayUsage.toLocaleString()}</span>
               </div>
               <div className="flex">
                 <span className={cn(fontStyles.body, "flex-1")}>최근 7일</span>
-                <span className={cn(fontStyles.body, "flex-2")}>1,200</span>
+                <span className={cn(fontStyles.body, "flex-2")}>{weeklyUsage.toLocaleString()}</span>
               </div>
             </div>
           </div>
