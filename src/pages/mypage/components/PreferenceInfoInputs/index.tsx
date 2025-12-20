@@ -103,6 +103,7 @@ export function PreferenceInfoInputs({
           onChange={handleChange}
           className="border-2 border-[#888]"
           placeholder="수업번호를 쉼표로 구분하여 입력 (예: 20001, 20002)"
+          type="text"
         />
         <p className={cn(fontStyles.caption, "text-gray-400")}>
           * 꼭 들어야 하는 강의의 수업번호를 입력하세요.
@@ -119,6 +120,7 @@ export function PreferenceInfoInputs({
           onChange={handleChange}
           className="border-2 border-[#888]"
           placeholder="수업번호를 쉼표로 구분하여 입력 (예: 20001, 20002)"
+          type="text"
         />
         <p className={cn(fontStyles.caption, "text-gray-400")}>
           * 듣고 싶지 않은 강의의 수업번호를 입력하세요.

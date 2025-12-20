@@ -80,7 +80,7 @@ export function MainPage() {
         <Card title="남은 크레딧" className="w-full xl:flex-1">
           <div className="flex flex-col gap-6">
             <div className="flex items-end">
-                <span className={cn(fontStyles.title, "text-[60px] leading-none")}>3,800</span>
+                <span className={cn(fontStyles.title, "text-[60px] leading-none")}>5,000</span>
                 <span className="text-[24px] pb-1">&nbsp;/&nbsp;</span>
                 <span className={cn(fontStyles.title, "text-[30px] leading-none")}>5,000</span>
               </div>
@@ -91,11 +91,11 @@ export function MainPage() {
               </div>
               <div className="flex">
                 <span className={cn(fontStyles.body, "flex-1")}>오늘 사용량</span>
-                <span className={cn(fontStyles.body, "flex-2")}>100</span>
+                <span className={cn(fontStyles.body, "flex-2")}>0</span>
               </div>
               <div className="flex">
                 <span className={cn(fontStyles.body, "flex-1")}>최근 7일</span>
-                <span className={cn(fontStyles.body, "flex-2")}>1,200</span>
+                <span className={cn(fontStyles.body, "flex-2")}>0</span>
               </div>
             </div>
           </div>

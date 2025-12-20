@@ -15,6 +15,7 @@ export function BasicInfoInputs({ formData, handleChange }: Pick<MyPageFormProps
           value={formData.id}
           onChange={handleChange}
           disabled
+          type="email"
         />
       </div>
 
@@ -59,6 +60,7 @@ export function BasicInfoInputs({ formData, handleChange }: Pick<MyPageFormProps
         name="nickname"
         value={formData.nickname}
         onChange={handleChange}
+        type="text"
       />
     </>
   );
