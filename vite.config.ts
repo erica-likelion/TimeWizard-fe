@@ -29,5 +29,18 @@ export default defineConfig({
       '@routes': path.resolve(__dirname, './src/routes'),
       '@utils': path.resolve(__dirname, './src/utils')
     }
+  },
+  server: {
+    proxy: {
+      '/api': {
+        target: 'https://billnut-api.pdj.kr',
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/api/, ''),
+        secure: false,
+        headers: {
+          Referer: 'https://billnut.pdj.kr'
+        }
+      }
+    }
   }
 })

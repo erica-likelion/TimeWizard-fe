@@ -37,9 +37,9 @@ export const updatePassword = async (data: PasswordChangePayload) => {
 // 2. 선호도 (Preferences) 관련
 // ==========================================
 
-export const getUserPreferences = async (): Promise<UserPreferences> => {
+export const getUserPreferences = async (): Promise<UserPreferences | null> => {
   try {
-    const response = await api.get<ApiResponse<UserPreferences>>('/users/me/preferences');
+    const response = await api.get<ApiResponse<UserPreferences | null>>('/users/me/preferences');
     return response.data.data;
   } catch (error) {
     console.error('유저 선호도 조회 에러:', error);
@@ -52,6 +52,19 @@ export const updateUserPreferences = async (data: Partial<UserPreferences>) => {
     await api.put<ApiResponse<any>>('/users/me/preferences', data);
   } catch (error) {
     console.error('유저 선호도 업데이트 에러:', error);
+    throw error;
+  }
+};
+
+// ==========================================
+// 3. 회원 탈퇴
+// ==========================================
+
+export const deleteAccount = async () => {
+  try {
+    await api.delete<ApiResponse<any>>('/users/me/remove');
+  } catch (error) {
+    console.error('회원 탈퇴 에러:', error);
     throw error;
   }
 };

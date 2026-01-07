@@ -6,6 +6,8 @@ import { fontStyles } from '@/utils/styles';
 import { majorOptions } from '@/constants/options';
 import type { SelectOption, MyPageFormData } from './types';
 import { useUser } from '@/contexts/UserContext';
+import { deleteAccount } from '@/apis/UserAPI/userApi';
+import { useNavigate } from '@tanstack/react-router';
 
 // 컴포넌트 imports
 import { MyPageSection } from './components/MyPageSection';
@@ -17,7 +19,8 @@ import { SubmitSection } from './components/SubmitSection';
 
 
 export function MyPage() {
-  const { user, preferences, loading, updateUser, updatePreferences, changePassword } = useUser();
+  const { user, preferences, loading, updateUser, updatePreferences, changePassword, logout } = useUser();
+  const navigate = useNavigate();
   const [formData, setFormData] = useState<MyPageFormData>({
     id: '',
     currentPassword: '',
@@ -43,11 +46,21 @@ export function MyPage() {
   });
 
   useEffect(() => {
-    if (!user || !preferences) {
+    if (!user) {
       return;
     }
 
     const initialMajorId = majorOptions.find(opt => opt.label === user.major)?.id || 1;
+
+    // preferences가 null이면 기본값 사용
+    const safePreferences = preferences || {
+      preferred_days: [],
+      preferred_start_time: '09:00',
+      preferred_end_time: '21:00',
+      target_credits: 20,
+      required_courses: [],
+      excluded_courses: []
+    };
 
     setFormData({
       id: user.email,
@@ -65,12 +78,12 @@ export function MyPage() {
       //creditsCurrentLiberal: '0',
 
       // 선호도 정보
-      preferredDays: preferences.preferred_days || [],
-      preferredStartTime: preferences.preferred_start_time || '09:00',
-      preferredEndTime: preferences.preferred_end_time || '18:00',
-      targetCredits: preferences.target_credits?.toString() || '20',
-      requiredCourses: preferences.required_courses?.join(', ') || '',
-      excludedCourses: preferences.excluded_courses?.join(', ') || '',
+      preferredDays: safePreferences.preferred_days || [],
+      preferredStartTime: safePreferences.preferred_start_time || '09:00',
+      preferredEndTime: safePreferences.preferred_end_time || '21:00',
+      targetCredits: safePreferences.target_credits?.toString() || '20',
+      requiredCourses: safePreferences.required_courses?.join(', ') || '',
+      excludedCourses: safePreferences.excluded_courses?.join(', ') || '',
     });
   }, [user, preferences]);
 
@@ -206,6 +219,34 @@ export function MyPage() {
     }
   };
 
+  const handleDeleteAccount = async () => {
+    const confirmed = window.confirm(
+      '정말로 회원 탈퇴하시겠습니까?\n\n탈퇴 시 모든 데이터가 삭제되며 복구할 수 없습니다.'
+    );
+
+    if (!confirmed) return;
+
+    const doubleConfirm = window.confirm(
+      '마지막 확인입니다. 정말 탈퇴하시겠습니까?'
+    );
+
+    if (!doubleConfirm) return;
+
+    try {
+      await deleteAccount();
+      alert('회원 탈퇴가 완료되었습니다.');
+      
+      // UserContext의 logout 함수를 사용하여 상태 초기화
+      await logout();
+      
+      // 페이지 강제 이동
+      window.location.href = '/login';
+    } catch (error: any) {
+      console.error('회원 탈퇴 실패:', error);
+      alert(error.message || '회원 탈퇴에 실패했습니다.');
+    }
+  };
+
   if (loading) {
     return (
       <div className="flex items-center justify-center h-full">
@@ -254,8 +295,18 @@ export function MyPage() {
             />
           </MyPageSection>
 
-          {/* 제출 버튼  */}
-          <div className="flex flex-col lg:flex-row gap-4 justify-end mt-auto flex-wrap">
+          {/* 제출 버튼 및 회원 탈퇴 링크 */}
+          <div className="flex flex-col lg:flex-row gap-4 justify-between items-end mt-auto flex-wrap">
+            <a
+              href="#"
+              onClick={(e) => {
+                e.preventDefault();
+                handleDeleteAccount();
+              }}
+              className="text-sm text-red-700 hover:text-red-800 underline transition-colors"
+            >
+              빌넣 탈퇴하기
+            </a>
             <SubmitSection formData={formData} />
           </div>
         </Card>

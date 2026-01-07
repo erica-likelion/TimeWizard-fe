@@ -87,7 +87,15 @@ export function UserProvider({ children }: UserProviderProps) {
       ]);
 
       setUser(userData);
-      setPreferences(userPrefs);
+      // preferences가 null이면 기본값 설정
+      setPreferences(userPrefs || {
+        preferred_days: [],
+        preferred_start_time: '09:00',
+        preferred_end_time: '21:00',
+        target_credits: 20,
+        required_courses: [],
+        excluded_courses: []
+      });
 
     } catch (err) {
       setError(err instanceof Error ? err : new Error('알 수 없는 오류'));
