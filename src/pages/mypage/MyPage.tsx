@@ -7,7 +7,7 @@ import { majorOptions } from '@/constants/options';
 import type { SelectOption, MyPageFormData } from './types';
 import { useUser } from '@/contexts/UserContext';
 import { deleteAccount } from '@/apis/UserAPI/userApi';
-import { useNavigate } from '@tanstack/react-router';
+// import { useNavigate } from '@tanstack/react-router';
 
 // 컴포넌트 imports
 import { MyPageSection } from './components/MyPageSection';
@@ -20,7 +20,7 @@ import { SubmitSection } from './components/SubmitSection';
 
 export function MyPage() {
   const { user, preferences, loading, updateUser, updatePreferences, changePassword, logout } = useUser();
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
   const [formData, setFormData] = useState<MyPageFormData>({
     id: '',
     currentPassword: '',
